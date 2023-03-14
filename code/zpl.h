@@ -58,6 +58,14 @@ License:
 #    endif
 #endif
 
+#if defined(__cplusplus) && defined(ZPL_WRAP_IN_NAMESPACE)
+#    define ZPL_BEGIN_NAMESPACE zpl {
+#    define ZPL_END_NAMESPACE }
+#else
+#    define ZPL_BEGIN_NAMESPACE
+#    define ZPL_END_NAMESPACE
+#endif
+
 #if defined(__cplusplus) && !defined(ZPL_EXTERN)
 #    define ZPL_EXTERN extern "C"
 #else
