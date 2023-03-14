@@ -1,12 +1,12 @@
 // file: header/essentials/types.h
 
 
-ZPL_BEGIN_C_DECLS
 
 /* Basic types */
 
 #if defined(ZPL_COMPILER_MSVC)
 ZPL_BEGIN_NAMESPACE
+ZPL_BEGIN_C_DECLS
 #    if _MSC_VER < 1300
         typedef unsigned char zpl_u8;
         typedef signed char zpl_i8;
@@ -24,11 +24,13 @@ ZPL_BEGIN_NAMESPACE
 #    endif
     typedef unsigned __int64 zpl_u64;
     typedef signed __int64 zpl_i64;
+ZPL_END_C_DECLS
 ZPL_END_NAMESPACE
 #else
 #    include <stdint.h>
 
 ZPL_BEGIN_NAMESPACE
+ZPL_BEGIN_C_DECLS
     typedef uint8_t zpl_u8;
     typedef int8_t zpl_i8;
     typedef uint16_t zpl_u16;
@@ -37,10 +39,12 @@ ZPL_BEGIN_NAMESPACE
     typedef int32_t zpl_i32;
     typedef uint64_t zpl_u64;
     typedef int64_t zpl_i64;
+ZPL_END_C_DECLS
 ZPL_END_NAMESPACE
 #endif
 
 ZPL_BEGIN_NAMESPACE
+ZPL_BEGIN_C_DECLS
 ZPL_STATIC_ASSERT(sizeof(zpl_u8) == sizeof(zpl_i8), "sizeof(zpl_u8) != sizeof(zpl_i8)");
 ZPL_STATIC_ASSERT(sizeof(zpl_u16) == sizeof(zpl_i16), "sizeof(zpl_u16) != sizeof(zpl_i16)");
 ZPL_STATIC_ASSERT(sizeof(zpl_u32) == sizeof(zpl_i32), "sizeof(zpl_u32) != sizeof(zpl_i32)");
@@ -86,14 +90,15 @@ ZPL_STATIC_ASSERT(sizeof(zpl_f64) == 8, "sizeof(zpl_f64) != 8");
 
 typedef zpl_i32 zpl_rune; // NOTE: Unicode codepoint
 typedef zpl_i32 zpl_char32;
-#define ZPL_RUNE_INVALID cast(zpl_rune)(0xfffd)
-#define ZPL_RUNE_MAX cast(zpl_rune)(0x0010ffff)
-#define ZPL_RUNE_BOM cast(zpl_rune)(0xfeff)
-#define ZPL_RUNE_EOF cast(zpl_rune)(-1)
+#define ZPL_RUNE_INVALID cast(ZPL_NS zpl_rune)(0xfffd)
+#define ZPL_RUNE_MAX cast(ZPL_NS zpl_rune)(0x0010ffff)
+#define ZPL_RUNE_BOM cast(ZPL_NS zpl_rune)(0xfeff)
+#define ZPL_RUNE_EOF cast(ZPL_NS zpl_rune)(-1)
 
 typedef zpl_i8 zpl_b8;
 typedef zpl_i16 zpl_b16;
 typedef zpl_i32 zpl_b32;
+ZPL_END_C_DECLS
 ZPL_END_NAMESPACE
 
 #if !defined(__cplusplus)
@@ -105,7 +110,9 @@ ZPL_END_NAMESPACE
 #            define false(0 != 0)
 #        endif
         ZPL_BEGIN_NAMESPACE
-        typedef zpl_b8 bool;
+        ZPL_BEGIN_C_DECLS
+            typedef zpl_b8 bool;
+        ZPL_END_C_DECLS
         ZPL_END_NAMESPACE
 #    else
 #        include <stdbool.h>
@@ -159,5 +166,3 @@ ZPL_END_NAMESPACE
 #        define NULL ZPL_NULL
 #    endif
 #endif
-
-ZPL_END_C_DECLS

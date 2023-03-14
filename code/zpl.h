@@ -59,14 +59,16 @@ License:
 #endif
 
 #if defined(__cplusplus) && defined(ZPL_WRAP_IN_NAMESPACE)
-#    define ZPL_BEGIN_NAMESPACE zpl {
+#    define ZPL_BEGIN_NAMESPACE namespace zpl {
 #    define ZPL_END_NAMESPACE }
+#    define ZPL_NS zpl:: // Used in macros, properly exposes symbol anywhere
 #else
 #    define ZPL_BEGIN_NAMESPACE
 #    define ZPL_END_NAMESPACE
+#    define ZPL_NS // Used in macros, properly exposes symbol anywhere
 #endif
 
-#if defined(__cplusplus) && !defined(ZPL_EXTERN)
+#if defined(__cplusplus) && !defined(ZPL_EXTERN) && !defined(ZPL_DISABLE_C_DECL)
 #    define ZPL_EXTERN extern "C"
 #else
 #    define ZPL_EXTERN extern

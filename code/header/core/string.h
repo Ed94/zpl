@@ -56,7 +56,7 @@ ZPL_DEF_INLINE const char *zpl_strntok(char *output, zpl_isize len, const char *
 ZPL_DEF_INLINE char   *zpl_strdup(zpl_allocator a, char *src, zpl_isize max_len);
 ZPL_DEF_INLINE char  **zpl_str_split_lines(zpl_allocator alloc, char *source, zpl_b32 strip_whitespace);
 
-#define zpl_str_expand(str) str, zpl_strlen(str)
+#define zpl_str_expand(str) str, ZPL_NS zpl_strlen(str)
 #define zpl_str_advance_while(str, cond) \
     do { \
         ++str; \
@@ -67,7 +67,7 @@ ZPL_DEF_INLINE zpl_b32 zpl_str_has_suffix(const char *str, const char *suffix);
 
 ZPL_DEF_INLINE const char *zpl_char_first_occurence(const char *str, char c);
 ZPL_DEF_INLINE const char *zpl_char_last_occurence(const char *str, char c);
-#define zpl_strchr zpl_char_first_occurence
+#define zpl_strchr ZPL_NS zpl_char_first_occurence
 
 ZPL_DEF_INLINE void zpl_str_concat(char *dest, zpl_isize dest_len, const char *src_a, zpl_isize src_a_len, const char *src_b, zpl_isize src_b_len);
 

@@ -44,7 +44,7 @@ typedef struct {
     zpl_isize error;
 } zpl_tar_record;
 
-#define ZPL_TAR_UNPACK_PROC(name) zpl_isize name(zpl_file *archive, zpl_tar_record *file, void* user_data)
+#define ZPL_TAR_UNPACK_PROC(name) ZPL_NS zpl_isize name(ZPL_NS zpl_file *archive, ZPL_NS zpl_tar_record *file, void* user_data)
 typedef ZPL_TAR_UNPACK_PROC(zpl_tar_unpack_proc);
 
 /**

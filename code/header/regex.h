@@ -58,7 +58,7 @@ typedef struct zpl_re_capture {
     zpl_isize len;
 } zpl_re_capture;
 
-#define zplRegexError zpl_regex_error
+#define zplRegexError ZPL_NS zpl_regex_error
 typedef enum zpl_regex_error {
     ZPL_RE_ERROR_NONE,
     ZPL_RE_ERROR_NO_MATCH,

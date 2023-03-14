@@ -1,6 +1,7 @@
 // file: header/core/system.h
 
 
+ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
 
 /* Platform architecture */
@@ -163,7 +164,7 @@ defined(__ppc64__) || defined(__aarch64__)
         float value;
     } zpl__msvc_inf_hack;
     static union zpl__msvc_inf_hack ZPL__INFINITY_HACK = {{0x00, 0x00, 0x80, 0x7F}};
-#    define ZPL__HACK_INFINITY (ZPL__INFINITY_HACK.value)
+#    define ZPL__HACK_INFINITY (ZPL_NS ZPL__INFINITY_HACK.value)
 #    endif
 
 #    define ZPL_INFINITY (ZPL__HACK_INFINITY)
@@ -174,3 +175,4 @@ defined(__ppc64__) || defined(__aarch64__)
 #endif
 
 ZPL_END_C_DECLS
+ZPL_END_NAMESPACE

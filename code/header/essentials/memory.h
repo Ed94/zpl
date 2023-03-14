@@ -39,11 +39,11 @@ ZPL_DEF_INLINE void const *zpl_pointer_sub_const(void const *ptr, zpl_isize byte
 //! Calculates difference between two addresses.
 ZPL_DEF_INLINE zpl_isize zpl_pointer_diff(void const *begin, void const *end);
 
-#define zpl_ptr_add zpl_pointer_add
-#define zpl_ptr_sub zpl_pointer_sub
-#define zpl_ptr_add_const zpl_pointer_add_const
-#define zpl_ptr_sub_const zpl_pointer_sub_const
-#define zpl_ptr_diff zpl_pointer_diff
+#define zpl_ptr_add ZPL_NS zpl_pointer_add
+#define zpl_ptr_sub ZPL_NS zpl_pointer_sub
+#define zpl_ptr_add_const ZPL_NS zpl_pointer_add_const
+#define zpl_ptr_sub_const ZPL_NS zpl_pointer_sub_const
+#define zpl_ptr_diff ZPL_NS zpl_pointer_diff
 
 //! Clears up memory at location by specified size.
 
@@ -100,10 +100,10 @@ do {                                                                            
 #endif
 
 #ifndef zpl_kilobytes
-#define zpl_kilobytes(x) ((x)              * (zpl_i64)(1024))
-#define zpl_megabytes(x) (zpl_kilobytes(x) * (zpl_i64)(1024))
-#define zpl_gigabytes(x) (zpl_megabytes(x) * (zpl_i64)(1024))
-#define zpl_terabytes(x) (zpl_gigabytes(x) * (zpl_i64)(1024))
+#define zpl_kilobytes(x) ((x)              * (ZPL_NS zpl_i64)(1024))
+#define zpl_megabytes(x) (zpl_kilobytes(x) * (ZPL_NS zpl_i64)(1024))
+#define zpl_gigabytes(x) (zpl_megabytes(x) * (ZPL_NS zpl_i64)(1024))
+#define zpl_terabytes(x) (zpl_gigabytes(x) * (ZPL_NS zpl_i64)(1024))
 #endif
 
 

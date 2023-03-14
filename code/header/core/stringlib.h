@@ -12,7 +12,7 @@ typedef struct zpl_string_header {
     zpl_isize capacity;
 } zpl_string_header;
 
-#define ZPL_STRING_HEADER(str) (cast(zpl_string_header *)(str) - 1)
+#define ZPL_STRING_HEADER(str) (cast(ZPL_NS zpl_string_header *)(str) - 1)
 
 ZPL_DEF zpl_string zpl_string_make_reserve(zpl_allocator a, zpl_isize capacity);
 ZPL_DEF zpl_string zpl_string_make_length(zpl_allocator a, void const *str, zpl_isize num_bytes);

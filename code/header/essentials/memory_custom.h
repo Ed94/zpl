@@ -100,13 +100,13 @@ ZPL_DEF ZPL_ALLOCATOR_PROC(zpl_heap_allocator_proc);
 #ifndef zpl_malloc
 
 //! Helper to allocate memory using heap allocator.
-#define zpl_malloc(sz) zpl_alloc(zpl_heap_allocator( ), sz)
+#define zpl_malloc(sz) ZPL_NS zpl_alloc(zpl_heap_allocator( ), sz)
 
 //! Helper to free memory allocated by heap allocator.
-#define zpl_mfree(ptr) zpl_free(zpl_heap_allocator( ), ptr)
+#define zpl_mfree(ptr) ZPL_NS zpl_free(zpl_heap_allocator( ), ptr)
 
 //! Alias to heap allocator.
-#define zpl_heap zpl_heap_allocator
+#define zpl_heap ZPL_NS zpl_heap_allocator
 #endif
 
 //
@@ -432,7 +432,7 @@ ZPL_IMPL_INLINE void zpl_allocation_header_fill(zpl_allocation_header_ev *header
 // Stack Memory Allocator
 //
 
-#define ZPL_STACK_ALLOC_OFFSET sizeof(zpl_u64)
+#define ZPL_STACK_ALLOC_OFFSET sizeof(ZPL_NS zpl_u64)
 ZPL_STATIC_ASSERT(ZPL_STACK_ALLOC_OFFSET == 8, "ZPL_STACK_ALLOC_OFFSET != 8");
 
 ZPL_IMPL_INLINE void zpl_stack_memory_init_from_memory(zpl_stack_memory *s, void *start, zpl_isize size) {
