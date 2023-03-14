@@ -45,48 +45,51 @@ Supported Matching:
 ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
 
-typedef struct zpl_re {
-    zpl_allocator backing;
-    zpl_isize capture_count;
-    char *buf;
-    zpl_isize buf_len, buf_cap;
-    zpl_b32 can_realloc;
-} zpl_re;
+typedef struct re
+{
+	zpl_allocator backing;
+	sw            capture_count;
+	char*         buf;
+	sw            buf_len, buf_cap;
+	b32           can_realloc;
+} re;
 
-typedef struct zpl_re_capture {
-    char const *str;
-    zpl_isize len;
-} zpl_re_capture;
+typedef struct re_capture
+{
+	char const * str;
+	sw           len;
+} re_capture;
 
-#define zplRegexError zpl_regex_error
-typedef enum zpl_regex_error {
-    ZPL_RE_ERROR_NONE,
-    ZPL_RE_ERROR_NO_MATCH,
-    ZPL_RE_ERROR_TOO_LONG,
-    ZPL_RE_ERROR_MISMATCHED_CAPTURES,
-    ZPL_RE_ERROR_MISMATCHED_BLOCKS,
-    ZPL_RE_ERROR_BRANCH_FAILURE,
-    ZPL_RE_ERROR_INVALID_QUANTIFIER,
-    ZPL_RE_ERROR_INTERNAL_FAILURE,
-} zpl_regex_error;
+#define zplRegexError regex_error
+typedef enum regex_error
+{
+	ZPL_RE_ERROR_NONE,
+	ZPL_RE_ERROR_NO_MATCH,
+	ZPL_RE_ERROR_TOO_LONG,
+	ZPL_RE_ERROR_MISMATCHED_CAPTURES,
+	ZPL_RE_ERROR_MISMATCHED_BLOCKS,
+	ZPL_RE_ERROR_BRANCH_FAILURE,
+	ZPL_RE_ERROR_INVALID_QUANTIFIER,
+	ZPL_RE_ERROR_INTERNAL_FAILURE,
+} regex_error;
 
 //! Compile regex pattern.
-ZPL_DEF zpl_regex_error zpl_re_compile(zpl_re *re, zpl_allocator backing, char const *pattern, zpl_isize pattern_len);
+ZPL_DEF regex_error re_compile( re* re, zpl_allocator backing, char const * pattern, sw pattern_len );
 
 //! Compile regex pattern using a buffer.
-ZPL_DEF zpl_regex_error zpl_re_compile_from_buffer(zpl_re *re, char const *pattern, zpl_isize pattern_len, void *buffer, zpl_isize buffer_len);
+ZPL_DEF regex_error re_compile_from_buffer( re* re, char const * pattern, sw pattern_len, void* buffer, sw buffer_len );
 
 //! Destroy regex object.
-ZPL_DEF void            zpl_re_destroy(zpl_re *re);
+ZPL_DEF void re_destroy( re* re );
 
 //! Retrieve number of retrievable captures.
-ZPL_DEF zpl_isize       zpl_re_capture_count(zpl_re *re);
+ZPL_DEF sw re_capture_count( re* re );
 
 //! Match input string and output captures of the occurence.
-ZPL_DEF zpl_b32         zpl_re_match(zpl_re *re, char const *str, zpl_isize str_len, zpl_re_capture *captures, zpl_isize max_capture_count, zpl_isize *offset);
+ZPL_DEF b32 re_match( re* re, char const * str, sw str_len, re_capture* captures, sw max_capture_count, sw* offset );
 
 //! Match all occurences in an input string and output them into captures. Array of captures is allocated on the heap and needs to be freed afterwards.
-ZPL_DEF zpl_b32         zpl_re_match_all(zpl_re *re, char const *str, zpl_isize str_len, zpl_isize max_capture_count, zpl_re_capture **out_captures);
+ZPL_DEF b32 re_match_all( re* re, char const * str, sw str_len, sw max_capture_count, re_capture** out_captures );
 
 ZPL_END_C_DECLS
 ZPL_END_NAMESPACE

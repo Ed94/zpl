@@ -1,46 +1,48 @@
 // file: header/threading/affinity.h
 
-
 ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
 
-#if defined(ZPL_SYSTEM_WINDOWS) || defined (ZPL_SYSTEM_CYGWIN)
+#if defined( ZPL_SYSTEM_WINDOWS ) || defined( ZPL_SYSTEM_CYGWIN )
 
-    typedef struct zpl_affinity {
-        zpl_b32   is_accurate;
-        zpl_isize core_count;
-        zpl_isize thread_count;
+typedef struct affinity
+{
+	b32 is_accurate;
+	sw  core_count;
+	sw  thread_count;
 
-#    define ZPL_WIN32_MAX_THREADS (8 * zpl_size_of(zpl_usize))
-        zpl_usize core_masks[ZPL_WIN32_MAX_THREADS];
-    } zpl_affinity;
+#define ZPL_WIN32_MAX_THREADS ( 8 * size_of( uw ) )
+	uw core_masks[ ZPL_WIN32_MAX_THREADS ];
+} affinity;
 
-#elif defined(ZPL_SYSTEM_OSX)
+#elif defined( ZPL_SYSTEM_OSX )
 
-    typedef struct zpl_affinity {
-        zpl_b32   is_accurate;
-        zpl_isize core_count;
-        zpl_isize thread_count;
-        zpl_isize threads_per_core;
-    } zpl_affinity;
+typedef struct affinity
+{
+	b32 is_accurate;
+	sw  core_count;
+	sw  thread_count;
+	sw  threads_per_core;
+} affinity;
 
-#elif defined(ZPL_SYSTEM_LINUX) || defined(ZPL_SYSTEM_FREEBSD) || defined(ZPL_SYSTEM_EMSCRIPTEN) || defined(ZPL_SYSTEM_OPENBSD)
+#elif defined( ZPL_SYSTEM_LINUX ) || defined( ZPL_SYSTEM_FREEBSD ) || defined( ZPL_SYSTEM_EMSCRIPTEN ) || defined( ZPL_SYSTEM_OPENBSD )
 
-    typedef struct zpl_affinity {
-        zpl_b32   is_accurate;
-        zpl_isize core_count;
-        zpl_isize thread_count;
-        zpl_isize threads_per_core;
-    } zpl_affinity;
+typedef struct affinity
+{
+	b32 is_accurate;
+	sw  core_count;
+	sw  thread_count;
+	sw  threads_per_core;
+} affinity;
 
 #else
-#    error TODO: Unknown system
+#error TODO: Unknown system
 #endif
 
-ZPL_DEF void      zpl_affinity_init   (zpl_affinity *a);
-ZPL_DEF void      zpl_affinity_destroy(zpl_affinity *a);
-ZPL_DEF zpl_b32   zpl_affinity_set    (zpl_affinity *a, zpl_isize core, zpl_isize thread);
-ZPL_DEF zpl_isize zpl_affinity_thread_count_for_core(zpl_affinity *a, zpl_isize core);
+ZPL_DEF void affinity_init( affinity* a );
+ZPL_DEF void affinity_destroy( affinity* a );
+ZPL_DEF b32  affinity_set( affinity* a, sw core, sw thread );
+ZPL_DEF sw   affinity_thread_count_for_core( affinity* a, sw core );
 
 ZPL_END_C_DECLS
 ZPL_END_NAMESPACE

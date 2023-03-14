@@ -10,12 +10,12 @@
 ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
 
-typedef void *zpl_dll_handle;
-typedef void (*zpl_dll_proc)(void);
+typedef void* dll_handle;
+typedef void ( *dll_proc )( void );
 
-ZPL_DEF zpl_dll_handle zpl_dll_load(char const *filepath);
-ZPL_DEF void           zpl_dll_unload(zpl_dll_handle dll);
-ZPL_DEF zpl_dll_proc   zpl_dll_proc_address(zpl_dll_handle dll, char const *proc_name);
+ZPL_DEF dll_handle dll_load( char const * filepath );
+ZPL_DEF void       dll_unload( dll_handle dll );
+ZPL_DEF dll_proc   dll_proc_address( dll_handle dll, char const * proc_name );
 
 //! @}
 

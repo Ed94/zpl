@@ -12,123 +12,151 @@ OpenGL gamedev friendly library for math.
 ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
 
-typedef union zpl_vec2 {
-    struct {
-        zpl_f32 x, y;
-    };
-    struct {
-        zpl_f32 s, t;
-    };
-    zpl_f32 e[2];
-} zpl_vec2;
+typedef union vec2
+{
+	struct
+	{
+		f32 x, y;
+	};
+	struct
+	{
+		f32 s, t;
+	};
+	f32 e[ 2 ];
+} vec2;
 
-typedef union zpl_vec3 {
-    struct {
-        zpl_f32 x, y, z;
-    };
-    struct {
-        zpl_f32 r, g, b;
-    };
-    struct {
-        zpl_f32 s, t, p;
-    };
-    
-    zpl_vec2 xy;
-    zpl_vec2 st;
-    zpl_f32 e[3];
-} zpl_vec3;
+typedef union vec3
+{
+	struct
+	{
+		f32 x, y, z;
+	};
+	struct
+	{
+		f32 r, g, b;
+	};
+	struct
+	{
+		f32 s, t, p;
+	};
 
-typedef union zpl_vec4 {
-    struct {
-        zpl_f32 x, y, z, w;
-    };
-    struct {
-        zpl_f32 r, g, b, a;
-    };
-    struct {
-        zpl_f32 s, t, p, q;
-    };
-    struct {
-        zpl_vec2 xy, zw;
-    };
-    struct {
-        zpl_vec2 st, pq;
-    };
-    zpl_vec3 xyz;
-    zpl_vec3 rgb;
-    zpl_f32 e[4];
-} zpl_vec4;
+	vec2 xy;
+	vec2 st;
+	f32  e[ 3 ];
+} vec3;
 
-typedef union zpl_mat2 {
-    struct {
-        zpl_vec2 x, y;
-    };
-    zpl_vec2 col[2];
-    zpl_f32 e[4];
-} zpl_mat2;
+typedef union vec4
+{
+	struct
+	{
+		f32 x, y, z, w;
+	};
+	struct
+	{
+		f32 r, g, b, a;
+	};
+	struct
+	{
+		f32 s, t, p, q;
+	};
+	struct
+	{
+		vec2 xy, zw;
+	};
+	struct
+	{
+		vec2 st, pq;
+	};
+	vec3 xyz;
+	vec3 rgb;
+	f32  e[ 4 ];
+} vec4;
 
-typedef union zpl_mat3 {
-    struct {
-        zpl_vec3 x, y, z;
-    };
-    zpl_vec3 col[3];
-    zpl_f32 e[9];
-} zpl_mat3;
+typedef union mat2
+{
+	struct
+	{
+		vec2 x, y;
+	};
+	vec2 col[ 2 ];
+	f32  e[ 4 ];
+} mat2;
 
-typedef union zpl_mat4 {
-    struct {
-        zpl_vec4 x, y, z, w;
-    };
-    zpl_vec4 col[4];
-    zpl_f32 e[16];
-} zpl_mat4;
+typedef union mat3
+{
+	struct
+	{
+		vec3 x, y, z;
+	};
+	vec3 col[ 3 ];
+	f32  e[ 9 ];
+} mat3;
 
-typedef union zpl_quat {
-    struct {
-        zpl_f32 x, y, z, w;
-    };
-    zpl_vec4 xyzw;
-    zpl_vec3 xyz;
-    zpl_f32 e[4];
-} zpl_quat;
+typedef union mat4
+{
+	struct
+	{
+		vec4 x, y, z, w;
+	};
+	vec4 col[ 4 ];
+	f32  e[ 16 ];
+} mat4;
 
-typedef union zpl_plane {
-    struct {
-        zpl_f32 a, b, c, d;
-    };
-    zpl_vec4 xyzw;
-    zpl_vec3 n;
-    zpl_f32 e[4];
-} zpl_plane;
+typedef union quat
+{
+	struct
+	{
+		f32 x, y, z, w;
+	};
+	vec4 xyzw;
+	vec3 xyz;
+	f32  e[ 4 ];
+} quat;
 
-typedef struct zpl_frustum {
-    zpl_plane x1;
-    zpl_plane x2;
-    zpl_plane y1;
-    zpl_plane y2;
-    zpl_plane z1;
-    zpl_plane z2;
-} zpl_frustum;
+typedef union plane
+{
+	struct
+	{
+		f32 a, b, c, d;
+	};
+	vec4 xyzw;
+	vec3 n;
+	f32  e[ 4 ];
+} plane;
 
-typedef zpl_f32 zpl_float2[2];
-typedef zpl_f32 zpl_float3[3];
-typedef zpl_f32 zpl_float4[4];
+typedef struct frustum
+{
+	plane x1;
+	plane x2;
+	plane y1;
+	plane y2;
+	plane z1;
+	plane z2;
+} frustum;
 
-typedef struct zpl_rect2 {
-    zpl_vec2 pos, dim;
-} zpl_rect2;
-typedef struct zpl_rect3 {
-    zpl_vec3 pos, dim;
-} zpl_rect3;
+typedef f32 float2[ 2 ];
+typedef f32 float3[ 3 ];
+typedef f32 float4[ 4 ];
 
-typedef struct zpl_aabb2 {
-    zpl_vec2 min, max;
-} zpl_aabb2;
-typedef struct zpl_aabb3 {
-    zpl_vec3 min, max;
-} zpl_aabb3;
+typedef struct rect2
+{
+	vec2 pos, dim;
+} rect2;
+typedef struct rect3
+{
+	vec3 pos, dim;
+} rect3;
 
-typedef short zpl_half;
+typedef struct aabb2
+{
+	vec2 min, max;
+} aabb2;
+typedef struct aabb3
+{
+	vec3 min, max;
+} aabb3;
+
+typedef short half;
 
 #ifndef ZPL_CONSTANTS
 #define ZPL_CONSTANTS
@@ -155,545 +183,860 @@ typedef short zpl_half;
 #define ZPL_LOG_TEN 2.30258509299404568401799145468436421f
 #endif // ZPL_CONSTANTS
 
-#ifndef zpl_square
-#define zpl_square(x) ((x) * (x))
+#ifndef square
+#define square( x ) ( ( x ) * ( x ) )
 #endif
 
-#ifndef zpl_cube
-#define zpl_cube(x) ((x) * (x) * (x))
+#ifndef cube
+#define cube( x ) ( ( x ) * ( x ) * ( x ) )
 #endif
 
-#ifndef zpl_sign
-#define zpl_sign(x) ((x) >= 0.0f ? 1.0f : -1.0f)
+#ifndef sign
+#define sign( x ) ( ( x ) >= 0.0f ? 1.0f : -1.0f )
 #endif
 
-#ifndef zpl_sign0
-#define zpl_sign0(x) ((x == 0.0f) ? 0.0f : ((x) >= 0.0f ? 1.0f : -1.0f))
+#ifndef sign0
+#define sign0( x ) ( ( x == 0.0f ) ? 0.0f : ( ( x ) >= 0.0f ? 1.0f : -1.0f ) )
 #endif
 
-ZPL_DEF zpl_f32 zpl_to_radians(zpl_f32 degrees);
-ZPL_DEF zpl_f32 zpl_to_degrees(zpl_f32 radians);
+ZPL_DEF f32 to_radians( f32 degrees );
+ZPL_DEF f32 to_degrees( f32 radians );
 
 /* NOTE: Because to interpolate angles */
-ZPL_DEF zpl_f32 zpl_angle_diff(zpl_f32 radians_a, zpl_f32 radians_b);
+ZPL_DEF f32 angle_diff( f32 radians_a, f32 radians_b );
 
-ZPL_DEF zpl_f32 zpl_copy_sign(zpl_f32 x, zpl_f32 y);
-ZPL_DEF zpl_f32 zpl_remainder(zpl_f32 x, zpl_f32 y);
-ZPL_DEF zpl_f32 zpl_mod(zpl_f32 x, zpl_f32 y);
-ZPL_DEF zpl_f64 zpl_copy_sign64(zpl_f64 x, zpl_f64 y);
-ZPL_DEF zpl_f64 zpl_floor64(zpl_f64 x);
-ZPL_DEF zpl_f64 zpl_ceil64(zpl_f64 x);
-ZPL_DEF zpl_f64 zpl_round64(zpl_f64 x);
-ZPL_DEF zpl_f64 zpl_remainder64(zpl_f64 x, zpl_f64 y);
-ZPL_DEF zpl_f64 zpl_abs64(zpl_f64 x);
-ZPL_DEF zpl_f64 zpl_sign64(zpl_f64 x);
-ZPL_DEF zpl_f64 zpl_mod64(zpl_f64 x, zpl_f64 y);
-ZPL_DEF zpl_f32 zpl_sqrt(zpl_f32 a);
-ZPL_DEF zpl_f32 zpl_rsqrt(zpl_f32 a);
-ZPL_DEF zpl_f32 zpl_quake_rsqrt(zpl_f32 a); /* NOTE: It's probably better to use 1.0f/zpl_sqrt(a)
-                                     * And for simd, there is usually isqrt functions too!
-                                     */
-ZPL_DEF zpl_f32 zpl_sin(zpl_f32 radians);
-ZPL_DEF zpl_f32 zpl_cos(zpl_f32 radians);
-ZPL_DEF zpl_f32 zpl_tan(zpl_f32 radians);
-ZPL_DEF zpl_f32 zpl_arcsin(zpl_f32 a);
-ZPL_DEF zpl_f32 zpl_arccos(zpl_f32 a);
-ZPL_DEF zpl_f32 zpl_arctan(zpl_f32 a);
-ZPL_DEF zpl_f32 zpl_arctan2(zpl_f32 y, zpl_f32 x);
+ZPL_DEF f32 copy_sign( f32 x, f32 y );
+ZPL_DEF f32 remainder( f32 x, f32 y );
+ZPL_DEF f32 mod( f32 x, f32 y );
+ZPL_DEF f64 copy_sign64( f64 x, f64 y );
+ZPL_DEF f64 floor64( f64 x );
+ZPL_DEF f64 ceil64( f64 x );
+ZPL_DEF f64 round64( f64 x );
+ZPL_DEF f64 remainder64( f64 x, f64 y );
+ZPL_DEF f64 abs64( f64 x );
+ZPL_DEF f64 sign64( f64 x );
+ZPL_DEF f64 mod64( f64 x, f64 y );
+ZPL_DEF f32 sqrt( f32 a );
+ZPL_DEF f32 rsqrt( f32 a );
+ZPL_DEF f32 quake_rsqrt( f32 a ); /* NOTE: It's probably better to use 1.0f/sqrt(a)
+                                   * And for simd, there is usually isqrt functions too!
+                                   */
+ZPL_DEF f32 sin( f32 radians );
+ZPL_DEF f32 cos( f32 radians );
+ZPL_DEF f32 tan( f32 radians );
+ZPL_DEF f32 arcsin( f32 a );
+ZPL_DEF f32 arccos( f32 a );
+ZPL_DEF f32 arctan( f32 a );
+ZPL_DEF f32 arctan2( f32 y, f32 x );
 
-ZPL_DEF zpl_f32 zpl_exp(zpl_f32 x);
-ZPL_DEF zpl_f32 zpl_exp2(zpl_f32 x);
-ZPL_DEF zpl_f32 zpl_log(zpl_f32 x);
-ZPL_DEF zpl_f32 zpl_log2(zpl_f32 x);
-ZPL_DEF zpl_f32 zpl_fast_exp(zpl_f32 x);   /* NOTE: Only valid from -1 <= x <= +1 */
-ZPL_DEF zpl_f32 zpl_fast_exp2(zpl_f32 x);  /* NOTE: Only valid from -1 <= x <= +1 */
-ZPL_DEF zpl_f32 zpl_pow(zpl_f32 x, zpl_f32 y); /* x^y */
+ZPL_DEF f32 exp( f32 x );
+ZPL_DEF f32 exp2( f32 x );
+ZPL_DEF f32 log( f32 x );
+ZPL_DEF f32 log2( f32 x );
+ZPL_DEF f32 fast_exp( f32 x ); /* NOTE: Only valid from -1 <= x <= +1 */
+ZPL_DEF f32 fast_exp2( f32 x ); /* NOTE: Only valid from -1 <= x <= +1 */
+ZPL_DEF f32 pow( f32 x, f32 y ); /* x^y */
 
-ZPL_DEF zpl_f32 zpl_round(zpl_f32 x);
-ZPL_DEF zpl_f32 zpl_floor(zpl_f32 x);
-ZPL_DEF zpl_f32 zpl_ceil(zpl_f32 x);
+ZPL_DEF f32 round( f32 x );
+ZPL_DEF f32 floor( f32 x );
+ZPL_DEF f32 ceil( f32 x );
 
-ZPL_DEF zpl_f32  zpl_half_to_float(zpl_half value);
-ZPL_DEF zpl_half zpl_float_to_half(zpl_f32 value);
+ZPL_DEF f32  half_to_float( half value );
+ZPL_DEF half float_to_half( f32 value );
 
-ZPL_DEF zpl_vec2 zpl_vec2f_zero(void);
-ZPL_DEF zpl_vec2 zpl_vec2f(zpl_f32 x, zpl_f32 y);
-ZPL_DEF zpl_vec2 zpl_vec2fv(zpl_f32 x[2]);
+ZPL_DEF vec2 vec2f_zero( void );
+ZPL_DEF vec2 vec2f( f32 x, f32 y );
+ZPL_DEF vec2 vec2fv( f32 x[ 2 ] );
 
-ZPL_DEF zpl_vec3 zpl_vec3f_zero(void);
-ZPL_DEF zpl_vec3 zpl_vec3f(zpl_f32 x, zpl_f32 y, zpl_f32 z);
-ZPL_DEF zpl_vec3 zpl_vec3fv(zpl_f32 x[3]);
+ZPL_DEF vec3 vec3f_zero( void );
+ZPL_DEF vec3 vec3f( f32 x, f32 y, f32 z );
+ZPL_DEF vec3 vec3fv( f32 x[ 3 ] );
 
-ZPL_DEF zpl_vec4 zpl_vec4f_zero(void);
-ZPL_DEF zpl_vec4 zpl_vec4f(zpl_f32 x, zpl_f32 y, zpl_f32 z, zpl_f32 w);
-ZPL_DEF zpl_vec4 zpl_vec4fv(zpl_f32 x[4]);
+ZPL_DEF vec4 vec4f_zero( void );
+ZPL_DEF vec4 vec4f( f32 x, f32 y, f32 z, f32 w );
+ZPL_DEF vec4 vec4fv( f32 x[ 4 ] );
 
-ZPL_DEF zpl_f32 zpl_vec2_max(zpl_vec2 v);
-ZPL_DEF zpl_f32 zpl_vec2_side(zpl_vec2 p, zpl_vec2 q, zpl_vec2 r);
-ZPL_DEF void zpl_vec2_add(zpl_vec2 *d, zpl_vec2 v0, zpl_vec2 v1);
-ZPL_DEF void zpl_vec2_sub(zpl_vec2 *d, zpl_vec2 v0, zpl_vec2 v1);
-ZPL_DEF void zpl_vec2_mul(zpl_vec2 *d, zpl_vec2 v, zpl_f32 s);
-ZPL_DEF void zpl_vec2_div(zpl_vec2 *d, zpl_vec2 v, zpl_f32 s);
+ZPL_DEF f32  vec2_max( vec2 v );
+ZPL_DEF f32  vec2_side( vec2 p, vec2 q, vec2 r );
+ZPL_DEF void vec2_add( vec2* d, vec2 v0, vec2 v1 );
+ZPL_DEF void vec2_sub( vec2* d, vec2 v0, vec2 v1 );
+ZPL_DEF void vec2_mul( vec2* d, vec2 v, f32 s );
+ZPL_DEF void vec2_div( vec2* d, vec2 v, f32 s );
 
-ZPL_DEF zpl_f32 zpl_vec3_max(zpl_vec3 v);
-ZPL_DEF void zpl_vec3_add(zpl_vec3 *d, zpl_vec3 v0, zpl_vec3 v1);
-ZPL_DEF void zpl_vec3_sub(zpl_vec3 *d, zpl_vec3 v0, zpl_vec3 v1);
-ZPL_DEF void zpl_vec3_mul(zpl_vec3 *d, zpl_vec3 v, zpl_f32 s);
-ZPL_DEF void zpl_vec3_div(zpl_vec3 *d, zpl_vec3 v, zpl_f32 s);
+ZPL_DEF f32  vec3_max( vec3 v );
+ZPL_DEF void vec3_add( vec3* d, vec3 v0, vec3 v1 );
+ZPL_DEF void vec3_sub( vec3* d, vec3 v0, vec3 v1 );
+ZPL_DEF void vec3_mul( vec3* d, vec3 v, f32 s );
+ZPL_DEF void vec3_div( vec3* d, vec3 v, f32 s );
 
-ZPL_DEF void zpl_vec4_add(zpl_vec4 *d, zpl_vec4 v0, zpl_vec4 v1);
-ZPL_DEF void zpl_vec4_sub(zpl_vec4 *d, zpl_vec4 v0, zpl_vec4 v1);
-ZPL_DEF void zpl_vec4_mul(zpl_vec4 *d, zpl_vec4 v, zpl_f32 s);
-ZPL_DEF void zpl_vec4_div(zpl_vec4 *d, zpl_vec4 v, zpl_f32 s);
+ZPL_DEF void vec4_add( vec4* d, vec4 v0, vec4 v1 );
+ZPL_DEF void vec4_sub( vec4* d, vec4 v0, vec4 v1 );
+ZPL_DEF void vec4_mul( vec4* d, vec4 v, f32 s );
+ZPL_DEF void vec4_div( vec4* d, vec4 v, f32 s );
 
-ZPL_DEF void zpl_vec2_addeq(zpl_vec2 *d, zpl_vec2 v);
-ZPL_DEF void zpl_vec2_subeq(zpl_vec2 *d, zpl_vec2 v);
-ZPL_DEF void zpl_vec2_muleq(zpl_vec2 *d, zpl_f32 s);
-ZPL_DEF void zpl_vec2_diveq(zpl_vec2 *d, zpl_f32 s);
+ZPL_DEF void vec2_addeq( vec2* d, vec2 v );
+ZPL_DEF void vec2_subeq( vec2* d, vec2 v );
+ZPL_DEF void vec2_muleq( vec2* d, f32 s );
+ZPL_DEF void vec2_diveq( vec2* d, f32 s );
 
-ZPL_DEF void zpl_vec3_addeq(zpl_vec3 *d, zpl_vec3 v);
-ZPL_DEF void zpl_vec3_subeq(zpl_vec3 *d, zpl_vec3 v);
-ZPL_DEF void zpl_vec3_muleq(zpl_vec3 *d, zpl_f32 s);
-ZPL_DEF void zpl_vec3_diveq(zpl_vec3 *d, zpl_f32 s);
+ZPL_DEF void vec3_addeq( vec3* d, vec3 v );
+ZPL_DEF void vec3_subeq( vec3* d, vec3 v );
+ZPL_DEF void vec3_muleq( vec3* d, f32 s );
+ZPL_DEF void vec3_diveq( vec3* d, f32 s );
 
-ZPL_DEF void zpl_vec4_addeq(zpl_vec4 *d, zpl_vec4 v);
-ZPL_DEF void zpl_vec4_subeq(zpl_vec4 *d, zpl_vec4 v);
-ZPL_DEF void zpl_vec4_muleq(zpl_vec4 *d, zpl_f32 s);
-ZPL_DEF void zpl_vec4_diveq(zpl_vec4 *d, zpl_f32 s);
+ZPL_DEF void vec4_addeq( vec4* d, vec4 v );
+ZPL_DEF void vec4_subeq( vec4* d, vec4 v );
+ZPL_DEF void vec4_muleq( vec4* d, f32 s );
+ZPL_DEF void vec4_diveq( vec4* d, f32 s );
 
-ZPL_DEF zpl_f32 zpl_vec2_dot(zpl_vec2 v0, zpl_vec2 v1);
-ZPL_DEF zpl_f32 zpl_vec3_dot(zpl_vec3 v0, zpl_vec3 v1);
-ZPL_DEF zpl_f32 zpl_vec4_dot(zpl_vec4 v0, zpl_vec4 v1);
+ZPL_DEF f32 vec2_dot( vec2 v0, vec2 v1 );
+ZPL_DEF f32 vec3_dot( vec3 v0, vec3 v1 );
+ZPL_DEF f32 vec4_dot( vec4 v0, vec4 v1 );
 
-ZPL_DEF void zpl_vec2_cross(zpl_f32 *d, zpl_vec2 v0, zpl_vec2 v1);
-ZPL_DEF void zpl_vec3_cross(zpl_vec3 *d, zpl_vec3 v0, zpl_vec3 v1);
+ZPL_DEF void vec2_cross( f32* d, vec2 v0, vec2 v1 );
+ZPL_DEF void vec3_cross( vec3* d, vec3 v0, vec3 v1 );
 
-ZPL_DEF zpl_f32 zpl_vec2_mag2(zpl_vec2 v);
-ZPL_DEF zpl_f32 zpl_vec3_mag2(zpl_vec3 v);
-ZPL_DEF zpl_f32 zpl_vec4_mag2(zpl_vec4 v);
+ZPL_DEF f32 vec2_mag2( vec2 v );
+ZPL_DEF f32 vec3_mag2( vec3 v );
+ZPL_DEF f32 vec4_mag2( vec4 v );
 
-ZPL_DEF zpl_f32 zpl_vec2_mag(zpl_vec2 v);
-ZPL_DEF zpl_f32 zpl_vec3_mag(zpl_vec3 v);
-ZPL_DEF zpl_f32 zpl_vec4_mag(zpl_vec4 v);
+ZPL_DEF f32 vec2_mag( vec2 v );
+ZPL_DEF f32 vec3_mag( vec3 v );
+ZPL_DEF f32 vec4_mag( vec4 v );
 
-ZPL_DEF void zpl_vec2_norm(zpl_vec2 *d, zpl_vec2 v);
-ZPL_DEF void zpl_vec3_norm(zpl_vec3 *d, zpl_vec3 v);
-ZPL_DEF void zpl_vec4_norm(zpl_vec4 *d, zpl_vec4 v);
+ZPL_DEF void vec2_norm( vec2* d, vec2 v );
+ZPL_DEF void vec3_norm( vec3* d, vec3 v );
+ZPL_DEF void vec4_norm( vec4* d, vec4 v );
 
-ZPL_DEF void zpl_vec2_norm0(zpl_vec2 *d, zpl_vec2 v);
-ZPL_DEF void zpl_vec3_norm0(zpl_vec3 *d, zpl_vec3 v);
-ZPL_DEF void zpl_vec4_norm0(zpl_vec4 *d, zpl_vec4 v);
+ZPL_DEF void vec2_norm0( vec2* d, vec2 v );
+ZPL_DEF void vec3_norm0( vec3* d, vec3 v );
+ZPL_DEF void vec4_norm0( vec4* d, vec4 v );
 
-ZPL_DEF void zpl_vec2_reflect(zpl_vec2 *d, zpl_vec2 i, zpl_vec2 n);
-ZPL_DEF void zpl_vec3_reflect(zpl_vec3 *d, zpl_vec3 i, zpl_vec3 n);
-ZPL_DEF void zpl_vec2_refract(zpl_vec2 *d, zpl_vec2 i, zpl_vec2 n, zpl_f32 eta);
-ZPL_DEF void zpl_vec3_refract(zpl_vec3 *d, zpl_vec3 i, zpl_vec3 n, zpl_f32 eta);
+ZPL_DEF void vec2_reflect( vec2* d, vec2 i, vec2 n );
+ZPL_DEF void vec3_reflect( vec3* d, vec3 i, vec3 n );
+ZPL_DEF void vec2_refract( vec2* d, vec2 i, vec2 n, f32 eta );
+ZPL_DEF void vec3_refract( vec3* d, vec3 i, vec3 n, f32 eta );
 
-ZPL_DEF zpl_f32 zpl_vec2_aspect_ratio(zpl_vec2 v);
+ZPL_DEF f32 vec2_aspect_ratio( vec2 v );
 
-ZPL_DEF void zpl_mat2_identity(zpl_mat2 *m);
-ZPL_DEF void zpl_float22_identity(zpl_f32 m[2][2]);
+ZPL_DEF void mat2_identity( mat2* m );
+ZPL_DEF void float22_identity( f32 m[ 2 ][ 2 ] );
 
-ZPL_DEF void    zpl_mat2_transpose(zpl_mat2 *m);
-ZPL_DEF void    zpl_mat2_mul(zpl_mat2 *out, zpl_mat2 *m1, zpl_mat2 *m2);
-ZPL_DEF void    zpl_mat2_mul_vec2(zpl_vec2 *out, zpl_mat2 *m, zpl_vec2 in);
-ZPL_DEF void    zpl_mat2_inverse(zpl_mat2 *out, zpl_mat2 *in);
-ZPL_DEF zpl_f32 zpl_mat2_determinate(zpl_mat2 *m);
+ZPL_DEF void mat2_transpose( mat2* m );
+ZPL_DEF void mat2_mul( mat2* out, mat2* m1, mat2* m2 );
+ZPL_DEF void mat2_mul_vec2( vec2* out, mat2* m, vec2 in );
+ZPL_DEF void mat2_inverse( mat2* out, mat2* in );
+ZPL_DEF f32  mat2_determinate( mat2* m );
 
-ZPL_DEF zpl_mat2   *zpl_mat2_v(zpl_vec2 m[2]);
-ZPL_DEF zpl_mat2   *zpl_mat2_f(zpl_f32 m[2][2]);
-ZPL_DEF zpl_float2 *zpl_float22_m(zpl_mat2 *m);
-ZPL_DEF zpl_float2 *zpl_float22_v(zpl_vec2 m[2]);
-ZPL_DEF zpl_float2 *zpl_float22_4(zpl_f32 m[4]);
+ZPL_DEF mat2*   mat2_v( vec2 m[ 2 ] );
+ZPL_DEF mat2*   mat2_f( f32 m[ 2 ][ 2 ] );
+ZPL_DEF float2* float22_m( mat2* m );
+ZPL_DEF float2* float22_v( vec2 m[ 2 ] );
+ZPL_DEF float2* float22_4( f32 m[ 4 ] );
 
-ZPL_DEF void zpl_float22_transpose(zpl_f32 (*vec)[2]);
-ZPL_DEF void zpl_float22_mul(zpl_f32 (*out)[2], zpl_f32 (*mat1)[2], zpl_f32 (*mat2)[2]);
-ZPL_DEF void zpl_float22_mul_vec2(zpl_vec2 *out, zpl_f32 m[2][2], zpl_vec2 in);
+ZPL_DEF void float22_transpose( f32 ( *vec )[ 2 ] );
+ZPL_DEF void float22_mul( f32 ( *out )[ 2 ], f32 ( *mat1 )[ 2 ], f32 ( *mat2 )[ 2 ] );
+ZPL_DEF void float22_mul_vec2( vec2* out, f32 m[ 2 ][ 2 ], vec2 in );
 
-ZPL_DEF void zpl_mat3_identity(zpl_mat3 *m);
-ZPL_DEF void zpl_float33_identity(zpl_f32 m[3][3]);
+ZPL_DEF void mat3_identity( mat3* m );
+ZPL_DEF void float33_identity( f32 m[ 3 ][ 3 ] );
 
-ZPL_DEF void    zpl_mat3_transpose(zpl_mat3 *m);
-ZPL_DEF void    zpl_mat3_mul(zpl_mat3 *out, zpl_mat3 *m1, zpl_mat3 *m2);
-ZPL_DEF void    zpl_mat3_mul_vec3(zpl_vec3 *out, zpl_mat3 *m, zpl_vec3 in);
-ZPL_DEF void    zpl_mat3_inverse(zpl_mat3 *out, zpl_mat3 *in);
-ZPL_DEF zpl_f32 zpl_mat3_determinate(zpl_mat3 *m);
+ZPL_DEF void mat3_transpose( mat3* m );
+ZPL_DEF void mat3_mul( mat3* out, mat3* m1, mat3* m2 );
+ZPL_DEF void mat3_mul_vec3( vec3* out, mat3* m, vec3 in );
+ZPL_DEF void mat3_inverse( mat3* out, mat3* in );
+ZPL_DEF f32  mat3_determinate( mat3* m );
 
-ZPL_DEF zpl_mat3   *zpl_mat3_v(zpl_vec3 m[3]);
-ZPL_DEF zpl_mat3   *zpl_mat3_f(zpl_f32 m[3][3]);
+ZPL_DEF mat3* mat3_v( vec3 m[ 3 ] );
+ZPL_DEF mat3* mat3_f( f32 m[ 3 ][ 3 ] );
 
-ZPL_DEF zpl_float3 *zpl_float33_m(zpl_mat3 *m);
-ZPL_DEF zpl_float3 *zpl_float33_v(zpl_vec3 m[3]);
-ZPL_DEF zpl_float3 *zpl_float33_9(zpl_f32 m[9]);
+ZPL_DEF float3* float33_m( mat3* m );
+ZPL_DEF float3* float33_v( vec3 m[ 3 ] );
+ZPL_DEF float3* float33_9( f32 m[ 9 ] );
 
-ZPL_DEF void zpl_float33_transpose(zpl_f32 (*vec)[3]);
-ZPL_DEF void zpl_float33_mul(zpl_f32 (*out)[3], zpl_f32 (*mat1)[3], zpl_f32 (*mat2)[3]);
-ZPL_DEF void zpl_float33_mul_vec3(zpl_vec3 *out, zpl_f32 m[3][3], zpl_vec3 in);
+ZPL_DEF void float33_transpose( f32 ( *vec )[ 3 ] );
+ZPL_DEF void float33_mul( f32 ( *out )[ 3 ], f32 ( *mat1 )[ 3 ], f32 ( *mat2 )[ 3 ] );
+ZPL_DEF void float33_mul_vec3( vec3* out, f32 m[ 3 ][ 3 ], vec3 in );
 
-ZPL_DEF void zpl_mat4_identity(zpl_mat4 *m);
-ZPL_DEF void zpl_float44_identity(zpl_f32 m[4][4]);
-ZPL_DEF void zpl_mat4_copy(zpl_mat4* out, zpl_mat4* m);
+ZPL_DEF void mat4_identity( mat4* m );
+ZPL_DEF void float44_identity( f32 m[ 4 ][ 4 ] );
+ZPL_DEF void mat4_copy( mat4* out, mat4* m );
 
-ZPL_DEF void zpl_mat4_transpose(zpl_mat4 *m);
-ZPL_DEF void zpl_mat4_mul(zpl_mat4 *out, zpl_mat4 *m1, zpl_mat4 *m2);
-ZPL_DEF void zpl_mat4_mul_vec4(zpl_vec4 *out, zpl_mat4 *m, zpl_vec4 in);
-ZPL_DEF void zpl_mat4_inverse(zpl_mat4 *out, zpl_mat4 *in);
+ZPL_DEF void mat4_transpose( mat4* m );
+ZPL_DEF void mat4_mul( mat4* out, mat4* m1, mat4* m2 );
+ZPL_DEF void mat4_mul_vec4( vec4* out, mat4* m, vec4 in );
+ZPL_DEF void mat4_inverse( mat4* out, mat4* in );
 
-ZPL_DEF zpl_mat4 *zpl_mat4_v(zpl_vec4 m[4]);
-ZPL_DEF zpl_mat4 *zpl_mat4_f(zpl_f32 m[4][4]);
+ZPL_DEF mat4* mat4_v( vec4 m[ 4 ] );
+ZPL_DEF mat4* mat4_f( f32 m[ 4 ][ 4 ] );
 
-ZPL_DEF zpl_float4 *zpl_float44_m(zpl_mat4 *m);
-ZPL_DEF zpl_float4 *zpl_float44_v(zpl_vec4 m[4]);
-ZPL_DEF zpl_float4 *zpl_float44_16(zpl_f32 m[16]);
+ZPL_DEF float4* float44_m( mat4* m );
+ZPL_DEF float4* float44_v( vec4 m[ 4 ] );
+ZPL_DEF float4* float44_16( f32 m[ 16 ] );
 
-ZPL_DEF void zpl_float44_transpose(zpl_f32 (*vec)[4]);
-ZPL_DEF void zpl_float44_mul(zpl_f32 (*out)[4], zpl_f32 (*mat1)[4], zpl_f32 (*mat2)[4]);
-ZPL_DEF void zpl_float44_mul_vec4(zpl_vec4 *out, zpl_f32 m[4][4], zpl_vec4 in);
+ZPL_DEF void float44_transpose( f32 ( *vec )[ 4 ] );
+ZPL_DEF void float44_mul( f32 ( *out )[ 4 ], f32 ( *mat1 )[ 4 ], f32 ( *mat2 )[ 4 ] );
+ZPL_DEF void float44_mul_vec4( vec4* out, f32 m[ 4 ][ 4 ], vec4 in );
 
-ZPL_DEF void zpl_mat4_axis_angle(zpl_mat4* out, zpl_vec3 v, zpl_f32 angle_radians);
-ZPL_DEF void zpl_mat4_to_translate(zpl_mat4* out, zpl_vec3 v);
-ZPL_DEF void zpl_mat4_to_rotate(zpl_mat4* out, zpl_vec3 v, zpl_f32 angle_radians);
-ZPL_DEF void zpl_mat4_to_scale(zpl_mat4* out, zpl_vec3 v);
-ZPL_DEF void zpl_mat4_to_scalef(zpl_mat4* out, zpl_f32 s);
-ZPL_DEF void zpl_mat4_translate(zpl_mat4* out, zpl_vec3 v);
-ZPL_DEF void zpl_mat4_rotate(zpl_mat4* out, zpl_vec3 v, zpl_f32 angle_radians);
-ZPL_DEF void zpl_mat4_scale(zpl_mat4* out, zpl_vec3 v);
-ZPL_DEF void zpl_mat4_scalef(zpl_mat4 *out, zpl_f32 s);
-ZPL_DEF void zpl_mat4_ortho2d(zpl_mat4 *out, zpl_f32 left, zpl_f32 right, zpl_f32 bottom, zpl_f32 top);
-ZPL_DEF void zpl_mat4_ortho3d(zpl_mat4 *out, zpl_f32 left, zpl_f32 right, zpl_f32 bottom, zpl_f32 top, zpl_f32 z_near, zpl_f32 z_far);
-ZPL_DEF void zpl_mat4_perspective(zpl_mat4 *out, zpl_f32 fovy, zpl_f32 aspect, zpl_f32 z_near, zpl_f32 z_far);
-ZPL_DEF void zpl_mat4_infinite_perspective(zpl_mat4 *out, zpl_f32 fovy, zpl_f32 aspect, zpl_f32 z_near);
+ZPL_DEF void mat4_axis_angle( mat4* out, vec3 v, f32 angle_radians );
+ZPL_DEF void mat4_to_translate( mat4* out, vec3 v );
+ZPL_DEF void mat4_to_rotate( mat4* out, vec3 v, f32 angle_radians );
+ZPL_DEF void mat4_to_scale( mat4* out, vec3 v );
+ZPL_DEF void mat4_to_scalef( mat4* out, f32 s );
+ZPL_DEF void mat4_translate( mat4* out, vec3 v );
+ZPL_DEF void mat4_rotate( mat4* out, vec3 v, f32 angle_radians );
+ZPL_DEF void mat4_scale( mat4* out, vec3 v );
+ZPL_DEF void mat4_scalef( mat4* out, f32 s );
+ZPL_DEF void mat4_ortho2d( mat4* out, f32 left, f32 right, f32 bottom, f32 top );
+ZPL_DEF void mat4_ortho3d( mat4* out, f32 left, f32 right, f32 bottom, f32 top, f32 z_near, f32 z_far );
+ZPL_DEF void mat4_perspective( mat4* out, f32 fovy, f32 aspect, f32 z_near, f32 z_far );
+ZPL_DEF void mat4_infinite_perspective( mat4* out, f32 fovy, f32 aspect, f32 z_near );
 
-ZPL_DEF void zpl_mat4_ortho2d_dx(zpl_mat4 *out, zpl_f32 left, zpl_f32 right, zpl_f32 bottom, zpl_f32 top);
-ZPL_DEF void zpl_mat4_ortho3d_dx(zpl_mat4 *out, zpl_f32 left, zpl_f32 right, zpl_f32 bottom, zpl_f32 top, zpl_f32 z_near, zpl_f32 z_far);
-ZPL_DEF void zpl_mat4_perspective_dx(zpl_mat4 *out, zpl_f32 fovy, zpl_f32 aspect, zpl_f32 z_near, zpl_f32 z_far);
-ZPL_DEF void zpl_mat4_infinite_perspective_dx(zpl_mat4 *out, zpl_f32 fovy, zpl_f32 aspect, zpl_f32 z_near);
+ZPL_DEF void mat4_ortho2d_dx( mat4* out, f32 left, f32 right, f32 bottom, f32 top );
+ZPL_DEF void mat4_ortho3d_dx( mat4* out, f32 left, f32 right, f32 bottom, f32 top, f32 z_near, f32 z_far );
+ZPL_DEF void mat4_perspective_dx( mat4* out, f32 fovy, f32 aspect, f32 z_near, f32 z_far );
+ZPL_DEF void mat4_infinite_perspective_dx( mat4* out, f32 fovy, f32 aspect, f32 z_near );
 
-ZPL_DEF void zpl_mat4_look_at(zpl_mat4 *out, zpl_vec3 eye, zpl_vec3 centre, zpl_vec3 up);
+ZPL_DEF void mat4_look_at( mat4* out, vec3 eye, vec3 centre, vec3 up );
 
-ZPL_DEF void zpl_mat4_look_at_lh(zpl_mat4 *out, zpl_vec3 eye, zpl_vec3 centre, zpl_vec3 up);
+ZPL_DEF void mat4_look_at_lh( mat4* out, vec3 eye, vec3 centre, vec3 up );
 
-ZPL_DEF zpl_quat zpl_quatf(zpl_f32 x, zpl_f32 y, zpl_f32 z, zpl_f32 w);
-ZPL_DEF zpl_quat zpl_quatfv(zpl_f32 e[4]);
-ZPL_DEF zpl_quat zpl_quat_axis_angle(zpl_vec3 axis, zpl_f32 angle_radians);
-ZPL_DEF zpl_quat zpl_quat_euler_angles(zpl_f32 pitch, zpl_f32 yaw, zpl_f32 roll);
-ZPL_DEF zpl_quat zpl_quat_identity(void);
+ZPL_DEF quat quatf( f32 x, f32 y, f32 z, f32 w );
+ZPL_DEF quat quatfv( f32 e[ 4 ] );
+ZPL_DEF quat quat_axis_angle( vec3 axis, f32 angle_radians );
+ZPL_DEF quat quat_euler_angles( f32 pitch, f32 yaw, f32 roll );
+ZPL_DEF quat quat_identity( void );
 
-ZPL_DEF void zpl_quat_add(zpl_quat *d, zpl_quat q0, zpl_quat q1);
-ZPL_DEF void zpl_quat_sub(zpl_quat *d, zpl_quat q0, zpl_quat q1);
-ZPL_DEF void zpl_quat_mul(zpl_quat *d, zpl_quat q0, zpl_quat q1);
-ZPL_DEF void zpl_quat_div(zpl_quat *d, zpl_quat q0, zpl_quat q1);
+ZPL_DEF void quat_add( quat* d, quat q0, quat q1 );
+ZPL_DEF void quat_sub( quat* d, quat q0, quat q1 );
+ZPL_DEF void quat_mul( quat* d, quat q0, quat q1 );
+ZPL_DEF void quat_div( quat* d, quat q0, quat q1 );
 
-ZPL_DEF void zpl_quat_mulf(zpl_quat *d, zpl_quat q, zpl_f32 s);
-ZPL_DEF void zpl_quat_divf(zpl_quat *d, zpl_quat q, zpl_f32 s);
+ZPL_DEF void quat_mulf( quat* d, quat q, f32 s );
+ZPL_DEF void quat_divf( quat* d, quat q, f32 s );
 
-ZPL_DEF void zpl_quat_addeq(zpl_quat *d, zpl_quat q);
-ZPL_DEF void zpl_quat_subeq(zpl_quat *d, zpl_quat q);
-ZPL_DEF void zpl_quat_muleq(zpl_quat *d, zpl_quat q);
-ZPL_DEF void zpl_quat_diveq(zpl_quat *d, zpl_quat q);
+ZPL_DEF void quat_addeq( quat* d, quat q );
+ZPL_DEF void quat_subeq( quat* d, quat q );
+ZPL_DEF void quat_muleq( quat* d, quat q );
+ZPL_DEF void quat_diveq( quat* d, quat q );
 
-ZPL_DEF void zpl_quat_muleqf(zpl_quat *d, zpl_f32 s);
-ZPL_DEF void zpl_quat_diveqf(zpl_quat *d, zpl_f32 s);
+ZPL_DEF void quat_muleqf( quat* d, f32 s );
+ZPL_DEF void quat_diveqf( quat* d, f32 s );
 
-ZPL_DEF zpl_f32 zpl_quat_dot(zpl_quat q0, zpl_quat q1);
-ZPL_DEF zpl_f32 zpl_quat_mag(zpl_quat q);
+ZPL_DEF f32 quat_dot( quat q0, quat q1 );
+ZPL_DEF f32 quat_mag( quat q );
 
-ZPL_DEF void zpl_quat_norm(zpl_quat *d, zpl_quat q);
-ZPL_DEF void zpl_quat_conj(zpl_quat *d, zpl_quat q);
-ZPL_DEF void zpl_quat_inverse(zpl_quat *d, zpl_quat q);
+ZPL_DEF void quat_norm( quat* d, quat q );
+ZPL_DEF void quat_conj( quat* d, quat q );
+ZPL_DEF void quat_inverse( quat* d, quat q );
 
-ZPL_DEF void    zpl_quat_axis(zpl_vec3 *axis, zpl_quat q);
-ZPL_DEF zpl_f32 zpl_quat_angle(zpl_quat q);
+ZPL_DEF void quat_axis( vec3* axis, quat q );
+ZPL_DEF f32  quat_angle( quat q );
 
-ZPL_DEF zpl_f32 zpl_quat_pitch(zpl_quat q);
-ZPL_DEF zpl_f32 zpl_quat_yaw(zpl_quat q);
-ZPL_DEF zpl_f32 zpl_quat_roll(zpl_quat q);
+ZPL_DEF f32 quat_pitch( quat q );
+ZPL_DEF f32 quat_yaw( quat q );
+ZPL_DEF f32 quat_roll( quat q );
 
 /* NOTE: Rotate v by q */
-ZPL_DEF void zpl_quat_rotate_vec3(zpl_vec3 *d, zpl_quat q, zpl_vec3 v);
-ZPL_DEF void zpl_mat4_from_quat(zpl_mat4 *out, zpl_quat q);
-ZPL_DEF void zpl_quat_from_mat4(zpl_quat *out, zpl_mat4 *m);
+ZPL_DEF void quat_rotate_vec3( vec3* d, quat q, vec3 v );
+ZPL_DEF void mat4_from_quat( mat4* out, quat q );
+ZPL_DEF void quat_from_mat4( quat* out, mat4* m );
 
 /* Plane math. */
-ZPL_DEF zpl_f32 zpl_plane_distance(zpl_plane* p, zpl_vec3 v);
+ZPL_DEF f32 plane_distance( plane* p, vec3 v );
 
 /* Frustum culling. */
-ZPL_DEF void zpl_frustum_create(zpl_frustum* out, zpl_mat4* camera, zpl_mat4* proj);
-ZPL_DEF zpl_b8 zpl_frustum_sphere_inside(zpl_frustum* frustum, zpl_vec3 center, zpl_f32 radius);
-ZPL_DEF zpl_b8 zpl_frustum_point_inside(zpl_frustum* frustum, zpl_vec3 point);
-ZPL_DEF zpl_b8 zpl_frustum_box_inside(zpl_frustum* frustum, zpl_aabb3 box);
+ZPL_DEF void frustum_create( frustum* out, mat4* camera, mat4* proj );
+ZPL_DEF b8   frustum_sphere_inside( frustum* frustum, vec3 center, f32 radius );
+ZPL_DEF b8   frustum_point_inside( frustum* frustum, vec3 point );
+ZPL_DEF b8   frustum_box_inside( frustum* frustum, aabb3 box );
 
 /* Interpolations */
-ZPL_DEF zpl_f32 zpl_lerp(zpl_f32 a, zpl_f32 b, zpl_f32 t);
-ZPL_DEF zpl_f32 zpl_unlerp(zpl_f32 t, zpl_f32 a, zpl_f32 b);
-ZPL_DEF zpl_f32 zpl_smooth_step(zpl_f32 a, zpl_f32 b, zpl_f32 t);
-ZPL_DEF zpl_f32 zpl_smoother_step(zpl_f32 a, zpl_f32 b, zpl_f32 t);
+ZPL_DEF f32 lerp( f32 a, f32 b, f32 t );
+ZPL_DEF f32 unlerp( f32 t, f32 a, f32 b );
+ZPL_DEF f32 smooth_step( f32 a, f32 b, f32 t );
+ZPL_DEF f32 smoother_step( f32 a, f32 b, f32 t );
 
-ZPL_DEF void zpl_vec2_lerp(zpl_vec2 *d, zpl_vec2 a, zpl_vec2 b, zpl_f32 t);
-ZPL_DEF void zpl_vec3_lerp(zpl_vec3 *d, zpl_vec3 a, zpl_vec3 b, zpl_f32 t);
-ZPL_DEF void zpl_vec4_lerp(zpl_vec4 *d, zpl_vec4 a, zpl_vec4 b, zpl_f32 t);
+ZPL_DEF void vec2_lerp( vec2* d, vec2 a, vec2 b, f32 t );
+ZPL_DEF void vec3_lerp( vec3* d, vec3 a, vec3 b, f32 t );
+ZPL_DEF void vec4_lerp( vec4* d, vec4 a, vec4 b, f32 t );
 
-ZPL_DEF void zpl_vec2_cslerp(zpl_vec2 *d, zpl_vec2 a, zpl_vec2 v0, zpl_vec2 b, zpl_vec2 v1, zpl_f32 t);
-ZPL_DEF void zpl_vec3_cslerp(zpl_vec3 *d, zpl_vec3 a, zpl_vec3 v0, zpl_vec3 b, zpl_vec3 v1, zpl_f32 t);
-ZPL_DEF void zpl_vec2_dcslerp(zpl_vec2 *d, zpl_vec2 a, zpl_vec2 v0, zpl_vec2 b, zpl_vec2 v1, zpl_f32 t);
-ZPL_DEF void zpl_vec3_dcslerp(zpl_vec3 *d, zpl_vec3 a, zpl_vec3 v0, zpl_vec3 b, zpl_vec3 v1, zpl_f32 t);
+ZPL_DEF void vec2_cslerp( vec2* d, vec2 a, vec2 v0, vec2 b, vec2 v1, f32 t );
+ZPL_DEF void vec3_cslerp( vec3* d, vec3 a, vec3 v0, vec3 b, vec3 v1, f32 t );
+ZPL_DEF void vec2_dcslerp( vec2* d, vec2 a, vec2 v0, vec2 b, vec2 v1, f32 t );
+ZPL_DEF void vec3_dcslerp( vec3* d, vec3 a, vec3 v0, vec3 b, vec3 v1, f32 t );
 
-ZPL_DEF void zpl_quat_lerp(zpl_quat *d, zpl_quat a, zpl_quat b, zpl_f32 t);
-ZPL_DEF void zpl_quat_nlerp(zpl_quat *d, zpl_quat a, zpl_quat b, zpl_f32 t);
-ZPL_DEF void zpl_quat_slerp(zpl_quat *d, zpl_quat a, zpl_quat b, zpl_f32 t);
-ZPL_DEF void zpl_quat_nquad(zpl_quat *d, zpl_quat p, zpl_quat a, zpl_quat b, zpl_quat q, zpl_f32 t);
-ZPL_DEF void zpl_quat_squad(zpl_quat *d, zpl_quat p, zpl_quat a, zpl_quat b, zpl_quat q, zpl_f32 t);
-ZPL_DEF void zpl_quat_slerp_approx(zpl_quat *d, zpl_quat a, zpl_quat b, zpl_f32 t);
-ZPL_DEF void zpl_quat_squad_approx(zpl_quat *d, zpl_quat p, zpl_quat a, zpl_quat b, zpl_quat q, zpl_f32 t);
+ZPL_DEF void quat_lerp( quat* d, quat a, quat b, f32 t );
+ZPL_DEF void quat_nlerp( quat* d, quat a, quat b, f32 t );
+ZPL_DEF void quat_slerp( quat* d, quat a, quat b, f32 t );
+ZPL_DEF void quat_nquad( quat* d, quat p, quat a, quat b, quat q, f32 t );
+ZPL_DEF void quat_squad( quat* d, quat p, quat a, quat b, quat q, f32 t );
+ZPL_DEF void quat_slerp_approx( quat* d, quat a, quat b, f32 t );
+ZPL_DEF void quat_squad_approx( quat* d, quat p, quat a, quat b, quat q, f32 t );
 
 /* rects */
-ZPL_DEF zpl_rect2 zpl_rect2f(zpl_vec2 pos, zpl_vec2 dim);
-ZPL_DEF zpl_rect3 zpl_rect3f(zpl_vec3 pos, zpl_vec3 dim);
+ZPL_DEF rect2 rect2f( vec2 pos, vec2 dim );
+ZPL_DEF rect3 rect3f( vec3 pos, vec3 dim );
 
-ZPL_DEF zpl_aabb2 zpl_aabb2f(zpl_f32 minx, zpl_f32 miny, zpl_f32 maxx, zpl_f32 maxy);
-ZPL_DEF zpl_aabb3 zpl_aabb3f(zpl_f32 minx, zpl_f32 miny, zpl_f32 minz, zpl_f32 maxx, zpl_f32 maxy, zpl_f32 maxz);
+ZPL_DEF aabb2 aabb2f( f32 minx, f32 miny, f32 maxx, f32 maxy );
+ZPL_DEF aabb3 aabb3f( f32 minx, f32 miny, f32 minz, f32 maxx, f32 maxy, f32 maxz );
 
-ZPL_DEF zpl_aabb2 zpl_aabb2_rect2(zpl_rect2 a);
-ZPL_DEF zpl_aabb3 zpl_aabb3_rect3(zpl_rect3 a);
-ZPL_DEF zpl_rect2 zpl_rect2_aabb2(zpl_aabb2 a);
-ZPL_DEF zpl_rect3 zpl_rect3_aabb3(zpl_aabb3 a);
+ZPL_DEF aabb2 aabb2_rect2( rect2 a );
+ZPL_DEF aabb3 aabb3_rect3( rect3 a );
+ZPL_DEF rect2 rect2_aabb2( aabb2 a );
+ZPL_DEF rect3 rect3_aabb3( aabb3 a );
 
-ZPL_DEF int zpl_rect2_contains(zpl_rect2 a, zpl_f32 x, zpl_f32 y);
-ZPL_DEF int zpl_rect2_contains_vec2(zpl_rect2 a, zpl_vec2 p);
-ZPL_DEF int zpl_rect2_intersects(zpl_rect2 a, zpl_rect2 b);
-ZPL_DEF int zpl_rect2_intersection_result(zpl_rect2 a, zpl_rect2 b, zpl_rect2 *intersection);
-ZPL_DEF int zpl_aabb2_contains(zpl_aabb2 a, zpl_f32 x, zpl_f32 y);
-ZPL_DEF int zpl_aabb3_contains(zpl_aabb3 a, zpl_f32 x, zpl_f32 y, zpl_f32 z);
+ZPL_DEF int rect2_contains( rect2 a, f32 x, f32 y );
+ZPL_DEF int rect2_contains_vec2( rect2 a, vec2 p );
+ZPL_DEF int rect2_intersects( rect2 a, rect2 b );
+ZPL_DEF int rect2_intersection_result( rect2 a, rect2 b, rect2* intersection );
+ZPL_DEF int aabb2_contains( aabb2 a, f32 x, f32 y );
+ZPL_DEF int aabb3_contains( aabb3 a, f32 x, f32 y, f32 z );
 
 /* rectangle partitioning: based on https://halt.software/dead-simple-layouts/ */
-ZPL_DEF zpl_aabb2 zpl_aabb2_cut_left(zpl_aabb2 *a, zpl_f32 b);
-ZPL_DEF zpl_aabb2 zpl_aabb2_cut_right(zpl_aabb2 *a, zpl_f32 b);
-ZPL_DEF zpl_aabb2 zpl_aabb2_cut_top(zpl_aabb2 *a, zpl_f32 b);
-ZPL_DEF zpl_aabb2 zpl_aabb2_cut_bottom(zpl_aabb2 *a, zpl_f32 b);
+ZPL_DEF aabb2 aabb2_cut_left( aabb2* a, f32 b );
+ZPL_DEF aabb2 aabb2_cut_right( aabb2* a, f32 b );
+ZPL_DEF aabb2 aabb2_cut_top( aabb2* a, f32 b );
+ZPL_DEF aabb2 aabb2_cut_bottom( aabb2* a, f32 b );
 
-ZPL_DEF zpl_aabb2 zpl_aabb2_get_left(const zpl_aabb2 *a, zpl_f32 b);
-ZPL_DEF zpl_aabb2 zpl_aabb2_get_right(const zpl_aabb2 *a, zpl_f32 b);
-ZPL_DEF zpl_aabb2 zpl_aabb2_get_top(const zpl_aabb2 *a, zpl_f32 b);
-ZPL_DEF zpl_aabb2 zpl_aabb2_get_bottom(const zpl_aabb2 *a, zpl_f32 b);
+ZPL_DEF aabb2 aabb2_get_left( const aabb2* a, f32 b );
+ZPL_DEF aabb2 aabb2_get_right( const aabb2* a, f32 b );
+ZPL_DEF aabb2 aabb2_get_top( const aabb2* a, f32 b );
+ZPL_DEF aabb2 aabb2_get_bottom( const aabb2* a, f32 b );
 
-ZPL_DEF zpl_aabb2 zpl_aabb2_add_left(const zpl_aabb2 *a, zpl_f32 b);
-ZPL_DEF zpl_aabb2 zpl_aabb2_add_right(const zpl_aabb2 *a, zpl_f32 b);
-ZPL_DEF zpl_aabb2 zpl_aabb2_add_top(const zpl_aabb2 *a, zpl_f32 b);
-ZPL_DEF zpl_aabb2 zpl_aabb2_add_bottom(const zpl_aabb2 *a, zpl_f32 b);
+ZPL_DEF aabb2 aabb2_add_left( const aabb2* a, f32 b );
+ZPL_DEF aabb2 aabb2_add_right( const aabb2* a, f32 b );
+ZPL_DEF aabb2 aabb2_add_top( const aabb2* a, f32 b );
+ZPL_DEF aabb2 aabb2_add_bottom( const aabb2* a, f32 b );
 
-ZPL_DEF zpl_aabb2 zpl_aabb2_contract(const zpl_aabb2 *a, zpl_f32 b);
-ZPL_DEF zpl_aabb2 zpl_aabb2_expand(const zpl_aabb2 *a, zpl_f32 b);
+ZPL_DEF aabb2 aabb2_contract( const aabb2* a, f32 b );
+ZPL_DEF aabb2 aabb2_expand( const aabb2* a, f32 b );
 
 //! @}
 ZPL_END_C_DECLS
-#if defined(__cplusplus)
-ZPL_INLINE bool operator==(zpl_vec2 a, zpl_vec2 b) { return (a.x == b.x) && (a.y == b.y); }
-ZPL_INLINE bool operator!=(zpl_vec2 a, zpl_vec2 b) { return !operator==(a, b); }
+#if defined( __cplusplus )
+ZPL_INLINE bool operator==( vec2 a, vec2 b )
+{
+	return ( a.x == b.x ) && ( a.y == b.y );
+}
+ZPL_INLINE bool operator!=( vec2 a, vec2 b )
+{
+	return ! operator==( a, b );
+}
 
-ZPL_INLINE zpl_vec2 operator+(zpl_vec2 a) { return a; }
-ZPL_INLINE zpl_vec2 operator-(zpl_vec2 a) { zpl_vec2 r = {-a.x, -a.y}; return r; }
+ZPL_INLINE vec2 operator+( vec2 a )
+{
+	return a;
+}
+ZPL_INLINE vec2 operator-( vec2 a )
+{
+	vec2 r = { -a.x, -a.y };
+	return r;
+}
 
-ZPL_INLINE zpl_vec2 operator+(zpl_vec2 a, zpl_vec2 b) { zpl_vec2 r; zpl_vec2_add(&r, a, b); return r; }
-ZPL_INLINE zpl_vec2 operator-(zpl_vec2 a, zpl_vec2 b) { zpl_vec2 r; zpl_vec2_sub(&r, a, b); return r; }
+ZPL_INLINE vec2 operator+( vec2 a, vec2 b )
+{
+	vec2 r;
+	vec2_add( &r, a, b );
+	return r;
+}
+ZPL_INLINE vec2 operator-( vec2 a, vec2 b )
+{
+	vec2 r;
+	vec2_sub( &r, a, b );
+	return r;
+}
 
-ZPL_INLINE zpl_vec2 operator*(zpl_vec2 a, float scalar) { zpl_vec2 r; zpl_vec2_mul(&r, a, scalar); return r; }
-ZPL_INLINE zpl_vec2 operator*(float scalar, zpl_vec2 a) { return operator*(a, scalar); }
+ZPL_INLINE vec2 operator*( vec2 a, float scalar )
+{
+	vec2 r;
+	vec2_mul( &r, a, scalar );
+	return r;
+}
+ZPL_INLINE vec2 operator*( float scalar, vec2 a )
+{
+	return operator*( a, scalar );
+}
 
-ZPL_INLINE zpl_vec2 operator/(zpl_vec2 a, float scalar) { return operator*(a, 1.0f/scalar); }
+ZPL_INLINE vec2 operator/( vec2 a, float scalar )
+{
+	return operator*( a, 1.0f / scalar );
+}
 
 /* Hadamard Product */
-ZPL_INLINE zpl_vec2 operator*(zpl_vec2 a, zpl_vec2 b) { zpl_vec2 r = {a.x*b.x, a.y*b.y}; return r; }
-ZPL_INLINE zpl_vec2 operator/(zpl_vec2 a, zpl_vec2 b) { zpl_vec2 r = {a.x/b.x, a.y/b.y}; return r; }
+ZPL_INLINE vec2 operator*( vec2 a, vec2 b )
+{
+	vec2 r = { a.x * b.x, a.y * b.y };
+	return r;
+}
+ZPL_INLINE vec2 operator/( vec2 a, vec2 b )
+{
+	vec2 r = { a.x / b.x, a.y / b.y };
+	return r;
+}
 
-ZPL_INLINE zpl_vec2 &operator+=(zpl_vec2 &a, zpl_vec2 b)       { return (a = a + b); }
-ZPL_INLINE zpl_vec2 &operator-=(zpl_vec2 &a, zpl_vec2 b)       { return (a = a - b); }
-ZPL_INLINE zpl_vec2 &operator*=(zpl_vec2 &a, float scalar) { return (a = a * scalar); }
-ZPL_INLINE zpl_vec2 &operator/=(zpl_vec2 &a, float scalar) { return (a = a / scalar); }
+ZPL_INLINE vec2& operator+=( vec2& a, vec2 b )
+{
+	return ( a = a + b );
+}
+ZPL_INLINE vec2& operator-=( vec2& a, vec2 b )
+{
+	return ( a = a - b );
+}
+ZPL_INLINE vec2& operator*=( vec2& a, float scalar )
+{
+	return ( a = a * scalar );
+}
+ZPL_INLINE vec2& operator/=( vec2& a, float scalar )
+{
+	return ( a = a / scalar );
+}
 
+ZPL_INLINE bool operator==( vec3 a, vec3 b )
+{
+	return ( a.x == b.x ) && ( a.y == b.y ) && ( a.z == b.z );
+}
+ZPL_INLINE bool operator!=( vec3 a, vec3 b )
+{
+	return ! operator==( a, b );
+}
 
-ZPL_INLINE bool operator==(zpl_vec3 a, zpl_vec3 b) { return (a.x == b.x) && (a.y == b.y) && (a.z == b.z); }
-ZPL_INLINE bool operator!=(zpl_vec3 a, zpl_vec3 b) { return !operator==(a, b); }
+ZPL_INLINE vec3 operator+( vec3 a )
+{
+	return a;
+}
+ZPL_INLINE vec3 operator-( vec3 a )
+{
+	vec3 r = { -a.x, -a.y, -a.z };
+	return r;
+}
 
-ZPL_INLINE zpl_vec3 operator+(zpl_vec3 a) { return a; }
-ZPL_INLINE zpl_vec3 operator-(zpl_vec3 a) { zpl_vec3 r = {-a.x, -a.y, -a.z}; return r; }
+ZPL_INLINE vec3 operator+( vec3 a, vec3 b )
+{
+	vec3 r;
+	vec3_add( &r, a, b );
+	return r;
+}
+ZPL_INLINE vec3 operator-( vec3 a, vec3 b )
+{
+	vec3 r;
+	vec3_sub( &r, a, b );
+	return r;
+}
 
-ZPL_INLINE zpl_vec3 operator+(zpl_vec3 a, zpl_vec3 b) { zpl_vec3 r; zpl_vec3_add(&r, a, b); return r; }
-ZPL_INLINE zpl_vec3 operator-(zpl_vec3 a, zpl_vec3 b) { zpl_vec3 r; zpl_vec3_sub(&r, a, b); return r; }
+ZPL_INLINE vec3 operator*( vec3 a, float scalar )
+{
+	vec3 r;
+	vec3_mul( &r, a, scalar );
+	return r;
+}
+ZPL_INLINE vec3 operator*( float scalar, vec3 a )
+{
+	return operator*( a, scalar );
+}
 
-ZPL_INLINE zpl_vec3 operator*(zpl_vec3 a, float scalar) { zpl_vec3 r; zpl_vec3_mul(&r, a, scalar); return r; }
-ZPL_INLINE zpl_vec3 operator*(float scalar, zpl_vec3 a) { return operator*(a, scalar); }
-
-ZPL_INLINE zpl_vec3 operator/(zpl_vec3 a, float scalar) { return operator*(a, 1.0f/scalar); }
+ZPL_INLINE vec3 operator/( vec3 a, float scalar )
+{
+	return operator*( a, 1.0f / scalar );
+}
 
 /* Hadamard Product */
-ZPL_INLINE zpl_vec3 operator*(zpl_vec3 a, zpl_vec3 b) { zpl_vec3 r = {a.x*b.x, a.y*b.y, a.z*b.z}; return r; }
-ZPL_INLINE zpl_vec3 operator/(zpl_vec3 a, zpl_vec3 b) { zpl_vec3 r = {a.x/b.x, a.y/b.y, a.z/b.z}; return r; }
+ZPL_INLINE vec3 operator*( vec3 a, vec3 b )
+{
+	vec3 r = { a.x * b.x, a.y * b.y, a.z * b.z };
+	return r;
+}
+ZPL_INLINE vec3 operator/( vec3 a, vec3 b )
+{
+	vec3 r = { a.x / b.x, a.y / b.y, a.z / b.z };
+	return r;
+}
 
-ZPL_INLINE zpl_vec3 &operator+=(zpl_vec3 &a, zpl_vec3 b)       { return (a = a + b); }
-ZPL_INLINE zpl_vec3 &operator-=(zpl_vec3 &a, zpl_vec3 b)       { return (a = a - b); }
-ZPL_INLINE zpl_vec3 &operator*=(zpl_vec3 &a, float scalar) { return (a = a * scalar); }
-ZPL_INLINE zpl_vec3 &operator/=(zpl_vec3 &a, float scalar) { return (a = a / scalar); }
+ZPL_INLINE vec3& operator+=( vec3& a, vec3 b )
+{
+	return ( a = a + b );
+}
+ZPL_INLINE vec3& operator-=( vec3& a, vec3 b )
+{
+	return ( a = a - b );
+}
+ZPL_INLINE vec3& operator*=( vec3& a, float scalar )
+{
+	return ( a = a * scalar );
+}
+ZPL_INLINE vec3& operator/=( vec3& a, float scalar )
+{
+	return ( a = a / scalar );
+}
 
+ZPL_INLINE bool operator==( vec4 a, vec4 b )
+{
+	return ( a.x == b.x ) && ( a.y == b.y ) && ( a.z == b.z ) && ( a.w == b.w );
+}
+ZPL_INLINE bool operator!=( vec4 a, vec4 b )
+{
+	return ! operator==( a, b );
+}
 
-ZPL_INLINE bool operator==(zpl_vec4 a, zpl_vec4 b) { return (a.x == b.x) && (a.y == b.y) && (a.z == b.z) && (a.w == b.w); }
-ZPL_INLINE bool operator!=(zpl_vec4 a, zpl_vec4 b) { return !operator==(a, b); }
+ZPL_INLINE vec4 operator+( vec4 a )
+{
+	return a;
+}
+ZPL_INLINE vec4 operator-( vec4 a )
+{
+	vec4 r = { -a.x, -a.y, -a.z, -a.w };
+	return r;
+}
 
-ZPL_INLINE zpl_vec4 operator+(zpl_vec4 a) { return a; }
-ZPL_INLINE zpl_vec4 operator-(zpl_vec4 a) { zpl_vec4 r = {-a.x, -a.y, -a.z, -a.w}; return r; }
+ZPL_INLINE vec4 operator+( vec4 a, vec4 b )
+{
+	vec4 r;
+	vec4_add( &r, a, b );
+	return r;
+}
+ZPL_INLINE vec4 operator-( vec4 a, vec4 b )
+{
+	vec4 r;
+	vec4_sub( &r, a, b );
+	return r;
+}
 
-ZPL_INLINE zpl_vec4 operator+(zpl_vec4 a, zpl_vec4 b) { zpl_vec4 r; zpl_vec4_add(&r, a, b); return r; }
-ZPL_INLINE zpl_vec4 operator-(zpl_vec4 a, zpl_vec4 b) { zpl_vec4 r; zpl_vec4_sub(&r, a, b); return r; }
+ZPL_INLINE vec4 operator*( vec4 a, float scalar )
+{
+	vec4 r;
+	vec4_mul( &r, a, scalar );
+	return r;
+}
+ZPL_INLINE vec4 operator*( float scalar, vec4 a )
+{
+	return operator*( a, scalar );
+}
 
-ZPL_INLINE zpl_vec4 operator*(zpl_vec4 a, float scalar) { zpl_vec4 r; zpl_vec4_mul(&r, a, scalar); return r; }
-ZPL_INLINE zpl_vec4 operator*(float scalar, zpl_vec4 a) { return operator*(a, scalar); }
-
-ZPL_INLINE zpl_vec4 operator/(zpl_vec4 a, float scalar) { return operator*(a, 1.0f/scalar); }
+ZPL_INLINE vec4 operator/( vec4 a, float scalar )
+{
+	return operator*( a, 1.0f / scalar );
+}
 
 /* Hadamard Product */
-ZPL_INLINE zpl_vec4 operator*(zpl_vec4 a, zpl_vec4 b) { zpl_vec4 r = {a.x*b.x, a.y*b.y, a.z*b.z, a.w*b.w}; return r; }
-ZPL_INLINE zpl_vec4 operator/(zpl_vec4 a, zpl_vec4 b) { zpl_vec4 r = {a.x/b.x, a.y/b.y, a.z/b.z, a.w/b.w}; return r; }
-
-ZPL_INLINE zpl_vec4 &operator+=(zpl_vec4 &a, zpl_vec4 b)       { return (a = a + b); }
-ZPL_INLINE zpl_vec4 &operator-=(zpl_vec4 &a, zpl_vec4 b)       { return (a = a - b); }
-ZPL_INLINE zpl_vec4 &operator*=(zpl_vec4 &a, float scalar) { return (a = a * scalar); }
-ZPL_INLINE zpl_vec4 &operator/=(zpl_vec4 &a, float scalar) { return (a = a / scalar); }
-
-
-ZPL_INLINE zpl_mat2 operator+(zpl_mat2 const &a, zpl_mat2 const &b) {
-    int i, j;
-    zpl_mat2 r = {0};
-    for (j = 0; j < 2; j++) {
-        for (i = 0; i < 2; i++)
-            r.e[2*j+i] = a.e[2*j+i] + b.e[2*j+i];
-    }
-    return r;
+ZPL_INLINE vec4 operator*( vec4 a, vec4 b )
+{
+	vec4 r = { a.x * b.x, a.y * b.y, a.z * b.z, a.w * b.w };
+	return r;
+}
+ZPL_INLINE vec4 operator/( vec4 a, vec4 b )
+{
+	vec4 r = { a.x / b.x, a.y / b.y, a.z / b.z, a.w / b.w };
+	return r;
 }
 
-ZPL_INLINE zpl_mat2 operator-(zpl_mat2 const &a, zpl_mat2 const &b) {
-    int i, j;
-    zpl_mat2 r = {0};
-    for (j = 0; j < 2; j++) {
-        for (i = 0; i < 2; i++)
-            r.e[2*j+i] = a.e[2*j+i] - b.e[2*j+i];
-    }
-    return r;
+ZPL_INLINE vec4& operator+=( vec4& a, vec4 b )
+{
+	return ( a = a + b );
+}
+ZPL_INLINE vec4& operator-=( vec4& a, vec4 b )
+{
+	return ( a = a - b );
+}
+ZPL_INLINE vec4& operator*=( vec4& a, float scalar )
+{
+	return ( a = a * scalar );
+}
+ZPL_INLINE vec4& operator/=( vec4& a, float scalar )
+{
+	return ( a = a / scalar );
 }
 
-ZPL_INLINE zpl_mat2 operator*(zpl_mat2 const &a, zpl_mat2 const &b) { zpl_mat2 r; zpl_mat2_mul(&r, (zpl_mat2 *)&a, (zpl_mat2 *)&b); return r; }
-ZPL_INLINE zpl_vec2 operator*(zpl_mat2 const &a, zpl_vec2 v) { zpl_vec2 r; zpl_mat2_mul_vec2(&r, (zpl_mat2 *)&a, v); return r; }
-ZPL_INLINE zpl_mat2 operator*(zpl_mat2 const &a, float scalar) {
-    zpl_mat2 r = {0};
-    int i;
-    for (i = 0; i < 2*2; i++) r.e[i] = a.e[i] * scalar;
-    return r;
-}
-ZPL_INLINE zpl_mat2 operator*(float scalar, zpl_mat2 const &a) { return operator*(a, scalar); }
-ZPL_INLINE zpl_mat2 operator/(zpl_mat2 const &a, float scalar) { return operator*(a, 1.0f/scalar); }
-
-ZPL_INLINE zpl_mat2& operator+=(zpl_mat2& a, zpl_mat2 const &b) { return (a = a + b); }
-ZPL_INLINE zpl_mat2& operator-=(zpl_mat2& a, zpl_mat2 const &b) { return (a = a - b); }
-ZPL_INLINE zpl_mat2& operator*=(zpl_mat2& a, zpl_mat2 const &b) { return (a = a * b); }
-
-
-
-ZPL_INLINE zpl_mat3 operator+(zpl_mat3 const &a, zpl_mat3 const &b) {
-    int i, j;
-    zpl_mat3 r = {0};
-    for (j = 0; j < 3; j++) {
-        for (i = 0; i < 3; i++)
-            r.e[3*j+i] = a.e[3*j+i] + b.e[3*j+i];
-    }
-    return r;
+ZPL_INLINE mat2 operator+( mat2 const & a, mat2 const & b )
+{
+	int  i, j;
+	mat2 r = { 0 };
+	for ( j = 0; j < 2; j++ )
+	{
+		for ( i = 0; i < 2; i++ )
+			r.e[ 2 * j + i ] = a.e[ 2 * j + i ] + b.e[ 2 * j + i ];
+	}
+	return r;
 }
 
-ZPL_INLINE zpl_mat3 operator-(zpl_mat3 const &a, zpl_mat3 const &b) {
-    int i, j;
-    zpl_mat3 r = {0};
-    for (j = 0; j < 3; j++) {
-        for (i = 0; i < 3; i++)
-            r.e[3*j+i] = a.e[3*j+i] - b.e[3*j+i];
-    }
-    return r;
+ZPL_INLINE mat2 operator-( mat2 const & a, mat2 const & b )
+{
+	int  i, j;
+	mat2 r = { 0 };
+	for ( j = 0; j < 2; j++ )
+	{
+		for ( i = 0; i < 2; i++ )
+			r.e[ 2 * j + i ] = a.e[ 2 * j + i ] - b.e[ 2 * j + i ];
+	}
+	return r;
 }
 
-ZPL_INLINE zpl_mat3 operator*(zpl_mat3 const &a, zpl_mat3 const &b) { zpl_mat3 r; zpl_mat3_mul(&r, (zpl_mat3 *)&a, (zpl_mat3 *)&b); return r; }
-ZPL_INLINE zpl_vec3 operator*(zpl_mat3 const &a, zpl_vec3 v) { zpl_vec3 r; zpl_mat3_mul_vec3(&r, (zpl_mat3 *)&a, v); return r; }
-ZPL_INLINE zpl_mat3 operator*(zpl_mat3 const &a, float scalar) {
-    zpl_mat3 r = {0};
-    int i;
-    for (i = 0; i < 3*3; i++) r.e[i] = a.e[i] * scalar;
-    return r;
+ZPL_INLINE mat2 operator*( mat2 const & a, mat2 const & b )
+{
+	mat2 r;
+	mat2_mul( &r, (mat2*)&a, (mat2*)&b );
+	return r;
 }
-ZPL_INLINE zpl_mat3 operator*(float scalar, zpl_mat3 const &a) { return operator*(a, scalar); }
-ZPL_INLINE zpl_mat3 operator/(zpl_mat3 const &a, float scalar) { return operator*(a, 1.0f/scalar); }
-
-ZPL_INLINE zpl_mat3& operator+=(zpl_mat3& a, zpl_mat3 const &b) { return (a = a + b); }
-ZPL_INLINE zpl_mat3& operator-=(zpl_mat3& a, zpl_mat3 const &b) { return (a = a - b); }
-ZPL_INLINE zpl_mat3& operator*=(zpl_mat3& a, zpl_mat3 const &b) { return (a = a * b); }
-
-
-
-ZPL_INLINE zpl_mat4 operator+(zpl_mat4 const &a, zpl_mat4 const &b) {
-    int i, j;
-    zpl_mat4 r = {0};
-    for (j = 0; j < 4; j++) {
-        for (i = 0; i < 4; i++)
-            r.e[4*j+i] = a.e[4*j+i] + b.e[4*j+i];
-    }
-    return r;
+ZPL_INLINE vec2 operator*( mat2 const & a, vec2 v )
+{
+	vec2 r;
+	mat2_mul_vec2( &r, (mat2*)&a, v );
+	return r;
 }
-
-ZPL_INLINE zpl_mat4 operator-(zpl_mat4 const &a, zpl_mat4 const &b) {
-    int i, j;
-    zpl_mat4 r = {0};
-    for (j = 0; j < 4; j++) {
-        for (i = 0; i < 4; i++)
-            r.e[4*j+i] = a.e[4*j+i] - b.e[4*j+i];
-    }
-    return r;
+ZPL_INLINE mat2 operator*( mat2 const & a, float scalar )
+{
+	mat2 r = { 0 };
+	int  i;
+	for ( i = 0; i < 2 * 2; i++ )
+		r.e[ i ] = a.e[ i ] * scalar;
+	return r;
+}
+ZPL_INLINE mat2 operator*( float scalar, mat2 const & a )
+{
+	return operator*( a, scalar );
+}
+ZPL_INLINE mat2 operator/( mat2 const & a, float scalar )
+{
+	return operator*( a, 1.0f / scalar );
 }
 
-ZPL_INLINE zpl_mat4 operator*(zpl_mat4 const &a, zpl_mat4 const &b) { zpl_mat4 r; zpl_mat4_mul(&r, (zpl_mat4 *)&a, (zpl_mat4 *)&b); return r; }
-ZPL_INLINE zpl_vec4 operator*(zpl_mat4 const &a, zpl_vec4 v) { zpl_vec4 r; zpl_mat4_mul_vec4(&r, (zpl_mat4 *)&a, v); return r; }
-ZPL_INLINE zpl_mat4 operator*(zpl_mat4 const &a, float scalar) {
-    zpl_mat4 r = {0};
-    int i;
-    for (i = 0; i < 4*4; i++) r.e[i] = a.e[i] * scalar;
-    return r;
+ZPL_INLINE mat2& operator+=( mat2& a, mat2 const & b )
+{
+	return ( a = a + b );
 }
-ZPL_INLINE zpl_mat4 operator*(float scalar, zpl_mat4 const &a) { return operator*(a, scalar); }
-ZPL_INLINE zpl_mat4 operator/(zpl_mat4 const &a, float scalar) { return operator*(a, 1.0f/scalar); }
+ZPL_INLINE mat2& operator-=( mat2& a, mat2 const & b )
+{
+	return ( a = a - b );
+}
+ZPL_INLINE mat2& operator*=( mat2& a, mat2 const & b )
+{
+	return ( a = a * b );
+}
 
-ZPL_INLINE zpl_mat4& operator+=(zpl_mat4 &a, zpl_mat4 const &b) { return (a = a + b); }
-ZPL_INLINE zpl_mat4& operator-=(zpl_mat4 &a, zpl_mat4 const &b) { return (a = a - b); }
-ZPL_INLINE zpl_mat4& operator*=(zpl_mat4 &a, zpl_mat4 const &b) { return (a = a * b); }
+ZPL_INLINE mat3 operator+( mat3 const & a, mat3 const & b )
+{
+	int  i, j;
+	mat3 r = { 0 };
+	for ( j = 0; j < 3; j++ )
+	{
+		for ( i = 0; i < 3; i++ )
+			r.e[ 3 * j + i ] = a.e[ 3 * j + i ] + b.e[ 3 * j + i ];
+	}
+	return r;
+}
 
+ZPL_INLINE mat3 operator-( mat3 const & a, mat3 const & b )
+{
+	int  i, j;
+	mat3 r = { 0 };
+	for ( j = 0; j < 3; j++ )
+	{
+		for ( i = 0; i < 3; i++ )
+			r.e[ 3 * j + i ] = a.e[ 3 * j + i ] - b.e[ 3 * j + i ];
+	}
+	return r;
+}
 
+ZPL_INLINE mat3 operator*( mat3 const & a, mat3 const & b )
+{
+	mat3 r;
+	mat3_mul( &r, (mat3*)&a, (mat3*)&b );
+	return r;
+}
+ZPL_INLINE vec3 operator*( mat3 const & a, vec3 v )
+{
+	vec3 r;
+	mat3_mul_vec3( &r, (mat3*)&a, v );
+	return r;
+}
+ZPL_INLINE mat3 operator*( mat3 const & a, float scalar )
+{
+	mat3 r = { 0 };
+	int  i;
+	for ( i = 0; i < 3 * 3; i++ )
+		r.e[ i ] = a.e[ i ] * scalar;
+	return r;
+}
+ZPL_INLINE mat3 operator*( float scalar, mat3 const & a )
+{
+	return operator*( a, scalar );
+}
+ZPL_INLINE mat3 operator/( mat3 const & a, float scalar )
+{
+	return operator*( a, 1.0f / scalar );
+}
 
-ZPL_INLINE bool operator==(zpl_quat a, zpl_quat b) { return a.xyzw == b.xyzw; }
-ZPL_INLINE bool operator!=(zpl_quat a, zpl_quat b) { return !operator==(a, b); }
+ZPL_INLINE mat3& operator+=( mat3& a, mat3 const & b )
+{
+	return ( a = a + b );
+}
+ZPL_INLINE mat3& operator-=( mat3& a, mat3 const & b )
+{
+	return ( a = a - b );
+}
+ZPL_INLINE mat3& operator*=( mat3& a, mat3 const & b )
+{
+	return ( a = a * b );
+}
 
-ZPL_INLINE zpl_quat operator+(zpl_quat q) { return q; }
-ZPL_INLINE zpl_quat operator-(zpl_quat q) { return zpl_quatf(-q.x, -q.y, -q.z, -q.w); }
+ZPL_INLINE mat4 operator+( mat4 const & a, mat4 const & b )
+{
+	int  i, j;
+	mat4 r = { 0 };
+	for ( j = 0; j < 4; j++ )
+	{
+		for ( i = 0; i < 4; i++ )
+			r.e[ 4 * j + i ] = a.e[ 4 * j + i ] + b.e[ 4 * j + i ];
+	}
+	return r;
+}
 
-ZPL_INLINE zpl_quat operator+(zpl_quat a, zpl_quat b) { zpl_quat r; zpl_quat_add(&r, a, b); return r; }
-ZPL_INLINE zpl_quat operator-(zpl_quat a, zpl_quat b) { zpl_quat r; zpl_quat_sub(&r, a, b); return r; }
+ZPL_INLINE mat4 operator-( mat4 const & a, mat4 const & b )
+{
+	int  i, j;
+	mat4 r = { 0 };
+	for ( j = 0; j < 4; j++ )
+	{
+		for ( i = 0; i < 4; i++ )
+			r.e[ 4 * j + i ] = a.e[ 4 * j + i ] - b.e[ 4 * j + i ];
+	}
+	return r;
+}
 
-ZPL_INLINE zpl_quat operator*(zpl_quat a, zpl_quat b)  { zpl_quat r; zpl_quat_mul(&r, a, b); return r; }
-ZPL_INLINE zpl_quat operator*(zpl_quat q, float s) { zpl_quat r; zpl_quat_mulf(&r, q, s); return r; }
-ZPL_INLINE zpl_quat operator*(float s, zpl_quat q) { return operator*(q, s); }
-ZPL_INLINE zpl_quat operator/(zpl_quat q, float s) { zpl_quat r; zpl_quat_divf(&r, q, s); return r; }
+ZPL_INLINE mat4 operator*( mat4 const & a, mat4 const & b )
+{
+	mat4 r;
+	mat4_mul( &r, (mat4*)&a, (mat4*)&b );
+	return r;
+}
+ZPL_INLINE vec4 operator*( mat4 const & a, vec4 v )
+{
+	vec4 r;
+	mat4_mul_vec4( &r, (mat4*)&a, v );
+	return r;
+}
+ZPL_INLINE mat4 operator*( mat4 const & a, float scalar )
+{
+	mat4 r = { 0 };
+	int  i;
+	for ( i = 0; i < 4 * 4; i++ )
+		r.e[ i ] = a.e[ i ] * scalar;
+	return r;
+}
+ZPL_INLINE mat4 operator*( float scalar, mat4 const & a )
+{
+	return operator*( a, scalar );
+}
+ZPL_INLINE mat4 operator/( mat4 const & a, float scalar )
+{
+	return operator*( a, 1.0f / scalar );
+}
 
-ZPL_INLINE zpl_quat &operator+=(zpl_quat &a, zpl_quat b) { zpl_quat_addeq(&a, b); return a; }
-ZPL_INLINE zpl_quat &operator-=(zpl_quat &a, zpl_quat b) { zpl_quat_subeq(&a, b); return a; }
-ZPL_INLINE zpl_quat &operator*=(zpl_quat &a, zpl_quat b) { zpl_quat_muleq(&a, b); return a; }
-ZPL_INLINE zpl_quat &operator/=(zpl_quat &a, zpl_quat b) { zpl_quat_diveq(&a, b); return a; }
+ZPL_INLINE mat4& operator+=( mat4& a, mat4 const & b )
+{
+	return ( a = a + b );
+}
+ZPL_INLINE mat4& operator-=( mat4& a, mat4 const & b )
+{
+	return ( a = a - b );
+}
+ZPL_INLINE mat4& operator*=( mat4& a, mat4 const & b )
+{
+	return ( a = a * b );
+}
 
-ZPL_INLINE zpl_quat &operator*=(zpl_quat &a, float b) { zpl_quat_muleqf(&a, b); return a; }
-ZPL_INLINE zpl_quat &operator/=(zpl_quat &a, float b) { zpl_quat_diveqf(&a, b); return a; }
+ZPL_INLINE bool operator==( quat a, quat b )
+{
+	return a.xyzw == b.xyzw;
+}
+ZPL_INLINE bool operator!=( quat a, quat b )
+{
+	return ! operator==( a, b );
+}
+
+ZPL_INLINE quat operator+( quat q )
+{
+	return q;
+}
+ZPL_INLINE quat operator-( quat q )
+{
+	return quatf( -q.x, -q.y, -q.z, -q.w );
+}
+
+ZPL_INLINE quat operator+( quat a, quat b )
+{
+	quat r;
+	quat_add( &r, a, b );
+	return r;
+}
+ZPL_INLINE quat operator-( quat a, quat b )
+{
+	quat r;
+	quat_sub( &r, a, b );
+	return r;
+}
+
+ZPL_INLINE quat operator*( quat a, quat b )
+{
+	quat r;
+	quat_mul( &r, a, b );
+	return r;
+}
+ZPL_INLINE quat operator*( quat q, float s )
+{
+	quat r;
+	quat_mulf( &r, q, s );
+	return r;
+}
+ZPL_INLINE quat operator*( float s, quat q )
+{
+	return operator*( q, s );
+}
+ZPL_INLINE quat operator/( quat q, float s )
+{
+	quat r;
+	quat_divf( &r, q, s );
+	return r;
+}
+
+ZPL_INLINE quat& operator+=( quat& a, quat b )
+{
+	quat_addeq( &a, b );
+	return a;
+}
+ZPL_INLINE quat& operator-=( quat& a, quat b )
+{
+	quat_subeq( &a, b );
+	return a;
+}
+ZPL_INLINE quat& operator*=( quat& a, quat b )
+{
+	quat_muleq( &a, b );
+	return a;
+}
+ZPL_INLINE quat& operator/=( quat& a, quat b )
+{
+	quat_diveq( &a, b );
+	return a;
+}
+
+ZPL_INLINE quat& operator*=( quat& a, float b )
+{
+	quat_muleqf( &a, b );
+	return a;
+}
+ZPL_INLINE quat& operator/=( quat& a, float b )
+{
+	quat_diveqf( &a, b );
+	return a;
+}
 
 /* Rotate v by a */
-ZPL_INLINE zpl_vec3 operator*(zpl_quat q, zpl_vec3 v) { zpl_vec3 r; zpl_quat_rotate_vec3(&r, q, v); return r; }
+ZPL_INLINE vec3 operator*( quat q, vec3 v )
+{
+	vec3 r;
+	quat_rotate_vec3( &r, q, v );
+	return r;
+}
 #endif
 
 ZPL_END_NAMESPACE
