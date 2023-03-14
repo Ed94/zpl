@@ -117,16 +117,16 @@ void zpl_sort(void *base_, zpl_isize count, zpl_isize size, zpl_compare_proc cmp
 
 #define ZPL_RADIX_SORT_PROC_GEN(Type)                                                                                  \
 ZPL_RADIX_SORT_PROC(Type) {                                                                                        \
-    zpl_##Type *source = items;                                                                                          \
-    zpl_##Type *dest = temp;                                                                                             \
-    zpl_isize byte_index, i, byte_max = 8 * zpl_size_of(zpl_##Type);                                                         \
+    Type *source = items;                                                                                          \
+    Type *dest = temp;                                                                                             \
+    zpl_isize byte_index, i, byte_max = 8 * zpl_size_of(Type);                                                         \
     for (byte_index = 0; byte_index < byte_max; byte_index += 8) {                                                 \
         zpl_isize offsets[256] = { 0 };                                                                                \
         zpl_isize total = 0;                                                                                           \
         /* NOTE: First pass - count how many of each key */                                                        \
         for (i = 0; i < count; i++) {                                                                              \
-            zpl_##Type radix_value = source[i];                                                                          \
-            zpl_##Type radix_piece = (radix_value >> byte_index) & 0xff;                                                 \
+            Type radix_value = source[i];                                                                          \
+            Type radix_piece = (radix_value >> byte_index) & 0xff;                                                 \
             offsets[radix_piece]++;                                                                                \
         }                                                                                                          \
         /* NOTE: Change counts to offsets */                                                                       \
@@ -137,18 +137,18 @@ ZPL_RADIX_SORT_PROC(Type) {                                                     
         }                                                                                                          \
         /* NOTE: Second pass - place elements into the right location */                                           \
         for (i = 0; i < count; i++) {                                                                              \
-            zpl_##Type radix_value = source[i];                                                                          \
-            zpl_##Type radix_piece = (radix_value >> byte_index) & 0xff;                                                 \
+            Type radix_value = source[i];                                                                          \
+            Type radix_piece = (radix_value >> byte_index) & 0xff;                                                 \
             dest[offsets[radix_piece]++] = source[i];                                                              \
         }                                                                                                          \
-        zpl_swap(zpl_##Type *, source, dest);                                                                            \
+        zpl_swap(Type *, source, dest);                                                                            \
     }                                                                                                              \
 }
 
-ZPL_RADIX_SORT_PROC_GEN(u8);
-ZPL_RADIX_SORT_PROC_GEN(u16);
-ZPL_RADIX_SORT_PROC_GEN(u32);
-ZPL_RADIX_SORT_PROC_GEN(u64);
+ZPL_RADIX_SORT_PROC_GEN(zpl_u8);
+ZPL_RADIX_SORT_PROC_GEN(zpl_u16);
+ZPL_RADIX_SORT_PROC_GEN(zpl_u32);
+ZPL_RADIX_SORT_PROC_GEN(zpl_u64);
 
 void zpl_shuffle(void *base, zpl_isize count, zpl_isize size) {
     zpl_u8 *a;
