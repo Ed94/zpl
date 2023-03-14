@@ -1,4 +1,4 @@
-// file: header/essentials/collections/ring.h
+// a_file: header/essentials/collections/ring.h
 
 ////////////////////////////////////////////////////////////////
 //
@@ -13,14 +13,14 @@ PREFIX  - a prefix for function prototypes e.g. extern, static, etc.
      FUNC    - the name will prefix function names
      VALUE   - the type of the value to be stored
 
-funcname_init(VALUE * pad, zpl_allocator a, sw max_size)
+funcname_init(VALUE * pad, allocator a, sw max_size)
  funcname_free(VALUE * pad)
  funcname_full(VALUE * pad)
  funcname_empty(VALUE * pad)
  funcname_append(VALUE * pad, type data)
  funcname_append_array(VALUE * pad, zpl_array(type) data)
  funcname_get(VALUE * pad)
-funcname_get_array(VALUE * pad, uw max_size, zpl_allocator a)
+funcname_get_array(VALUE * pad, uw max_size, allocator a)
 */
 ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
@@ -32,23 +32,23 @@ ZPL_BEGIN_C_DECLS
 #define ZPL_RING_DECLARE( prefix, func, type )                                                                                                                                     \
 	typedef struct                                                                                                                                                                 \
 	{                                                                                                                                                                              \
-		zpl_allocator backing;                                                                                                                                                     \
+		allocator backing;                                                                                                                                                         \
 		buffer( type ) buf;                                                                                                                                                        \
 		uw head, tail;                                                                                                                                                             \
 		uw capacity;                                                                                                                                                               \
 	} ZPL_JOIN2( func, type );                                                                                                                                                     \
                                                                                                                                                                                    \
-	prefix void  ZPL_JOIN2( func, init )( ZPL_JOIN2( func, type ) * pad, zpl_allocator a, sw max_size );                                                                           \
+	prefix void  ZPL_JOIN2( func, init )( ZPL_JOIN2( func, type ) * pad, allocator a, sw max_size );                                                                               \
 	prefix void  ZPL_JOIN2( func, free )( ZPL_JOIN2( func, type ) * pad );                                                                                                         \
 	prefix b32   ZPL_JOIN2( func, full )( ZPL_JOIN2( func, type ) * pad );                                                                                                         \
 	prefix b32   ZPL_JOIN2( func, empty )( ZPL_JOIN2( func, type ) * pad );                                                                                                        \
 	prefix void  ZPL_JOIN2( func, append )( ZPL_JOIN2( func, type ) * pad, type data );                                                                                            \
 	prefix void  ZPL_JOIN2( func, append_array )( ZPL_JOIN2( func, type ) * pad, zpl_array( type ) data );                                                                         \
 	prefix type* ZPL_JOIN2( func, get )( ZPL_JOIN2( func, type ) * pad );                                                                                                          \
-	prefix       zpl_array( type ) ZPL_JOIN2( func, get_array )( ZPL_JOIN2( func, type ) * pad, uw max_size, zpl_allocator a );
+	prefix       zpl_array( type ) ZPL_JOIN2( func, get_array )( ZPL_JOIN2( func, type ) * pad, uw max_size, allocator a );
 
 #define ZPL_RING_DEFINE( func, type )                                                                                                                                              \
-	void ZPL_JOIN2( func, init )( ZPL_JOIN2( func, type ) * pad, zpl_allocator a, sw max_size )                                                                                    \
+	void ZPL_JOIN2( func, init )( ZPL_JOIN2( func, type ) * pad, allocator a, sw max_size )                                                                                        \
 	{                                                                                                                                                                              \
 		ZPL_JOIN2( func, type ) pad_ = { 0 };                                                                                                                                      \
 		*pad                         = pad_;                                                                                                                                       \
@@ -106,7 +106,7 @@ ZPL_BEGIN_C_DECLS
 		return data;                                                                                                                                                               \
 	}                                                                                                                                                                              \
                                                                                                                                                                                    \
-	zpl_array( type ) ZPL_JOIN2( func, get_array )( ZPL_JOIN2( func, type ) * pad, uw max_size, zpl_allocator a )                                                                  \
+	zpl_array( type ) ZPL_JOIN2( func, get_array )( ZPL_JOIN2( func, type ) * pad, uw max_size, allocator a )                                                                      \
 	{                                                                                                                                                                              \
 		zpl_array( type ) vals = 0;                                                                                                                                                \
 		array_init( vals, a );                                                                                                                                                     \

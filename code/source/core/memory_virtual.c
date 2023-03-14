@@ -1,4 +1,4 @@
-// file: source/core/memory_virtual.c
+// a_file: source/core/memory_virtual.c
 
 ////////////////////////////////////////////////////////////////
 //
@@ -80,11 +80,11 @@ sw virtual_memory_page_size( sw* alignment_out )
 }
 
 #else
-#include <sys/mman.h>
+#	include <sys/mman.h>
 
-#ifndef MAP_ANONYMOUS
-#define MAP_ANONYMOUS MAP_ANON
-#endif
+#	ifndef MAP_ANONYMOUS
+#		define MAP_ANONYMOUS MAP_ANON
+#	endif
 
 virtual_memory vm_alloc( void* addr, sw size )
 {

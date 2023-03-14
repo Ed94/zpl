@@ -1,34 +1,36 @@
-// file: source/core/file_misc.c
+// a_file: source/core/file_misc.c
+
 
 #if defined( ZPL_SYSTEM_UNIX ) || defined( ZPL_SYSTEM_MACOS )
-#include <dirent.h>
+#	include <dirent.h>
 #endif
 
 #if defined( ZPL_SYSTEM_UNIX ) && ! defined( ZPL_SYSTEM_FREEBSD ) && ! defined( ZPL_SYSTEM_OPENBSD ) && ! defined( ZPL_SYSTEM_CYGWIN ) && ! defined( ZPL_SYSTEM_EMSCRIPTEN )
-#include <sys/sendfile.h>
+#	include <sys/sendfile.h>
 #endif
 
 #if defined( ZPL_SYSTEM_WINDOWS )
-#include <direct.h>
-#include <io.h>
+#	include <direct.h>
+#	include <io.h>
 #endif
 
 #if defined( ZPL_SYSTEM_CYGWIN )
-#include <dirent.h>
-#include <io.h>
-#include <windows.h>
+#	include <dirent.h>
+#	include <io.h>
+#	include <windows.h>
 #endif
 
 ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
 
+
 #if defined( ZPL_SYSTEM_WINDOWS ) || defined( ZPL_SYSTEM_CYGWIN )
-file_time fs_last_write_time( char const * filepath )
+file_time fs_last_write_time( char const* filepath )
 {
 	ULARGE_INTEGER            li              = { 0 };
 	FILETIME                  last_write_time = { 0 };
 	WIN32_FILE_ATTRIBUTE_DATA data            = { 0 };
-	zpl_allocator             a               = heap_allocator();
+	allocator                 a               = heap_allocator();
 
 	wchar_t* w_text = zpl__alloc_utf8_to_ucs2( a, filepath, NULL );
 	if ( w_text == NULL )
@@ -45,10 +47,10 @@ file_time fs_last_write_time( char const * filepath )
 	return zpl_cast( file_time ) li.QuadPart;
 }
 
-b32 fs_copy( char const * existing_filename, char const * new_filename, b32 fail_if_exists )
+b32 fs_copy( char const* existing_filename, char const* new_filename, b32 fail_if_exists )
 {
-	b32           result = false;
-	zpl_allocator a      = heap_allocator();
+	b32       result = false;
+	allocator a      = heap_allocator();
 
 	wchar_t* w_old = zpl__alloc_utf8_to_ucs2( a, existing_filename, NULL );
 	if ( w_old == NULL )
@@ -67,10 +69,10 @@ b32 fs_copy( char const * existing_filename, char const * new_filename, b32 fail
 	return result;
 }
 
-b32 fs_move( char const * existing_filename, char const * new_filename )
+b32 fs_move( char const* existing_filename, char const* new_filename )
 {
-	b32           result = false;
-	zpl_allocator a      = heap_allocator();
+	b32       result = false;
+	allocator a      = heap_allocator();
 
 	wchar_t* w_old = zpl__alloc_utf8_to_ucs2( a, existing_filename, NULL );
 	if ( w_old == NULL )
@@ -89,10 +91,10 @@ b32 fs_move( char const * existing_filename, char const * new_filename )
 	return result;
 }
 
-b32 fs_remove( char const * filename )
+b32 fs_remove( char const* filename )
 {
-	b32           result = false;
-	zpl_allocator a      = heap_allocator();
+	b32       result = false;
+	allocator a      = heap_allocator();
 
 	wchar_t* w_filename = zpl__alloc_utf8_to_ucs2( a, filename, NULL );
 	if ( w_filename == NULL )
@@ -108,7 +110,7 @@ b32 fs_remove( char const * filename )
 
 #else
 
-file_time fs_last_write_time( char const * filepath )
+file_time fs_last_write_time( char const* filepath )
 {
 	time_t      result = 0;
 	struct stat file_stat;
@@ -119,24 +121,25 @@ file_time fs_last_write_time( char const * filepath )
 	return zpl_cast( file_time ) result;
 }
 
-#if defined( ZPL_SYSTEM_FREEBSD )
-#include <sys/socket.h>
-#include <sys/types.h>
-#include <sys/uio.h>
-#endif
+#	if defined( ZPL_SYSTEM_FREEBSD )
+#		include <sys/socket.h>
+#		include <sys/types.h>
+#		include <sys/uio.h>
+#	endif
 
-b32 fs_copy( char const * existing_filename, char const * new_filename, b32 fail_if_exists )
+
+b32 fs_copy( char const* existing_filename, char const* new_filename, b32 fail_if_exists )
 {
 	unused( fail_if_exists );
-#if defined( ZPL_SYSTEM_OSX )
+#	if defined( ZPL_SYSTEM_OSX )
 	return copyfile( existing_filename, new_filename, NULL, COPYFILE_DATA ) == 0;
-#elif defined( ZPL_SYSTEM_OPENBSD )
+#	elif defined( ZPL_SYSTEM_OPENBSD )
 	ZPL_NOT_IMPLEMENTED;
 	return 0;
-#elif defined( ZPL_SYSTEM_EMSCRIPTEN )
+#	elif defined( ZPL_SYSTEM_EMSCRIPTEN )
 	ZPL_NOT_IMPLEMENTED;
 	return 0;
-#else
+#	else
 	int         existing_fd = open( existing_filename, O_RDONLY, 0 );
 	struct stat stat_existing;
 	fstat( existing_fd, &stat_existing );
@@ -144,20 +147,20 @@ b32 fs_copy( char const * existing_filename, char const * new_filename, b32 fail
 	sw  size;
 	int new_fd = open( new_filename, O_WRONLY | O_CREAT, stat_existing.st_mode );
 
-#if defined( ZPL_SYSTEM_FREEBSD )
+#		if defined( ZPL_SYSTEM_FREEBSD )
 	size       = sendfile( new_fd, existing_fd, 0, stat_existing.st_size, NULL, 0, 0 );
-#else
+#		else
 	size = sendfile( new_fd, existing_fd, 0, stat_existing.st_size );
-#endif
+#		endif
 
 	close( new_fd );
 	close( existing_fd );
 
 	return size == stat_existing.st_size;
-#endif
+#	endif
 }
 
-b32 fs_move( char const * existing_filename, char const * new_filename )
+b32 fs_move( char const* existing_filename, char const* new_filename )
 {
 	if ( link( existing_filename, new_filename ) == 0 )
 	{
@@ -166,18 +169,18 @@ b32 fs_move( char const * existing_filename, char const * new_filename )
 	return false;
 }
 
-b32 fs_remove( char const * filename )
+b32 fs_remove( char const* filename )
 {
-#if defined( ZPL_SYSTEM_OSX ) || defined( ZPL_SYSTEM_EMSCRIPTEN )
+#	if defined( ZPL_SYSTEM_OSX ) || defined( ZPL_SYSTEM_EMSCRIPTEN )
 	return ( unlink( filename ) != -1 );
-#else
+#	else
 	return ( remove( filename ) == 0 );
-#endif
+#	endif
 }
 
 #endif
 
-char* path_get_full_name( zpl_allocator a, char const * path )
+char* path_get_full_name( allocator a, char const* path )
 {
 #if defined( ZPL_SYSTEM_WINDOWS )
 	wchar_t* w_path     = NULL;
@@ -236,10 +239,10 @@ char* path_get_full_name( zpl_allocator a, char const * path )
 		fullpath = zpl_cast( char* ) path;
 	}
 
-	len = zpl_strlen( fullpath );
+	len = strlen( fullpath );
 
 	result = alloc_array( a, char, len + 1 );
-	zpl_memmove( result, fullpath, len );
+	memmove( result, fullpath, len );
 	result[ len ] = 0;
 	free( a, p );
 
@@ -247,13 +250,13 @@ char* path_get_full_name( zpl_allocator a, char const * path )
 #endif
 }
 
-file_error path_mkdir( char const * path, s32 mode )
+file_error path_mkdir( char const* path, s32 mode )
 {
 	s32 error = 0;
 #if defined( ZPL_SYSTEM_WINDOWS )
-	error = _wmkdir( (const wchar_t*)utf8_to_ucs2_buf( (const u8*)path ) );
+	error = _wmkdir( ( const wchar_t* )utf8_to_ucs2_buf( ( const u8* )path ) );
 #else
-	error                      = mkdir( path, (mode_t)mode );
+	error                      = mkdir( path, ( mode_t )mode );
 #endif
 
 	if ( error == 0 )
@@ -275,11 +278,11 @@ file_error path_mkdir( char const * path, s32 mode )
 	return ZPL_FILE_ERROR_UNKNOWN;
 }
 
-sw path_mkdir_recursive( char const * path, s32 mode )
+sw path_mkdir_recursive( char const* path, s32 mode )
 {
 	char  tmp[ ZPL_MAX_PATH ] = { 0 };
 	char* p                   = 0;
-	sw    len                 = zpl_strlen( path );
+	sw    len                 = strlen( path );
 
 	if ( len > size_of( tmp ) - 1 )
 	{
@@ -300,11 +303,11 @@ sw path_mkdir_recursive( char const * path, s32 mode )
 	return 0;
 }
 
-file_error path_rmdir( char const * path )
+file_error path_rmdir( char const* path )
 {
 	s32 error = 0;
 #if defined( ZPL_SYSTEM_WINDOWS )
-	error = _wrmdir( (const wchar_t*)utf8_to_ucs2_buf( (const u8*)path ) );
+	error = _wrmdir( ( const wchar_t* )utf8_to_ucs2_buf( ( const u8* )path ) );
 #else
 	error                      = rmdir( path );
 #endif
@@ -330,7 +333,7 @@ file_error path_rmdir( char const * path )
 	return ZPL_FILE_ERROR_UNKNOWN;
 }
 
-void zpl__file_direntry( zpl_allocator allocator, char const * dirname, string* output, b32 recurse )
+void zpl__file_direntry( allocator a_allocator, char const* dirname, string* output, b32 recurse )
 {
 #if defined( ZPL_SYSTEM_UNIX ) || defined( ZPL_SYSTEM_OSX )
 	DIR *          d, *cd;
@@ -348,7 +351,7 @@ void zpl__file_direntry( zpl_allocator allocator, char const * dirname, string* 
 			if ( dir->d_name[ 0 ] == '.' && dir->d_name[ 1 ] == 0 )
 				continue;
 
-			string dirpath = string_make( allocator, dirname );
+			string dirpath = string_make( a_allocator, dirname );
 			dirpath        = string_appendc( dirpath, "/" );
 			dirpath        = string_appendc( dirpath, dir->d_name );
 
@@ -357,13 +360,13 @@ void zpl__file_direntry( zpl_allocator allocator, char const * dirname, string* 
 
 			if ( recurse && ( cd = opendir( dirpath ) ) != NULL && dir->d_type == DT_DIR )
 			{
-				zpl__file_direntry( allocator, dirpath, output, recurse );
+				zpl__file_direntry( a_allocator, dirpath, output, recurse );
 			}
 			string_free( dirpath );
 		}
 	}
 #elif defined( ZPL_SYSTEM_WINDOWS )
-	uw                  length = zpl_strlen( dirname );
+	uw                  length = strlen( dirname );
 	struct _wfinddata_t data;
 	sptr                findhandle;
 
@@ -384,34 +387,34 @@ void zpl__file_direntry( zpl_allocator allocator, char const * dirname, string* 
 	}
 
 	// attach search pattern
-	string findpath = string_make( allocator, directory );
+	string findpath = string_make( a_allocator, directory );
 	findpath        = string_appendc( findpath, "\\" );
 	findpath        = string_appendc( findpath, "*" );
 
-	findhandle = _wfindfirst( (const wchar_t*)utf8_to_ucs2_buf( (const u8*)findpath ), &data );
+	findhandle = _wfindfirst( ( const wchar_t* )utf8_to_ucs2_buf( ( const u8* )findpath ), &data );
 	string_free( findpath );
 
 	if ( findhandle != -1 )
 	{
 		do
 		{
-			char* filename = (char*)ucs2_to_utf8_buf( (const u16*)data.name );
+			char* filename = ( char* )ucs2_to_utf8_buf( ( const u16* )data.name );
 			if ( ! str_compare( filename, "..", 2 ) )
 				continue;
 			if ( filename[ 0 ] == '.' && filename[ 1 ] == 0 )
 				continue;
 
-			string dirpath = string_make( allocator, directory );
+			string dirpath = string_make( a_allocator, directory );
 			dirpath        = string_appendc( dirpath, "\\" );
 			dirpath        = string_appendc( dirpath, filename );
-			DWORD attrs    = GetFileAttributesW( (const wchar_t*)utf8_to_ucs2_buf( (const u8*)dirpath ) );
+			DWORD attrs    = GetFileAttributesW( ( const wchar_t* )utf8_to_ucs2_buf( ( const u8* )dirpath ) );
 
 			*output = string_appendc( *output, dirpath );
 			*output = string_appendc( *output, "\n" );
 
 			if ( recurse && ( data.attrib & _A_SUBDIR ) && ! ( attrs & FILE_ATTRIBUTE_REPARSE_POINT ) )
 			{
-				zpl__file_direntry( allocator, dirpath, output, recurse );
+				zpl__file_direntry( a_allocator, dirpath, output, recurse );
 			}
 
 			string_free( dirpath );
@@ -423,21 +426,22 @@ void zpl__file_direntry( zpl_allocator allocator, char const * dirname, string* 
 #endif
 }
 
-string path_dirlist( zpl_allocator allocator, char const * dirname, b32 recurse )
+string path_dirlist( allocator a_allocator, char const* dirname, b32 recurse )
 {
-	string buf = string_make_reserve( allocator, 4 );
-	zpl__file_direntry( allocator, dirname, &buf, recurse );
+	string buf = string_make_reserve( a_allocator, 4 );
+	zpl__file_direntry( a_allocator, dirname, &buf, recurse );
 	return buf;
 }
 
-void dirinfo_init( dir_info* dir, char const * path )
+void dirinfo_init( dir_info* dir, char const* path )
 {
 	ZPL_ASSERT_NOT_NULL( dir );
 
 	dir_info dir_ = { 0 };
 	*dir          = dir_;
-	dir->fullpath = (char const *)malloc( zpl_strlen( path ) );
-	strcpy( (char*)dir->fullpath, path );
+	dir->fullpath = ( char const* )malloc( strlen( path ) );
+	strcpy( ( char* )dir->fullpath, path );
+
 
 	string dirlist = path_dirlist( heap(), path, false );
 	char** files   = str_split_lines( heap(), dirlist, false );
@@ -478,13 +482,13 @@ void dirinfo_free( dir_info* dir )
 	array_free( dir->entries );
 	array_free( dir->filenames );
 	string_free( dir->buf );
-	mfree( (void*)dir->fullpath );
+	mfree( ( void* )dir->fullpath );
 }
 
-u8 fs_get_type( char const * path )
+u8 fs_get_type( char const* path )
 {
 #ifdef ZPL_SYSTEM_WINDOWS
-	DWORD attrs = GetFileAttributesW( (const wchar_t*)utf8_to_ucs2_buf( (const u8*)path ) );
+	DWORD attrs = GetFileAttributesW( ( const wchar_t* )utf8_to_ucs2_buf( ( const u8* )path ) );
 
 	if ( attrs == INVALID_FILE_ATTRIBUTES )
 	{
@@ -517,17 +521,17 @@ void dirinfo_step( dir_entry* entry )
 		zpl__dirinfo_free_entry( entry );
 	}
 
-	entry->dir_info  = (dir_info*)malloc( sizeof( dir_info ) );
+	entry->dir_info  = ( dir_info* )malloc( sizeof( dir_info ) );
 	dir_info dir_    = { 0 };
 	*entry->dir_info = dir_;
 
 	local_persist char buf[ 128 ] = { 0 };
-	char const *       path       = entry->filename;
+	char const*        path       = entry->filename;
 
 	if ( entry->type != ZPL_DIR_TYPE_FOLDER )
 	{
-		path_fix_slashes( (char*)path );
-		char const * slash = char_last_occurence( path, ZPL_PATH_SEPARATOR );
+		path_fix_slashes( ( char* )path );
+		char const* slash = char_last_occurence( path, ZPL_PATH_SEPARATOR );
 		strncpy( buf, path, slash - path );
 		path = buf;
 	}
@@ -535,25 +539,25 @@ void dirinfo_step( dir_entry* entry )
 	dirinfo_init( entry->dir_info, path );
 }
 
-void file_dirinfo_refresh( zpl_file* file )
+void file_dirinfo_refresh( file* a_file )
 {
-	if ( file->is_temp )
+	if ( a_file->is_temp )
 		return;
 
-	if ( file->dir )
+	if ( a_file->dir )
 	{
-		zpl__dirinfo_free_entry( file->dir );
-		mfree( file->dir );
-		file->dir = NULL;
+		zpl__dirinfo_free_entry( a_file->dir );
+		mfree( a_file->dir );
+		a_file->dir = NULL;
 	}
 
-	file->dir           = (dir_entry*)malloc( sizeof( dir_entry ) );
-	dir_entry dir_      = { 0 };
-	*file->dir          = dir_;
-	file->dir->filename = file->filename;
-	file->dir->type     = ZPL_DIR_TYPE_FILE;
+	a_file->dir           = ( dir_entry* )malloc( sizeof( dir_entry ) );
+	dir_entry dir_        = { 0 };
+	*a_file->dir          = dir_;
+	a_file->dir->filename = a_file->filename;
+	a_file->dir->type     = ZPL_DIR_TYPE_FILE;
 
-	dirinfo_step( file->dir );
+	dirinfo_step( a_file->dir );
 }
 
 void path_fix_slashes( char* path )

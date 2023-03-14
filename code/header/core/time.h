@@ -1,6 +1,6 @@
-// file: header/core/time.h
+// a_file: header/core/time.h
 
-/** @file time.c
+/** @a_file time.c
 @brief Time helper methods.
 @defgroup time Time helpers
 
@@ -8,6 +8,7 @@
 
  @{
  */
+
 
 ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
@@ -52,8 +53,9 @@ ZPL_DEF_INLINE f64 time_now( void );
 ZPL_DEPRECATED_FOR( 10.9.0, time_utc )
 ZPL_DEF_INLINE f64 utc_time_now( void );
 
+
 #ifndef ZPL__UNIX_TO_WIN32_EPOCH
-#define ZPL__UNIX_TO_WIN32_EPOCH 11644473600000ull
+#	define ZPL__UNIX_TO_WIN32_EPOCH 11644473600000ull
 #endif
 
 ZPL_IMPL_INLINE u64 time_win32_to_unix( u64 ms )
@@ -68,7 +70,7 @@ ZPL_IMPL_INLINE u64 time_unix_to_win32( u64 ms )
 
 ZPL_IMPL_INLINE void sleep( f32 s )
 {
-	sleep_ms( (u32)( s * 1000 ) );
+	sleep_ms( ( u32 )( s * 1000 ) );
 }
 
 ZPL_IMPL_INLINE f64 time_now()

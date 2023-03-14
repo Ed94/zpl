@@ -1,4 +1,4 @@
-// file: header/essentials/collections/array.h
+// a_file: header/essentials/collections/array.h
 
 ////////////////////////////////////////////////////////////////
 //
@@ -22,11 +22,11 @@
 // array_reserve
 //
 
-#if 0 // Example
+#if 0    // Example
 void foo(void) {
     sw i;
     int test_values[] = {4, 2, 1, 7};
-    zpl_allocator a = heap_allocator();
+    allocator a = heap_allocator();
     zpl_array(int) items;
 
     array_init(items, a);
@@ -40,7 +40,7 @@ void foo(void) {
     // NOTE: No array bounds checking
 
     for (i = 0; i < items.count; i++)
-        zpl_printf("%d\n", items[i]);
+        printf("%d\n", items[i]);
     // 1
     // 3
     // 9
@@ -50,7 +50,7 @@ void foo(void) {
 
     array_appendv(items, test_values, count_of(test_values));
     for (i = 0; i < items.count; i++)
-        zpl_printf("%d\n", items[i]);
+        printf("%d\n", items[i]);
     // 4
     // 2
     // 1
@@ -60,15 +60,16 @@ void foo(void) {
 }
 #endif
 
+
 ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
 
 typedef struct array_header
 {
-	sw            elem_size;
-	sw            count;
-	sw            capacity;
-	zpl_allocator allocator;
+	sw        elem_size;
+	sw        count;
+	sw        capacity;
+	allocator allocator;
 } array_header;
 
 #define zpl_array( Type ) Type*
@@ -78,7 +79,7 @@ typedef struct array_header
 	array_init( Name, allocator )
 
 #ifndef ZPL_ARRAY_GROW_FORMULA
-#define ZPL_ARRAY_GROW_FORMULA( x ) ( 2 * ( x ) + 8 )
+#	define ZPL_ARRAY_GROW_FORMULA( x ) ( 2 * ( x ) + 8 )
 #endif
 
 ZPL_STATIC_ASSERT( ZPL_ARRAY_GROW_FORMULA( 0 ) > 0, "ZPL_ARRAY_GROW_FORMULA(0) <= 0" );
@@ -90,7 +91,7 @@ ZPL_STATIC_ASSERT( ZPL_ARRAY_GROW_FORMULA( 0 ) > 0, "ZPL_ARRAY_GROW_FORMULA(0) <
 #define array_capacity( x )   ( ZPL_ARRAY_HEADER( x )->capacity )
 #define array_end( x )        ( x + ( array_count( x ) - 1 ) )
 
-ZPL_IMPL_INLINE b8 zpl__array_init_reserve( void** zpl__array_, zpl_allocator allocator_, sw elem_size, sw cap )
+ZPL_IMPL_INLINE b8 zpl__array_init_reserve( void** zpl__array_, allocator allocator_, sw elem_size, sw cap )
 {
 	array_header* zpl__ah = zpl_cast( array_header* ) alloc( allocator_, size_of( array_header ) + elem_size * cap );
 	if ( ! zpl__ah )
@@ -129,7 +130,7 @@ ZPL_IMPL_INLINE b8 zpl__array_set_capacity( void** array, sw capacity )
 	array_header* nh   = zpl_cast( array_header* ) alloc( h->allocator, size );
 	if ( ! nh )
 		return false;
-	zpl_memmove( nh, h, size_of( array_header ) + h->elem_size * h->count );
+	memmove( nh, h, size_of( array_header ) + h->elem_size * h->count );
 	nh->allocator = h->allocator;
 	nh->elem_size = h->elem_size;
 	nh->count     = h->count;
@@ -175,7 +176,7 @@ ZPL_IMPL_INLINE b8 zpl__array_append_at_helper( void** x, sw ind )
 			return false;
 	}
 	s8* s = ( zpl_cast( s8* ) * x ) + ind * array_elem_size( *x );
-	zpl_memmove( s + array_elem_size( *x ), s, array_elem_size( *x ) * ( array_count( *x ) - ind ) );
+	memmove( s + array_elem_size( *x ), s, array_elem_size( *x ) * ( array_count( *x ) - ind ) );
 	return true;
 }
 
@@ -189,7 +190,7 @@ ZPL_IMPL_INLINE b8 zpl__array_appendv( void** x, void* items, sw item_size, sw i
 		if ( ! zpl__array_grow( x, array_count( *x ) + item_count ) )
 			return false;
 	}
-	zpl_memcopy( ( zpl_cast( s8* ) * x ) + array_count( *x ) * array_elem_size( *x ), items, array_elem_size( *x ) * item_count );
+	memcopy( ( zpl_cast( s8* ) * x ) + array_count( *x ) * array_elem_size( *x ), items, array_elem_size( *x ) * item_count );
 	array_count( *x ) += item_count;
 	return true;
 }
@@ -206,9 +207,12 @@ ZPL_IMPL_INLINE b8 zpl__array_appendv_at( void** x, void* items, sw item_size, s
 		if ( ! zpl__array_grow( x, array_count( *x ) + item_count ) )
 			return false;
 	}
-	zpl_memmove( ( zpl_cast( s8* ) * x ) + ( ind + item_count ) * array_elem_size( *x ), ( zpl_cast( s8* ) * x ) + ind * array_elem_size( *x ),
-	             array_elem_size( *x ) * ( array_count( *x ) - ind ) );
-	zpl_memcopy( ( zpl_cast( s8* ) * x ) + ind * array_elem_size( *x ), items, array_elem_size( *x ) * item_count );
+	memmove(
+	    ( zpl_cast( s8* ) * x ) + ( ind + item_count ) * array_elem_size( *x ),
+	    ( zpl_cast( s8* ) * x ) + ind * array_elem_size( *x ),
+	    array_elem_size( *x ) * ( array_count( *x ) - ind )
+	);
+	memcopy( ( zpl_cast( s8* ) * x ) + ind * array_elem_size( *x ), items, array_elem_size( *x ) * item_count );
 	array_count( *x ) += item_count;
 	return true;
 }
@@ -231,7 +235,7 @@ ZPL_IMPL_INLINE b8 zpl__array_appendv_at( void** x, void* items, sw item_size, s
 	{                                                                                                                                                                              \
 		array_header* zpl__ah = ZPL_ARRAY_HEADER( x );                                                                                                                             \
 		ZPL_ASSERT( index < zpl__ah->count );                                                                                                                                      \
-		zpl_memmove( x + index, x + index + 1, size_of( x[ 0 ] ) * ( zpl__ah->count - index - 1 ) );                                                                               \
+		memmove( x + index, x + index + 1, size_of( x[ 0 ] ) * ( zpl__ah->count - index - 1 ) );                                                                                   \
 		--zpl__ah->count;                                                                                                                                                          \
 	} while ( 0 )
 
@@ -239,7 +243,7 @@ ZPL_IMPL_INLINE b8 zpl__array_copy_init( void** y, void** x )
 {
 	if ( ! zpl__array_init_reserve( y, array_allocator( *x ), array_elem_size( *x ), array_capacity( *x ) ) )
 		return false;
-	zpl_memcopy( *y, *x, array_capacity( *x ) * array_elem_size( *x ) );
+	memcopy( *y, *x, array_capacity( *x ) * array_elem_size( *x ) );
 	array_count( *y ) = array_count( *x );
 	return true;
 }

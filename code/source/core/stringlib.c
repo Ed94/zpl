@@ -1,9 +1,10 @@
-// file: source/core/stringlib.c
+// a_file: source/core/stringlib.c
+
 
 ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
 
-string string_make_reserve( zpl_allocator a, sw capacity )
+string string_make_reserve( allocator a, sw capacity )
 {
 	sw    header_size = size_of( string_header );
 	void* ptr         = alloc( a, header_size + capacity + 1 );
@@ -25,7 +26,7 @@ string string_make_reserve( zpl_allocator a, sw capacity )
 	return str;
 }
 
-string string_make_length( zpl_allocator a, void const * init_str, sw num_bytes )
+string string_make_length( allocator a, void const* init_str, sw num_bytes )
 {
 	sw    header_size = size_of( string_header );
 	void* ptr         = alloc( a, header_size + num_bytes + 1 );
@@ -44,34 +45,34 @@ string string_make_length( zpl_allocator a, void const * init_str, sw num_bytes 
 	header->length    = num_bytes;
 	header->capacity  = num_bytes;
 	if ( num_bytes && init_str )
-		zpl_memcopy( str, init_str, num_bytes );
+		memcopy( str, init_str, num_bytes );
 	str[ num_bytes ] = '\0';
 
 	return str;
 }
 
-string string_sprintf_buf( zpl_allocator a, const char* fmt, ... )
+string string_sprintf_buf( allocator a, const char* fmt, ... )
 {
 	local_persist thread_local char buf[ ZPL_PRINTF_MAXLEN ] = { 0 };
 	va_list                         va;
 	va_start( va, fmt );
-	zpl_snprintf_va( buf, ZPL_PRINTF_MAXLEN, fmt, va );
+	snprintf_va( buf, ZPL_PRINTF_MAXLEN, fmt, va );
 	va_end( va );
 
 	return string_make( a, buf );
 }
 
-string string_sprintf( zpl_allocator a, char* buf, sw num_bytes, const char* fmt, ... )
+string string_sprintf( allocator a, char* buf, sw num_bytes, const char* fmt, ... )
 {
 	va_list va;
 	va_start( va, fmt );
-	zpl_snprintf_va( buf, num_bytes, fmt, va );
+	snprintf_va( buf, num_bytes, fmt, va );
 	va_end( va );
 
 	return string_make( a, buf );
 }
 
-string string_append_length( string str, void const * other, sw other_len )
+string string_append_length( string str, void const* other, sw other_len )
 {
 	if ( other_len > 0 )
 	{
@@ -81,7 +82,7 @@ string string_append_length( string str, void const * other, sw other_len )
 		if ( str == NULL )
 			return NULL;
 
-		zpl_memcopy( str + curr_len, other, other_len );
+		memcopy( str + curr_len, other, other_len );
 		str[ curr_len + other_len ] = '\0';
 		zpl__set_string_length( str, curr_len + other_len );
 	}
@@ -90,10 +91,10 @@ string string_append_length( string str, void const * other, sw other_len )
 
 ZPL_ALWAYS_INLINE string string_appendc( string str, const char* other )
 {
-	return string_append_length( str, other, zpl_strlen( other ) );
+	return string_append_length( str, other, strlen( other ) );
 }
 
-ZPL_ALWAYS_INLINE string string_join( zpl_allocator a, const char** parts, sw count, const char* glue )
+ZPL_ALWAYS_INLINE string string_join( allocator a, const char** parts, sw count, const char* glue )
 {
 	string ret;
 	sw     i;
@@ -115,7 +116,7 @@ ZPL_ALWAYS_INLINE string string_join( zpl_allocator a, const char** parts, sw co
 
 string string_set( string str, const char* cstr )
 {
-	sw len = zpl_strlen( cstr );
+	sw len = strlen( cstr );
 	if ( string_capacity( str ) < len )
 	{
 		str = string_make_space_for( str, len - string_length( str ) );
@@ -123,7 +124,7 @@ string string_set( string str, const char* cstr )
 			return NULL;
 	}
 
-	zpl_memcopy( str, cstr, len );
+	memcopy( str, cstr, len );
 	str[ len ] = '\0';
 	zpl__set_string_length( str, len );
 
@@ -143,7 +144,7 @@ string string_make_space_for( string str, sw add_len )
 	{
 		sw             new_len, old_size, new_size;
 		void *         ptr, *new_ptr;
-		zpl_allocator  a = ZPL_STRING_HEADER( str )->allocator;
+		allocator      a = ZPL_STRING_HEADER( str )->allocator;
 		string_header* header;
 
 		new_len  = string_length( str ) + add_len;
@@ -204,7 +205,7 @@ string string_trim( string str, const char* cut_set )
 	len = zpl_cast( sw )( ( start_pos > end_pos ) ? 0 : ( ( end_pos - start_pos ) + 1 ) );
 
 	if ( str != start_pos )
-		zpl_memmove( str, start_pos, len );
+		memmove( str, start_pos, len );
 	str[ len ] = '\0';
 
 	zpl__set_string_length( str, len );
@@ -230,7 +231,7 @@ string string_append_fmt( string str, const char* fmt, ... )
 	char    buf[ ZPL_PRINTF_MAXLEN ] = { 0 };
 	va_list va;
 	va_start( va, fmt );
-	res = zpl_snprintf_va( buf, count_of( buf ) - 1, fmt, va ) - 1;
+	res = snprintf_va( buf, count_of( buf ) - 1, fmt, va ) - 1;
 	va_end( va );
 	return string_append_length( str, buf, res );
 }

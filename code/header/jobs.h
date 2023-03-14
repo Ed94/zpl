@@ -1,10 +1,10 @@
-// file: header/jobs.h
+// a_file: header/jobs.h
 
-/** @file threadpool.c
+/** @a_file threadpool.c
 @brief Job system
 @defgroup jobs Job system
 
- This job system follows thread pool pattern to minimize the costs of thread initialization.
+ This job system follows thread a_pool pattern to minimize the costs of thread initialization.
  It reuses fixed number of threads to process variable number of jobs.
 
  @{
@@ -18,11 +18,11 @@ typedef void ( *jobs_proc )( void* data );
 #define ZPL_INVALID_JOB ZPL_U32_MAX
 
 #ifndef ZPL_JOBS_MAX_QUEUE
-#define ZPL_JOBS_MAX_QUEUE 100
+#	define ZPL_JOBS_MAX_QUEUE 100
 #endif
 
 #ifdef ZPL_JOBS_ENABLE_DEBUG
-#define ZPL_JOBS_DEBUG
+#	define ZPL_JOBS_DEBUG
 #endif
 
 typedef enum
@@ -64,7 +64,7 @@ typedef struct
 
 typedef struct
 {
-	zpl__jobs_ring_zpl_thread_job jobs; ///< ring
+	zpl__jobs_ring_zpl_thread_job jobs;    ///< ring
 	u32                           chance;
 #ifdef ZPL_JOBS_DEBUG
 	u32 hits;
@@ -73,41 +73,41 @@ typedef struct
 
 typedef struct
 {
-	zpl_allocator  allocator;
+	allocator      a_allocator;
 	u32            max_threads, max_jobs, counter;
-	thread_worker* workers; ///< buffer
+	thread_worker* workers;    ///< buffer
 	thread_queue   queues[ ZPL_JOBS_MAX_PRIORITIES ];
 } jobs_system;
 
-//! Initialize thread pool with specified amount of fixed threads.
-ZPL_DEF void jobs_init( jobs_system* pool, zpl_allocator a, u32 max_threads );
+//! Initialize thread a_pool with specified amount of fixed threads.
+ZPL_DEF void jobs_init( jobs_system* a_pool, allocator a, u32 max_threads );
 
-//! Initialize thread pool with specified amount of fixed threads and custom job limit.
-ZPL_DEF void jobs_init_with_limit( jobs_system* pool, zpl_allocator a, u32 max_threads, u32 max_jobs );
+//! Initialize thread a_pool with specified amount of fixed threads and custom job limit.
+ZPL_DEF void jobs_init_with_limit( jobs_system* a_pool, allocator a, u32 max_threads, u32 max_jobs );
 
-//! Release the resources use by thread pool.
-ZPL_DEF void jobs_free( jobs_system* pool );
+//! Release the resources use by thread a_pool.
+ZPL_DEF void jobs_free( jobs_system* a_pool );
 
 //! Enqueue a job with specified data and custom priority.
-ZPL_DEF b32 jobs_enqueue_with_priority( jobs_system* pool, jobs_proc proc, void* data, jobs_priority priority );
+ZPL_DEF b32 jobs_enqueue_with_priority( jobs_system* a_pool, jobs_proc proc, void* data, jobs_priority priority );
 
 //! Enqueue a job with specified data.
-ZPL_DEF b32 jobs_enqueue( jobs_system* pool, jobs_proc proc, void* data );
+ZPL_DEF b32 jobs_enqueue( jobs_system* a_pool, jobs_proc proc, void* data );
 
 //! Check if the work queue is empty.
-ZPL_DEF b32 jobs_empty( jobs_system* pool, jobs_priority priority );
+ZPL_DEF b32 jobs_empty( jobs_system* a_pool, jobs_priority priority );
 
-ZPL_DEF b32 jobs_empty_all( jobs_system* pool );
-ZPL_DEF b32 jobs_full_all( jobs_system* pool );
+ZPL_DEF b32 jobs_empty_all( jobs_system* a_pool );
+ZPL_DEF b32 jobs_full_all( jobs_system* a_pool );
 
 //! Check if the work queue is full.
-ZPL_DEF b32 jobs_full( jobs_system* pool, jobs_priority priority );
+ZPL_DEF b32 jobs_full( jobs_system* a_pool, jobs_priority priority );
 
 //! Check if all workers are done.
-ZPL_DEF b32 jobs_done( jobs_system* pool );
+ZPL_DEF b32 jobs_done( jobs_system* a_pool );
 
 //! Process all jobs and check all threads. Should be called by Main Thread in a tight loop.
-ZPL_DEF b32 jobs_process( jobs_system* pool );
+ZPL_DEF b32 jobs_process( jobs_system* a_pool );
 
 ZPL_END_C_DECLS
 ZPL_END_NAMESPACE

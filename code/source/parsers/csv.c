@@ -1,15 +1,17 @@
-// file: source/parsers/csv.c
+// a_file: source/parsers/csv.c
+
 
 #ifdef ZPL_CSV_DEBUG
-#define ZPL_CSV_ASSERT( msg ) ZPL_PANIC( msg )
+#	define ZPL_CSV_ASSERT( msg ) ZPL_PANIC( msg )
 #else
-#define ZPL_CSV_ASSERT( msg )
+#	define ZPL_CSV_ASSERT( msg )
 #endif
+
 
 ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
 
-u8 csv_parse_delimiter( csv_object* root, char* text, zpl_allocator allocator, b32 has_header, char delim )
+u8 csv_parse_delimiter( csv_object* root, char* text, allocator allocator, b32 has_header, char delim )
 {
 	csv_error err = ZPL_CSV_ERROR_NONE;
 	ZPL_ASSERT_NOT_NULL( root );
@@ -66,7 +68,7 @@ u8 csv_parse_delimiter( csv_object* root, char* text, zpl_allocator allocator, b
 				{
 					if ( *ep == '"' && *( ep + 1 ) == '"' )
 					{
-						zpl_memmove( ep, ep + 1, zpl_strlen( ep ) );
+						memmove( ep, ep + 1, strlen( ep ) );
 					}
 					ep++;
 				} while ( *ep );
@@ -170,12 +172,13 @@ u8 csv_parse_delimiter( csv_object* root, char* text, zpl_allocator allocator, b
 
 	return err;
 }
+
 void csv_free( csv_object* obj )
 {
 	adt_destroy_branch( obj );
 }
 
-void zpl__csv_write_record( zpl_file* file, csv_object* node )
+void zpl__csv_write_record( file* a_file, csv_object* node )
 {
 	switch ( node->type )
 	{
@@ -186,16 +189,16 @@ void zpl__csv_write_record( zpl_file* file, csv_object* node )
 				{
 					case ZPL_ADT_NAME_STYLE_DOUBLE_QUOTE :
 						{
-							zpl_fprintf( file, "\"" );
-							adt_print_string( file, node, "\"", "\"" );
-							zpl_fprintf( file, "\"" );
+							fprintf( a_file, "\"" );
+							adt_print_string( a_file, node, "\"", "\"" );
+							fprintf( a_file, "\"" );
 						}
 						break;
 
 					case ZPL_ADT_NAME_STYLE_NO_QUOTES :
 						{
 #endif
-							zpl_fprintf( file, "%s", node->string );
+							fprintf( a_file, "%s", node->string );
 #ifndef ZPL_PARSER_DISABLE_ANALYSIS
 						}
 						break;
@@ -207,23 +210,23 @@ void zpl__csv_write_record( zpl_file* file, csv_object* node )
 		case ZPL_ADT_TYPE_REAL :
 		case ZPL_ADT_TYPE_INTEGER :
 			{
-				adt_print_number( file, node );
+				adt_print_number( a_file, node );
 			}
 			break;
 	}
 }
 
-void zpl__csv_write_header( zpl_file* file, csv_object* header )
+void zpl__csv_write_header( file* a_file, csv_object* header )
 {
 	csv_object temp = *header;
 	temp.string     = temp.name;
 	temp.type       = ZPL_ADT_TYPE_STRING;
-	zpl__csv_write_record( file, &temp );
+	zpl__csv_write_record( a_file, &temp );
 }
 
-void csv_write_delimiter( zpl_file* file, csv_object* obj, char delimiter )
+void csv_write_delimiter( file* a_file, csv_object* obj, char delimiter )
 {
-	ZPL_ASSERT_NOT_NULL( file );
+	ZPL_ASSERT_NOT_NULL( a_file );
 	ZPL_ASSERT_NOT_NULL( obj );
 	ZPL_ASSERT( obj->nodes );
 	sw cols = array_count( obj->nodes );
@@ -240,37 +243,37 @@ void csv_write_delimiter( zpl_file* file, csv_object* obj, char delimiter )
 	{
 		for ( sw i = 0; i < cols; i++ )
 		{
-			zpl__csv_write_header( file, &obj->nodes[ i ] );
+			zpl__csv_write_header( a_file, &obj->nodes[ i ] );
 			if ( i + 1 != cols )
 			{
-				zpl_fprintf( file, "%c", delimiter );
+				fprintf( a_file, "%c", delimiter );
 			}
 		}
-		zpl_fprintf( file, "\n" );
+		fprintf( a_file, "\n" );
 	}
 
 	for ( sw r = 0; r < rows; r++ )
 	{
 		for ( sw i = 0; i < cols; i++ )
 		{
-			zpl__csv_write_record( file, &obj->nodes[ i ].nodes[ r ] );
+			zpl__csv_write_record( a_file, &obj->nodes[ i ].nodes[ r ] );
 			if ( i + 1 != cols )
 			{
-				zpl_fprintf( file, "%c", delimiter );
+				fprintf( a_file, "%c", delimiter );
 			}
 		}
-		zpl_fprintf( file, "\n" );
+		fprintf( a_file, "\n" );
 	}
 }
 
-string csv_write_string_delimiter( zpl_allocator a, csv_object* obj, char delimiter )
+string csv_write_string_delimiter( allocator a, csv_object* obj, char delimiter )
 {
-	zpl_file tmp;
+	file tmp;
 	file_stream_new( &tmp, a );
 	csv_write_delimiter( &tmp, obj, delimiter );
 	sw     fsize;
 	u8*    buf    = file_stream_buf( &tmp, &fsize );
-	string output = string_make_length( a, (char*)buf, fsize );
+	string output = string_make_length( a, ( char* )buf, fsize );
 	file_close( &tmp );
 	return output;
 }

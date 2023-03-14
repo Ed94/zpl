@@ -1,89 +1,91 @@
-// file: header/essentials/collections/list.h
+// a_file: header/essentials/collections/list.h
 
 ////////////////////////////////////////////////////////////////
 //
 // Linked List
 //
-// zpl_list encapsulates pointer to data and points to the next and the previous element in the list.
+// list encapsulates pointer to data and points to the next and the previous element in the a_list.
 //
-// Available Procedures for zpl_list
+// Available Procedures for list
 // list_init
 // list_add
 // list_remove
+
 
 ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
 
 #if 0
-#define ZPL_IMPLEMENTATION
-#include "zpl.h"
+#	define ZPL_IMPLEMENTATION
+#	include "zpl.h"
 int main(void)
 {
-    zpl_list s, *head, *cursor;
+    list s, *head, *cursor;
     list_init(&s, "it is optional to call init: ");
     head = cursor = &s;
 
     // since we can construct an element implicitly this way
-    // the second field gets overwritten once we add it to a list.
-    zpl_list a = {"hello"};
+    // the second field gets overwritten once we add it to a a_list.
+    list a = {"hello"};
     cursor = list_add(cursor, &a);
 
-    zpl_list b = {"world"};
+    list b = {"world"};
     cursor = list_add(cursor, &b);
 
-    zpl_list c = {"!!! OK"};
+    list c = {"!!! OK"};
     cursor = list_add(cursor, &c);
 
-    for (zpl_list *l=head; l; l=l->next) {
-        zpl_printf("%s ", zpl_cast(char *)l->ptr);
+    for (list *l=head; l; l=l->next) {
+        printf("%s ", zpl_cast(char *)l->ptr);
     }
-    zpl_printf("\n");
+    printf("\n");
 
     return 0;
 }
 #endif
 
+
 typedef struct zpl__list
 {
-	void const *      ptr;
+	void const*       ptr;
 	struct zpl__list *next, *prev;
-} zpl_list;
+} list;
 
-ZPL_DEF_INLINE void      list_init( zpl_list* list, void const * ptr );
-ZPL_DEF_INLINE zpl_list* list_add( zpl_list* list, zpl_list* item );
+ZPL_DEF_INLINE void  list_init( list* a_list, void const* ptr );
+ZPL_DEF_INLINE list* list_add( list* a_list, list* item );
 
 // NOTE(zaklaus): Returns a pointer to the next node (or NULL if the removed node has no trailing node.)
-ZPL_DEF_INLINE zpl_list* list_remove( zpl_list* list );
+ZPL_DEF_INLINE list* list_remove( list* a_list );
 
-ZPL_IMPL_INLINE void list_init( zpl_list* list, void const * ptr )
+ZPL_IMPL_INLINE void list_init( list* a_list, void const* ptr )
 {
-	zpl_list list_ = { 0 };
-	*list          = list_;
-	list->ptr      = ptr;
+	list list_  = { 0 };
+	*a_list     = list_;
+	a_list->ptr = ptr;
 }
 
-ZPL_IMPL_INLINE zpl_list* list_add( zpl_list* list, zpl_list* item )
+ZPL_IMPL_INLINE list* list_add( list* a_list, list* item )
 {
 	item->next = NULL;
 
-	if ( list->next )
+	if ( a_list->next )
 	{
-		item->next = list->next;
+		item->next = a_list->next;
 	}
 
-	list->next = item;
-	item->prev = list;
+	a_list->next = item;
+	item->prev   = a_list;
 	return item;
 }
 
-ZPL_IMPL_INLINE zpl_list* list_remove( zpl_list* list )
+ZPL_IMPL_INLINE list* list_remove( list* a_list )
 {
-	if ( list->prev )
+	if ( a_list->prev )
 	{
-		list->prev->next = list->next;
+		a_list->prev->next = a_list->next;
 	}
 
-	return list->next;
+	return a_list->next;
 }
 
 ZPL_END_C_DECLS

@@ -1,11 +1,12 @@
-// file: source/essentials/memory.c
+// a_file: source/essentials/memory.c
+
 
 #include <string.h>
 
 ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
 
-void zpl_memswap( void* i, void* j, sw size )
+void memswap( void* i, void* j, sw size )
 {
 	if ( i == j )
 		return;
@@ -36,21 +37,21 @@ void zpl_memswap( void* i, void* j, sw size )
 
 		while ( size > size_of( buffer ) )
 		{
-			zpl_memswap( i, j, size_of( buffer ) );
-			i = pointer_add( i, size_of( buffer ) );
-			j = pointer_add( j, size_of( buffer ) );
+			memswap( i, j, size_of( buffer ) );
+			i    = pointer_add( i, size_of( buffer ) );
+			j    = pointer_add( j, size_of( buffer ) );
 			size -= size_of( buffer );
 		}
 
-		zpl_memcopy( buffer, i, size );
-		zpl_memcopy( i, j, size );
-		zpl_memcopy( j, buffer, size );
+		memcopy( buffer, i, size );
+		memcopy( i, j, size );
+		memcopy( j, buffer, size );
 	}
 }
 
-void const * zpl_memchr( void const * data, u8 c, sw n )
+void const* memchr( void const* data, u8 c, sw n )
 {
-	u8 const * s = zpl_cast( u8 const * ) data;
+	u8 const* s = zpl_cast( u8 const* ) data;
 	while ( ( zpl_cast( uptr ) s & ( sizeof( uw ) - 1 ) ) && n && *s != c )
 	{
 		s++;
@@ -58,15 +59,15 @@ void const * zpl_memchr( void const * data, u8 c, sw n )
 	}
 	if ( n && *s != c )
 	{
-		sw const * w;
-		sw         k = ZPL__ONES * c;
-		w            = zpl_cast( sw const * ) s;
+		sw const* w;
+		sw        k = ZPL__ONES * c;
+		w           = zpl_cast( sw const* ) s;
 		while ( n >= size_of( sw ) && ! ZPL__HAS_ZERO( *w ^ k ) )
 		{
 			w++;
 			n -= size_of( sw );
 		}
-		s = zpl_cast( u8 const * ) w;
+		s = zpl_cast( u8 const* ) w;
 		while ( n && *s != c )
 		{
 			s++;
@@ -74,21 +75,21 @@ void const * zpl_memchr( void const * data, u8 c, sw n )
 		}
 	}
 
-	return n ? zpl_cast( void const * ) s : NULL;
+	return n ? zpl_cast( void const* ) s : NULL;
 }
 
-void const * memrchr( void const * data, u8 c, sw n )
+void const* memrchr( void const* data, u8 c, sw n )
 {
-	u8 const * s = zpl_cast( u8 const * ) data;
+	u8 const* s = zpl_cast( u8 const* ) data;
 	while ( n-- )
 	{
 		if ( s[ n ] == c )
-			return zpl_cast( void const * )( s + n );
+			return zpl_cast( void const* )( s + n );
 	}
 	return NULL;
 }
 
-void* zpl_memcopy( void* dest, void const * source, sw n )
+void* memcopy( void* dest, void const* source, sw n )
 {
 	if ( dest == NULL )
 	{
@@ -99,15 +100,15 @@ void* zpl_memcopy( void* dest, void const * source, sw n )
 
 	// TODO: Re-work the whole method
 #if 0
-#if defined( _MSC_VER )
+#	if defined( _MSC_VER )
     __movsb(zpl_cast(u8 *) dest, zpl_cast(u8 *) source, n);
-#elif defined( ZPL_CPU_X86 ) && ! defined( ZPL_SYSTEM_EMSCRIPTEN )
+#	elif defined( ZPL_CPU_X86 ) && ! defined( ZPL_SYSTEM_EMSCRIPTEN )
     u8 *__dest8 = zpl_cast(u8 *) dest;
     u8 *__source8 = zpl_cast(u8 *) source;
     __asm__ __volatile__("rep movsb" : "+D"(__dest8), "+S"(__source8), "+c"(n) : : "memory");
-#elif defined( ZPL_CPU_ARM )
+#	elif defined( ZPL_CPU_ARM )
     return memcpy(dest, source, n);
-#else
+#	else
     u8 *d = zpl_cast(u8 *) dest;
     u8 const *s = zpl_cast(u8 const *) source;
     u32 w, x;
@@ -141,13 +142,13 @@ void* zpl_memcopy( void* dest, void const * source, sw n )
     }
 
     if (n >= 32) {
-#if __BYTE_ORDER == __BIG_ENDIAN
-#define LS <<
-#define RS >>
-#else
-#define LS >>
-#define RS <<
-#endif
+#		if __BYTE_ORDER == __BIG_ENDIAN
+#			define LS <<
+#			define RS >>
+#		else
+#			define LS >>
+#			define RS <<
+#		endif
         switch (zpl_cast(uptr) d % 4) {
             case 1: {
                 w = *zpl_cast(u32 *) s;
@@ -211,8 +212,8 @@ void* zpl_memcopy( void* dest, void const * source, sw n )
             } break;
             default: break; // NOTE: Do nowt!
         }
-#undef LS
-#undef RS
+#		undef LS
+#		undef RS
         if (n & 16) {
             *d++ = *s++;
             *d++ = *s++;
@@ -254,7 +255,7 @@ void* zpl_memcopy( void* dest, void const * source, sw n )
         if (n & 1) { *d = *s; }
     }
 
-#endif
+#	endif
 #endif
 
 	return dest;

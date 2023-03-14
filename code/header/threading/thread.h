@@ -1,7 +1,7 @@
-// file: header/threading/thread.h
+// a_file: header/threading/thread.h
 
 #ifdef ZPL_EDITOR
-#include <zpl.h>
+#	include <zpl.h>
 #else
 struct thread;
 #endif
@@ -36,9 +36,9 @@ ZPL_DEF void thread_destroy( thread* t );
 ZPL_DEF void thread_start( thread* t, thread_proc proc, void* data );
 ZPL_DEF void thread_start_with_stack( thread* t, thread_proc proc, void* data, sw stack_size );
 ZPL_DEF void thread_join( thread* t );
-ZPL_DEF b32  thread_is_running( thread const * t );
+ZPL_DEF b32  thread_is_running( thread const* t );
 ZPL_DEF u32  thread_current_id( void );
-ZPL_DEF void thread_set_name( thread* t, char const * name );
+ZPL_DEF void thread_set_name( thread* t, char const* name );
 
 ZPL_END_C_DECLS
 ZPL_END_NAMESPACE

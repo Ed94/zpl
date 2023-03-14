@@ -1,4 +1,4 @@
-// file: source/parsers/json.c
+// a_file: source/parsers/json.c
 
 ////////////////////////////////////////////////////////////////
 //
@@ -6,26 +6,27 @@
 //
 //
 
+
 #ifdef ZPL_JSON_DEBUG
-#define ZPL_JSON_ASSERT( msg ) ZPL_PANIC( msg )
+#	define ZPL_JSON_ASSERT( msg ) ZPL_PANIC( msg )
 #else
-#define ZPL_JSON_ASSERT( msg )
+#	define ZPL_JSON_ASSERT( msg )
 #endif
 
 ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
 
-char* zpl__json_parse_object( adt_node* obj, char* base, zpl_allocator a, u8* err_code );
-char* zpl__json_parse_array( adt_node* obj, char* base, zpl_allocator a, u8* err_code );
-char* zpl__json_parse_value( adt_node* obj, char* base, zpl_allocator a, u8* err_code );
+char* zpl__json_parse_object( adt_node* obj, char* base, allocator a, u8* err_code );
+char* zpl__json_parse_array( adt_node* obj, char* base, allocator a, u8* err_code );
+char* zpl__json_parse_value( adt_node* obj, char* base, allocator a, u8* err_code );
 char* zpl__json_parse_name( adt_node* obj, char* base, u8* err_code );
 char* zpl__json_trim( char* base, b32 catch_newline );
-b8    zpl__json_write_value( zpl_file* f, adt_node* o, adt_node* t, sw indent, b32 is_inline, b32 is_last );
+b8    zpl__json_write_value( file* f, adt_node* o, adt_node* t, sw indent, b32 is_inline, b32 is_last );
 
 #define zpl__json_fprintf( s_, fmt_, ... )                                                                                                                                         \
 	do                                                                                                                                                                             \
 	{                                                                                                                                                                              \
-		if ( zpl_fprintf( s_, fmt_, ##__VA_ARGS__ ) < 0 )                                                                                                                          \
+		if ( fprintf( s_, fmt_, ##__VA_ARGS__ ) < 0 )                                                                                                                              \
 			return false;                                                                                                                                                          \
 	} while ( 0 )
 
@@ -33,7 +34,7 @@ b8    zpl__json_write_value( zpl_file* f, adt_node* o, adt_node* t, sw indent, b
 	if ( x > 0 )                                                                                                                                                                   \
 		zpl__json_fprintf( f, "%*r", x, ' ' );
 
-u8 json_parse( adt_node* root, char* text, zpl_allocator a )
+u8 json_parse( adt_node* root, char* text, allocator a )
 {
 	u8 err_code = ZPL_JSON_ERROR_NONE;
 	ZPL_ASSERT( root );
@@ -57,16 +58,16 @@ void json_free( adt_node* obj )
 	adt_destroy_branch( obj );
 }
 
-string json_write_string( zpl_allocator a, adt_node* obj, sw indent )
+string json_write_string( allocator a, adt_node* obj, sw indent )
 {
-	zpl_file tmp;
+	file tmp;
 	if ( ! file_stream_new( &tmp, a ) )
 		return NULL;
 	if ( ! json_write( &tmp, obj, indent ) )
 		return NULL;
 	sw     fsize;
 	u8*    buf    = file_stream_buf( &tmp, &fsize );
-	string output = string_make_length( a, (char*)buf, fsize );
+	string output = string_make_length( a, ( char* )buf, fsize );
 	file_close( &tmp );
 	return output;
 }
@@ -92,14 +93,17 @@ static ZPL_ALWAYS_INLINE b32 zpl__json_is_assign_char( char c )
 {
 	return ! ! strchr( ":=|", c );
 }
+
 static ZPL_ALWAYS_INLINE b32 zpl__json_is_delim_char( char c )
 {
 	return ! ! strchr( ",|\n", c );
 }
-ZPL_DEF_INLINE b32 zpl__json_validate_name( char const * str, char* err );
+
+ZPL_DEF_INLINE b32 zpl__json_validate_name( char const* str, char* err );
 
 #define jx( x ) ! char_is_hex_digit( str[ x ] )
-ZPL_IMPL_INLINE b32 zpl__json_validate_name( char const * str, char* err )
+
+ZPL_IMPL_INLINE b32 zpl__json_validate_name( char const* str, char* err )
 {
 	while ( *str )
 	{
@@ -116,9 +120,10 @@ ZPL_IMPL_INLINE b32 zpl__json_validate_name( char const * str, char* err )
 
 	return true;
 }
+
 #undef jx
 
-char* zpl__json_parse_array( adt_node* obj, char* base, zpl_allocator a, u8* err_code )
+char* zpl__json_parse_array( adt_node* obj, char* base, allocator a, u8* err_code )
 {
 	ZPL_ASSERT( obj && base );
 	char* p = base;
@@ -172,7 +177,7 @@ char* zpl__json_parse_array( adt_node* obj, char* base, zpl_allocator a, u8* err
 	return NULL;
 }
 
-char* zpl__json_parse_value( adt_node* obj, char* base, zpl_allocator a, u8* err_code )
+char* zpl__json_parse_value( adt_node* obj, char* base, allocator a, u8* err_code )
 {
 	ZPL_ASSERT( obj && base );
 	char *p = base, *b = p, *e = p;
@@ -195,49 +200,49 @@ char* zpl__json_parse_value( adt_node* obj, char* base, zpl_allocator a, u8* err
 			obj->type  = ZPL_ADT_TYPE_REAL;
 			obj->props = ZPL_ADT_PROPS_TRUE;
 			obj->real  = 1;
-			p += 4;
+			p          += 4;
 		}
 		else if ( str_has_prefix( p, "false" ) )
 		{
 			obj->type  = ZPL_ADT_TYPE_REAL;
 			obj->props = ZPL_ADT_PROPS_FALSE;
 			obj->real  = 0;
-			p += 5;
+			p          += 5;
 		}
 		else if ( str_has_prefix( p, "null" ) )
 		{
 			obj->type  = ZPL_ADT_TYPE_REAL;
 			obj->props = ZPL_ADT_PROPS_NULL;
 			obj->real  = 0;
-			p += 4;
+			p          += 4;
 		}
 		else if ( str_has_prefix( p, "Infinity" ) )
 		{
 			obj->type  = ZPL_ADT_TYPE_REAL;
 			obj->real  = ZPL_INFINITY;
 			obj->props = ZPL_ADT_PROPS_INFINITY;
-			p += 8;
+			p          += 8;
 		}
 		else if ( str_has_prefix( p, "-Infinity" ) )
 		{
 			obj->type  = ZPL_ADT_TYPE_REAL;
 			obj->real  = -ZPL_INFINITY;
 			obj->props = ZPL_ADT_PROPS_INFINITY_NEG;
-			p += 9;
+			p          += 9;
 		}
 		else if ( str_has_prefix( p, "NaN" ) )
 		{
 			obj->type  = ZPL_ADT_TYPE_REAL;
 			obj->real  = ZPL_NAN;
 			obj->props = ZPL_ADT_PROPS_NAN;
-			p += 3;
+			p          += 3;
 		}
 		else if ( str_has_prefix( p, "-NaN" ) )
 		{
 			obj->type  = ZPL_ADT_TYPE_REAL;
 			obj->real  = -ZPL_NAN;
 			obj->props = ZPL_ADT_PROPS_NAN_NEG;
-			p += 4;
+			p          += 4;
 		}
 		else
 		{
@@ -262,7 +267,7 @@ char* zpl__json_parse_value( adt_node* obj, char* base, zpl_allocator a, u8* err
 	return p;
 }
 
-char* zpl__json_parse_object( adt_node* obj, char* base, zpl_allocator a, u8* err_code )
+char* zpl__json_parse_object( adt_node* obj, char* base, allocator a, u8* err_code )
 {
 	ZPL_ASSERT( obj && base );
 	char* p = base;
@@ -432,7 +437,7 @@ char* zpl__json_trim( char* base, b32 catch_newline )
 		if ( str_has_prefix( p, "//" ) )
 		{
 			const char* e = str_skip( p, '\n' );
-			p += ( e - p );
+			p             += ( e - p );
 		}
 		else if ( str_has_prefix( p, "/*" ) )
 		{
@@ -455,7 +460,7 @@ char* zpl__json_trim( char* base, b32 catch_newline )
 	return NULL;
 }
 
-b8 json_write( zpl_file* f, adt_node* o, sw indent )
+b8 json_write( file* f, adt_node* o, sw indent )
 {
 	if ( ! o )
 		return true;
@@ -502,10 +507,10 @@ b8 json_write( zpl_file* f, adt_node* o, sw indent )
 	return true;
 }
 
-b8 zpl__json_write_value( zpl_file* f, adt_node* o, adt_node* t, sw indent, b32 is_inline, b32 is_last )
+b8 zpl__json_write_value( file* f, adt_node* o, adt_node* t, sw indent, b32 is_inline, b32 is_last )
 {
 	adt_node* node = o;
-	indent += 4;
+	indent         += 4;
 
 	if ( ! is_inline )
 	{

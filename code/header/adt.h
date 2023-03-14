@@ -1,4 +1,4 @@
-// file: header/adt.h
+// a_file: header/adt.h
 
 ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
@@ -63,7 +63,7 @@ typedef enum adt_error
 
 typedef struct adt_node
 {
-	char const *     name;
+	char const*      name;
 	struct adt_node* parent;
 
 	/* properties */
@@ -81,8 +81,9 @@ typedef struct adt_node
 	/* adt data */
 	union
 	{
-		char const *     string;
-		struct adt_node* nodes; ///< zpl_array
+		char const*      string;
+		struct adt_node* nodes;    ///< zpl_array
+
 		struct
 		{
 			union
@@ -119,7 +120,7 @@ typedef struct adt_node
  * @param is_array
  * @return error code
  */
-ZPL_DEF u8 adt_make_branch( adt_node* node, zpl_allocator backing, char const * name, b32 is_array );
+ZPL_DEF u8 adt_make_branch( adt_node* node, allocator backing, char const* name, b32 is_array );
 
 /**
  * @brief Destroy an ADT branch and its descendants
@@ -137,7 +138,8 @@ ZPL_DEF u8 adt_destroy_branch( adt_node* node );
  * @param type Node's type (use adt_make_branch for container nodes)
  * @return error code
  */
-ZPL_DEF u8 adt_make_leaf( adt_node* node, char const * name, u8 type );
+ZPL_DEF u8 adt_make_leaf( adt_node* node, char const* name, u8 type );
+
 
 /**
  * @brief Fetch a node using provided URI string.
@@ -156,7 +158,7 @@ ZPL_DEF u8 adt_make_leaf( adt_node* node, char const * name, u8 type );
  *
  * @see code/apps/examples/json_get.c
  */
-ZPL_DEF adt_node* adt_query( adt_node* node, char const * uri );
+ZPL_DEF adt_node* adt_query( adt_node* node, char const* uri );
 
 /**
  * @brief Find a field node within an object by the given name.
@@ -166,7 +168,7 @@ ZPL_DEF adt_node* adt_query( adt_node* node, char const * uri );
  * @param deep_search Perform search recursively
  * @return adt_node * node
  */
-ZPL_DEF adt_node* adt_find( adt_node* node, char const * name, b32 deep_search );
+ZPL_DEF adt_node* adt_find( adt_node* node, char const* name, b32 deep_search );
 
 /**
  * @brief Allocate an unitialised node within a container at a specified index.
@@ -229,7 +231,7 @@ ZPL_DEF void adt_remove_node( adt_node* node );
  * @param backing
  * @return
  */
-ZPL_DEF b8 adt_set_obj( adt_node* obj, char const * name, zpl_allocator backing );
+ZPL_DEF b8 adt_set_obj( adt_node* obj, char const* name, allocator backing );
 
 /**
  * @brief Initialise a node as an array
@@ -239,7 +241,7 @@ ZPL_DEF b8 adt_set_obj( adt_node* obj, char const * name, zpl_allocator backing 
  * @param backing
  * @return
  */
-ZPL_DEF b8 adt_set_arr( adt_node* obj, char const * name, zpl_allocator backing );
+ZPL_DEF b8 adt_set_arr( adt_node* obj, char const* name, allocator backing );
 
 /**
  * @brief Initialise a node as a string
@@ -249,7 +251,7 @@ ZPL_DEF b8 adt_set_arr( adt_node* obj, char const * name, zpl_allocator backing 
  * @param value
  * @return
  */
-ZPL_DEF b8 adt_set_str( adt_node* obj, char const * name, char const * value );
+ZPL_DEF b8 adt_set_str( adt_node* obj, char const* name, char const* value );
 
 /**
  * @brief Initialise a node as a float
@@ -259,7 +261,7 @@ ZPL_DEF b8 adt_set_str( adt_node* obj, char const * name, char const * value );
  * @param value
  * @return
  */
-ZPL_DEF b8 adt_set_flt( adt_node* obj, char const * name, f64 value );
+ZPL_DEF b8 adt_set_flt( adt_node* obj, char const* name, f64 value );
 
 /**
  * @brief Initialise a node as a signed integer
@@ -269,7 +271,7 @@ ZPL_DEF b8 adt_set_flt( adt_node* obj, char const * name, f64 value );
  * @param value
  * @return
  */
-ZPL_DEF b8 adt_set_int( adt_node* obj, char const * name, s64 value );
+ZPL_DEF b8 adt_set_int( adt_node* obj, char const* name, s64 value );
 
 /**
  * @brief Append a new node to a container as an object
@@ -278,7 +280,7 @@ ZPL_DEF b8 adt_set_int( adt_node* obj, char const * name, s64 value );
  * @param name
  * @return*
  */
-ZPL_DEF adt_node* adt_append_obj( adt_node* parent, char const * name );
+ZPL_DEF adt_node* adt_append_obj( adt_node* parent, char const* name );
 
 /**
  * @brief Append a new node to a container as an array
@@ -287,7 +289,7 @@ ZPL_DEF adt_node* adt_append_obj( adt_node* parent, char const * name );
  * @param name
  * @return*
  */
-ZPL_DEF adt_node* adt_append_arr( adt_node* parent, char const * name );
+ZPL_DEF adt_node* adt_append_arr( adt_node* parent, char const* name );
 
 /**
  * @brief Append a new node to a container as a string
@@ -297,7 +299,7 @@ ZPL_DEF adt_node* adt_append_arr( adt_node* parent, char const * name );
  * @param value
  * @return*
  */
-ZPL_DEF adt_node* adt_append_str( adt_node* parent, char const * name, char const * value );
+ZPL_DEF adt_node* adt_append_str( adt_node* parent, char const* name, char const* value );
 
 /**
  * @brief Append a new node to a container as a float
@@ -307,7 +309,7 @@ ZPL_DEF adt_node* adt_append_str( adt_node* parent, char const * name, char cons
  * @param value
  * @return*
  */
-ZPL_DEF adt_node* adt_append_flt( adt_node* parent, char const * name, f64 value );
+ZPL_DEF adt_node* adt_append_flt( adt_node* parent, char const* name, f64 value );
 
 /**
  * @brief Append a new node to a container as a signed integer
@@ -317,7 +319,7 @@ ZPL_DEF adt_node* adt_append_flt( adt_node* parent, char const * name, f64 value
  * @param value
  * @return*
  */
-ZPL_DEF adt_node* adt_append_int( adt_node* parent, char const * name, s64 value );
+ZPL_DEF adt_node* adt_append_int( adt_node* parent, char const* name, s64 value );
 
 /* parser helpers */
 
@@ -339,79 +341,86 @@ ZPL_DEF char* adt_parse_number( adt_node* node, char* base );
 ZPL_DEF adt_error adt_str_to_number( adt_node* node );
 
 /**
- * @brief Prints a number into a file stream.
+ * @brief Prints a number into a a_file stream.
  *
- * The provided file handle can also be a memory mapped stream.
+ * The provided a_file handle can also be a memory mapped stream.
  *
  * @see file_stream_new
- * @param file
+ * @param a_file
  * @param node
  * @return
  */
-ZPL_DEF adt_error adt_print_number( zpl_file* file, adt_node* node );
+ZPL_DEF adt_error adt_print_number( file* a_file, adt_node* node );
 
 /**
- * @brief Prints a string into a file stream.
+ * @brief Prints a string into a a_file stream.
  *
- * The provided file handle can also be a memory mapped stream.
+ * The provided a_file handle can also be a memory mapped stream.
  *
  * @see file_stream_new
- * @param file
+ * @param a_file
  * @param node
  * @param escaped_chars
  * @param escape_symbol
  * @return
  */
-ZPL_DEF adt_error adt_print_string( zpl_file* file, adt_node* node, char const * escaped_chars, char const * escape_symbol );
+ZPL_DEF adt_error adt_print_string( file* a_file, adt_node* node, char const* escaped_chars, char const* escape_symbol );
 
 /* extensions */
 
 #if defined( __STDC_VERSION__ ) && __STDC_VERSION__ >= 201112L
-#define adt_append( parent, name, value )                                                                                                                                          \
-	_Generic( ( value ), char* : adt_append_str, char const * : adt_append_str, f64 : adt_append_flt, default : adt_append_int )( parent, name, value )
-#define adt_set( obj, name, value ) _Generic( ( value ), char* : adt_set_str, char const * : adt_set_str, f64 : adt_set_flt, default : adt_set_int )( obj, name, value )
+#	define adt_append( parent, name, value )                                                                                                                                      \
+		_Generic( ( value ), char* : adt_append_str, char const* : adt_append_str, f64 : adt_append_flt, default : adt_append_int )( parent, name, value )
+#	define adt_set( obj, name, value ) _Generic( ( value ), char* : adt_set_str, char const* : adt_set_str, f64 : adt_set_flt, default : adt_set_int )( obj, name, value )
 #endif
 
 /* deprecated */
 
 ZPL_DEPRECATED_FOR( 18.0.0, adt_query )
-ZPL_IMPL_INLINE adt_node* adt_get( adt_node* node, char const * uri )
+
+ZPL_IMPL_INLINE adt_node* adt_get( adt_node* node, char const* uri )
 {
 	return adt_query( node, uri );
 }
 
 ZPL_DEPRECATED_FOR( 13.3.0, adt_str_to_number )
+
 ZPL_IMPL_INLINE void adt_str_to_flt( adt_node* node )
 {
-	(void)adt_str_to_number( node );
+	( void )adt_str_to_number( node );
 }
 
 ZPL_DEPRECATED_FOR( 17.0.0, adt_append_obj )
-ZPL_IMPL_INLINE adt_node* adt_inset_obj( adt_node* parent, char const * name )
+
+ZPL_IMPL_INLINE adt_node* adt_inset_obj( adt_node* parent, char const* name )
 {
 	return adt_append_obj( parent, name );
 }
 
 ZPL_DEPRECATED_FOR( 17.0.0, adt_append_arr )
-ZPL_IMPL_INLINE adt_node* adt_inset_arr( adt_node* parent, char const * name )
+
+ZPL_IMPL_INLINE adt_node* adt_inset_arr( adt_node* parent, char const* name )
 {
 	return adt_append_arr( parent, name );
 }
 
 ZPL_DEPRECATED_FOR( 17.0.0, adt_append_str )
-ZPL_IMPL_INLINE adt_node* adt_inset_str( adt_node* parent, char const * name, char const * value )
+
+ZPL_IMPL_INLINE adt_node* adt_inset_str( adt_node* parent, char const* name, char const* value )
 {
 	return adt_append_str( parent, name, value );
 }
 
 ZPL_DEPRECATED_FOR( 17.0.0, adt_append_flt )
-ZPL_IMPL_INLINE adt_node* adt_inset_flt( adt_node* parent, char const * name, f64 value )
+
+ZPL_IMPL_INLINE adt_node* adt_inset_flt( adt_node* parent, char const* name, f64 value )
 {
 	return adt_append_flt( parent, name, value );
 }
 
 ZPL_DEPRECATED_FOR( 17.0.0, adt_append_int )
-ZPL_IMPL_INLINE adt_node* adt_inset_int( adt_node* parent, char const * name, s64 value )
+
+ZPL_IMPL_INLINE adt_node* adt_inset_int( adt_node* parent, char const* name, s64 value )
 {
 	return adt_append_int( parent, name, value );
 }

@@ -1,4 +1,5 @@
-// file: source/core/misc.c
+// a_file: source/core/misc.c
+
 
 ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
@@ -22,9 +23,9 @@ const char* get_env( const char* name )
 		return NULL;
 	}
 
-	sw ptr_size = zpl_strlen( ptr );
-	buffer      = (char*)malloc( ptr_size * sizeof( char ) + 1 );
-	zpl_memcopy( (char*)buffer, ptr, ptr_size + 1 );
+	sw ptr_size = strlen( ptr );
+	buffer      = ( char* )malloc( ptr_size * sizeof( char ) + 1 );
+	memcopy( ( char* )buffer, ptr, ptr_size + 1 );
 	return buffer;
 }
 
@@ -41,9 +42,9 @@ const char* get_env_buf( const char* name )
 
 	ucs2_to_utf8( zpl_cast( u8* ) buffer, 32767, zpl_cast( const u16* ) wbuffer );
 
-	return (const char*)buffer;
+	return ( const char* )buffer;
 #else
-	return (const char*)getenv( name );
+	return ( const char* )getenv( name );
 #endif
 }
 
@@ -88,11 +89,11 @@ u32 system_command( const char* command, uw buffer_len, char* buffer )
 	ZPL_PANIC( "system_command not supported" );
 #else
 
-#if defined( ZPL_SYSTEM_WINDOWS )
+#	if defined( ZPL_SYSTEM_WINDOWS )
 	FILE* handle = _popen( command, "r" );
-#else
+#	else
 	FILE* handle = popen( command, "r" );
-#endif
+#	endif
 
 	if ( ! handle )
 		return 0;
@@ -104,28 +105,28 @@ u32 system_command( const char* command, uw buffer_len, char* buffer )
 		*buffer++ = c;
 	}
 
-#if defined( ZPL_SYSTEM_WINDOWS )
+#	if defined( ZPL_SYSTEM_WINDOWS )
 	_pclose( handle );
-#else
+#	else
 	pclose( handle );
-#endif
+#	endif
 
 #endif
 
 	return 1;
 }
 
-string system_command_str( const char* command, zpl_allocator backing )
+string system_command_str( const char* command, allocator backing )
 {
 #if defined( ZPL_SYSTEM_EMSCRIPTEN )
 	ZPL_PANIC( "system_command not supported" );
 #else
 
-#if defined( ZPL_SYSTEM_WINDOWS )
+#	if defined( ZPL_SYSTEM_WINDOWS )
 	FILE* handle = _popen( command, "r" );
-#else
+#	else
 	FILE* handle = popen( command, "r" );
-#endif
+#	endif
 
 	if ( ! handle )
 		return NULL;
@@ -135,15 +136,15 @@ string system_command_str( const char* command, zpl_allocator backing )
 	int c;
 	while ( ( c = getc( handle ) ) != EOF )
 	{
-		char ins[ 2 ] = { (char)c, 0 };
+		char ins[ 2 ] = { ( char )c, 0 };
 		output        = string_appendc( output, ins );
 	}
 
-#if defined( ZPL_SYSTEM_WINDOWS )
+#	if defined( ZPL_SYSTEM_WINDOWS )
 	_pclose( handle );
-#else
+#	else
 	pclose( handle );
-#endif
+#	endif
 	return output;
 #endif
 	return NULL;

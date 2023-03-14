@@ -1,4 +1,5 @@
-// file: source/core/file.c
+// a_file: source/core/file.c
+
 
 ////////////////////////////////////////////////////////////////
 //
@@ -8,15 +9,15 @@
 #include <sys/stat.h>
 
 #ifdef ZPL_SYSTEM_MACOS
-#include <copyfile.h>
+#	include <copyfile.h>
 #endif
 
 #ifdef ZPL_SYSTEM_CYGWIN
-#include <windows.h>
+#	include <windows.h>
 #endif
 
 #if defined( ZPL_SYSTEM_WINDOWS ) && ! defined( ZPL_COMPILER_GCC )
-#include <io.h>
+#	include <io.h>
 #endif
 
 ZPL_BEGIN_NAMESPACE
@@ -24,7 +25,7 @@ ZPL_BEGIN_C_DECLS
 
 #if defined( ZPL_SYSTEM_WINDOWS ) || defined( ZPL_SYSTEM_CYGWIN )
 
-internal wchar_t* zpl__alloc_utf8_to_ucs2( zpl_allocator a, char const * text, sw* w_len_ )
+internal wchar_t* zpl__alloc_utf8_to_ucs2( allocator a, char const* text, sw* w_len_ )
 {
 	wchar_t* w_text = NULL;
 	sw       len = 0, w_len = 0, w_len1 = 0;
@@ -34,7 +35,7 @@ internal wchar_t* zpl__alloc_utf8_to_ucs2( zpl_allocator a, char const * text, s
 			*w_len_ = w_len;
 		return NULL;
 	}
-	len = zpl_strlen( text );
+	len = strlen( text );
 	if ( len == 0 )
 	{
 		if ( w_len_ )
@@ -149,7 +150,7 @@ ZPL_NEVER_INLINE ZPL_FILE_OPEN_PROC( zpl__win32_file_open )
 			creation_disposition = OPEN_ALWAYS;
 			break;
 		default :
-			ZPL_PANIC( "Invalid file mode" );
+			ZPL_PANIC( "Invalid a_file mode" );
 			return ZPL_FILE_ERROR_INVALID;
 	}
 
@@ -190,16 +191,16 @@ ZPL_NEVER_INLINE ZPL_FILE_OPEN_PROC( zpl__win32_file_open )
 	return ZPL_FILE_ERROR_NONE;
 }
 
-#else // POSIX
-#include <fcntl.h>
+#else    // POSIX
+#	include <fcntl.h>
 
 internal ZPL_FILE_SEEK_PROC( zpl__posix_file_seek )
 {
-#if defined( ZPL_SYSTEM_OSX )
+#	if defined( ZPL_SYSTEM_OSX )
 	s64 res = lseek( fd.i, offset, whence );
-#else // TODO(ZaKlaus): @fixme lseek64
+#	else    // TODO(ZaKlaus): @fixme lseek64
 	s64 res = lseek( fd.i, offset, whence );
-#endif
+#	endif
 	if ( res < 0 )
 		return false;
 	if ( new_offset )
@@ -270,14 +271,14 @@ ZPL_NEVER_INLINE ZPL_FILE_OPEN_PROC( zpl__posix_file_open )
 			os_mode = O_RDWR | O_APPEND | O_CREAT;
 			break;
 		default :
-			ZPL_PANIC( "Invalid file mode" );
+			ZPL_PANIC( "Invalid a_file mode" );
 			return ZPL_FILE_ERROR_INVALID;
 	}
 
 	fd->i = open( filename, os_mode, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH );
 	if ( fd->i < 0 )
 	{
-		// TODO: More file errors
+		// TODO: More a_file errors
 		return ZPL_FILE_ERROR_INVALID;
 	}
 
@@ -287,25 +288,25 @@ ZPL_NEVER_INLINE ZPL_FILE_OPEN_PROC( zpl__posix_file_open )
 
 #endif
 
-file_error file_new( zpl_file* f, file_descriptor fd, file_operations ops, char const * filename )
+file_error file_new( file* f, file_descriptor fd, file_operations ops, char const* filename )
 {
 	file_error err = ZPL_FILE_ERROR_NONE;
-	sw         len = zpl_strlen( filename );
+	sw         len = strlen( filename );
 
 	f->ops             = ops;
 	f->fd              = fd;
 	f->dir             = NULL;
 	f->last_write_time = 0;
 	f->filename        = alloc_array( heap_allocator(), char, len + 1 );
-	zpl_memcopy( zpl_cast( char* ) f->filename, zpl_cast( char* ) filename, len + 1 );
+	memcopy( zpl_cast( char* ) f->filename, zpl_cast( char* ) filename, len + 1 );
 
 	return err;
 }
 
-file_error file_open_mode( zpl_file* f, file_mode mode, char const * filename )
+file_error file_open_mode( file* f, file_mode mode, char const* filename )
 {
-	zpl_file file_ = { 0 };
-	*f             = file_;
+	file file_ = { 0 };
+	*f         = file_;
 	file_error err;
 #if defined( ZPL_SYSTEM_WINDOWS ) || defined( ZPL_SYSTEM_CYGWIN )
 	err = zpl__win32_file_open( &f->fd, &f->ops, mode, filename );
@@ -319,7 +320,7 @@ file_error file_open_mode( zpl_file* f, file_mode mode, char const * filename )
 
 internal void zpl__dirinfo_free_entry( dir_entry* entry );
 
-file_error file_close( zpl_file* f )
+file_error file_close( file* f )
 {
 	if ( ! f )
 		return ZPL_FILE_ERROR_INVALID;
@@ -355,22 +356,22 @@ file_error file_close( zpl_file* f )
 	return ZPL_FILE_ERROR_NONE;
 }
 
-file_error file_create( zpl_file* f, char const * filename )
+file_error file_create( file* f, char const* filename )
 {
 	return file_open_mode( f, ZPL_FILE_MODE_WRITE | ZPL_FILE_MODE_RW, filename );
 }
 
-file_error file_open( zpl_file* f, char const * filename )
+file_error file_open( file* f, char const* filename )
 {
 	return file_open_mode( f, ZPL_FILE_MODE_READ, filename );
 }
 
-char const * file_name( zpl_file* f )
+char const* file_name( file* f )
 {
 	return f->filename ? f->filename : "";
 }
 
-b32 file_has_changed( zpl_file* f )
+b32 file_has_changed( file* f )
 {
 	if ( f->is_temp )
 		return false;
@@ -385,42 +386,42 @@ b32 file_has_changed( zpl_file* f )
 }
 
 // TODO: Is this a bad idea?
-global b32      zpl__std_file_set                         = false;
-global zpl_file zpl__std_files[ ZPL_FILE_STANDARD_COUNT ] = { { 0 } };
+global b32  zpl__std_file_set                         = false;
+global file zpl__std_files[ ZPL_FILE_STANDARD_COUNT ] = { { 0 } };
 
 #if defined( ZPL_SYSTEM_WINDOWS ) || defined( ZPL_SYSTEM_CYGWIN )
 
-zpl_file* file_get_standard( file_standard_type std )
+file* file_get_standard( file_standard_type std )
 {
 	if ( ! zpl__std_file_set )
 	{
-#define ZPL__SET_STD_FILE( type, v )                                                                                                                                               \
-	zpl__std_files[ type ].fd.p = v;                                                                                                                                               \
-	zpl__std_files[ type ].ops  = default_file_operations
-        ZPL__SET_STD_FILE( ZPL_FILE_STANDARD_INPUT, GetStdHandle( STD_INPUT_HANDLE ) );
-        ZPL__SET_STD_FILE( ZPL_FILE_STANDARD_OUTPUT, GetStdHandle( STD_OUTPUT_HANDLE ) );
-        ZPL__SET_STD_FILE( ZPL_FILE_STANDARD_ERROR, GetStdHandle( STD_ERROR_HANDLE ) );
-#undef ZPL__SET_STD_FILE
+#	define ZPL__SET_STD_FILE( type, v )                                                                                                                                           \
+		zpl__std_files[ type ].fd.p = v;                                                                                                                                           \
+		zpl__std_files[ type ].ops  = default_file_operations
+		ZPL__SET_STD_FILE( ZPL_FILE_STANDARD_INPUT, GetStdHandle( STD_INPUT_HANDLE ) );
+		ZPL__SET_STD_FILE( ZPL_FILE_STANDARD_OUTPUT, GetStdHandle( STD_OUTPUT_HANDLE ) );
+		ZPL__SET_STD_FILE( ZPL_FILE_STANDARD_ERROR, GetStdHandle( STD_ERROR_HANDLE ) );
+#	undef ZPL__SET_STD_FILE
 		zpl__std_file_set = true;
 	}
 	return &zpl__std_files[ std ];
 }
 
-void file_connect_handle( zpl_file* file, void* handle )
+void file_connect_handle( file* a_file, void* handle )
 {
-	ZPL_ASSERT_NOT_NULL( file );
+	ZPL_ASSERT_NOT_NULL( a_file );
 	ZPL_ASSERT_NOT_NULL( handle );
 
-	if ( file->is_temp )
+	if ( a_file->is_temp )
 		return;
 
-	zero_item( file );
+	zero_item( a_file );
 
-	file->fd.p = handle;
-	file->ops  = default_file_operations;
+	a_file->fd.p = handle;
+	a_file->ops  = default_file_operations;
 }
 
-file_error file_truncate( zpl_file* f, s64 size )
+file_error file_truncate( file* f, s64 size )
 {
 	file_error err         = ZPL_FILE_ERROR_NONE;
 	s64        prev_offset = file_tell( f );
@@ -431,13 +432,13 @@ file_error file_truncate( zpl_file* f, s64 size )
 	return err;
 }
 
-b32 fs_exists( char const * name )
+b32 fs_exists( char const* name )
 {
 	WIN32_FIND_DATAW data;
 	wchar_t*         w_text;
 	void*            handle;
 	b32              found = false;
-	zpl_allocator    a     = heap_allocator();
+	allocator        a     = heap_allocator();
 
 	w_text = zpl__alloc_utf8_to_ucs2( a, name, NULL );
 	if ( w_text == NULL )
@@ -452,25 +453,25 @@ b32 fs_exists( char const * name )
 	return found;
 }
 
-#else // POSIX
+#else    // POSIX
 
-zpl_file* file_get_standard( file_standard_type std )
+file* file_get_standard( file_standard_type std )
 {
 	if ( ! zpl__std_file_set )
 	{
-#define ZPL__SET_STD_FILE( type, v )                                                                                                                                               \
-	zpl__std_files[ type ].fd.i = v;                                                                                                                                               \
-	zpl__std_files[ type ].ops  = default_file_operations
+#	define ZPL__SET_STD_FILE( type, v )                                                                                                                                           \
+		zpl__std_files[ type ].fd.i = v;                                                                                                                                           \
+		zpl__std_files[ type ].ops  = default_file_operations
 		ZPL__SET_STD_FILE( ZPL_FILE_STANDARD_INPUT, 0 );
 		ZPL__SET_STD_FILE( ZPL_FILE_STANDARD_OUTPUT, 1 );
 		ZPL__SET_STD_FILE( ZPL_FILE_STANDARD_ERROR, 2 );
-#undef ZPL__SET_STD_FILE
+#	undef ZPL__SET_STD_FILE
 		zpl__std_file_set = true;
 	}
 	return &zpl__std_files[ std ];
 }
 
-file_error file_truncate( zpl_file* f, s64 size )
+file_error file_truncate( file* f, s64 size )
 {
 	file_error err = ZPL_FILE_ERROR_NONE;
 	int        i   = ftruncate( f->fd.i, size );
@@ -479,14 +480,14 @@ file_error file_truncate( zpl_file* f, s64 size )
 	return err;
 }
 
-b32 fs_exists( char const * name )
+b32 fs_exists( char const* name )
 {
 	return access( name, F_OK ) != -1;
 }
 
 #endif
 
-s64 file_size( zpl_file* f )
+s64 file_size( file* f )
 {
 	s64 size        = 0;
 	s64 prev_offset = file_tell( f );
@@ -496,9 +497,9 @@ s64 file_size( zpl_file* f )
 	return size;
 }
 
-file_error file_temp( zpl_file* file )
+file_error file_temp( file* a_file )
 {
-	zero_item( file );
+	zero_item( a_file );
 	FILE* fd = NULL;
 
 #if ( defined( ZPL_SYSTEM_WINDOWS ) && ! defined( ZPL_SYSTEM_TINYC ) ) && ! defined( ZPL_COMPILER_GCC )
@@ -509,7 +510,7 @@ file_error file_temp( zpl_file* file )
 		fd = NULL;
 	}
 #else
-	fd         = tmpfile();
+	fd           = tmpfile();
 #endif
 
 	if ( fd == NULL )
@@ -518,37 +519,37 @@ file_error file_temp( zpl_file* file )
 	}
 
 #if defined( ZPL_SYSTEM_WINDOWS ) && ! defined( ZPL_COMPILER_GCC )
-	file->fd.i = _get_osfhandle( _fileno( fd ) );
+	a_file->fd.i = _get_osfhandle( _fileno( fd ) );
 #else
-	file->fd.i = fileno( fd );
+	a_file->fd.i = fileno( fd );
 #endif
-	file->ops     = default_file_operations;
-	file->is_temp = true;
+	a_file->ops     = default_file_operations;
+	a_file->is_temp = true;
 	return ZPL_FILE_ERROR_NONE;
 }
 
-file_contents file_read_contents( zpl_allocator a, b32 zero_terminate, char const * filepath )
+file_contents file_read_contents( allocator a, b32 zero_terminate, char const* filepath )
 {
 	file_contents result = { 0 };
-	zpl_file      file   = { 0 };
+	file          a_file = { 0 };
 
 	result.allocator = a;
 
-	if ( file_open( &file, filepath ) == ZPL_FILE_ERROR_NONE )
+	if ( file_open( &a_file, filepath ) == ZPL_FILE_ERROR_NONE )
 	{
-		sw fsize = zpl_cast( sw ) file_size( &file );
+		sw fsize = zpl_cast( sw ) file_size( &a_file );
 		if ( fsize > 0 )
 		{
 			result.data = alloc( a, zero_terminate ? fsize + 1 : fsize );
 			result.size = fsize;
-			file_read_at( &file, result.data, result.size, 0 );
+			file_read_at( &a_file, result.data, result.size, 0 );
 			if ( zero_terminate )
 			{
 				u8* str      = zpl_cast( u8* ) result.data;
 				str[ fsize ] = '\0';
 			}
 		}
-		file_close( &file );
+		file_close( &a_file );
 	}
 
 	return result;
@@ -562,9 +563,9 @@ void file_free_contents( file_contents* fc )
 	fc->size = 0;
 }
 
-b32 file_write_contents( char const * filepath, void const * buffer, sw size, file_error* err )
+b32 file_write_contents( char const* filepath, void const* buffer, sw size, file_error* err )
 {
-	zpl_file   f = { 0 };
+	file       f = { 0 };
 	file_error open_err;
 	b32        write_ok;
 	open_err = file_open_mode( &f, ZPL_FILE_MODE_WRITE, filepath );
@@ -582,24 +583,24 @@ b32 file_write_contents( char const * filepath, void const * buffer, sw size, fi
 	return write_ok;
 }
 
-char* file_read_lines( zpl_allocator allocator, zpl_array( char* ) * lines, char const * filename, b32 strip_whitespace )
+char* file_read_lines( allocator a_allocator, zpl_array( char* ) * lines, char const* filename, b32 strip_whitespace )
 {
-	zpl_file f = { 0 };
+	file f = { 0 };
 	file_open( &f, filename );
-	sw fsize = (sw)file_size( &f );
+	sw fsize = ( sw )file_size( &f );
 
-	char* contents = (char*)alloc( allocator, fsize + 1 );
+	char* contents = ( char* )alloc( a_allocator, fsize + 1 );
 	file_read( &f, contents, fsize );
 	contents[ fsize ] = 0;
-	*lines            = str_split_lines( allocator, contents, strip_whitespace );
+	*lines            = str_split_lines( a_allocator, contents, strip_whitespace );
 	file_close( &f );
 
 	return contents;
 }
 
 #if ! defined( _WINDOWS_ ) && defined( ZPL_SYSTEM_WINDOWS )
-ZPL_IMPORT DWORD WINAPI GetFullPathNameA( char const * lpFileName, DWORD nBufferLength, char* lpBuffer, char** lpFilePart );
-ZPL_IMPORT DWORD WINAPI GetFullPathNameW( wchar_t const * lpFileName, DWORD nBufferLength, wchar_t* lpBuffer, wchar_t** lpFilePart );
+ZPL_IMPORT DWORD WINAPI GetFullPathNameA( char const* lpFileName, DWORD nBufferLength, char* lpBuffer, char** lpFilePart );
+ZPL_IMPORT DWORD WINAPI GetFullPathNameW( wchar_t const* lpFileName, DWORD nBufferLength, wchar_t* lpBuffer, wchar_t** lpFilePart );
 #endif
 
 ZPL_END_C_DECLS

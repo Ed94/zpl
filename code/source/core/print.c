@@ -1,74 +1,75 @@
-// file: source/core/print.c
+// a_file: source/core/print.c
+
 
 ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
 
-sw zpl_printf_va( char const * fmt, va_list va )
+sw printf_va( char const* fmt, va_list va )
 {
-	return zpl_fprintf_va( file_get_standard( ZPL_FILE_STANDARD_OUTPUT ), fmt, va );
+	return fprintf_va( file_get_standard( ZPL_FILE_STANDARD_OUTPUT ), fmt, va );
 }
 
-sw zpl_printf_err_va( char const * fmt, va_list va )
+sw printf_err_va( char const* fmt, va_list va )
 {
-	return zpl_fprintf_va( file_get_standard( ZPL_FILE_STANDARD_ERROR ), fmt, va );
+	return fprintf_va( file_get_standard( ZPL_FILE_STANDARD_ERROR ), fmt, va );
 }
 
-sw zpl_fprintf_va( struct zpl_file* f, char const * fmt, va_list va )
+sw fprintf_va( struct file* f, char const* fmt, va_list va )
 {
 	local_persist thread_local char buf[ ZPL_PRINTF_MAXLEN ];
-	sw                              len = zpl_snprintf_va( buf, size_of( buf ), fmt, va );
-	b32                             res = file_write( f, buf, len - 1 ); // NOTE: prevent extra whitespace
+	sw                              len = snprintf_va( buf, size_of( buf ), fmt, va );
+	b32                             res = file_write( f, buf, len - 1 );    // NOTE: prevent extra whitespace
 	return res ? len : -1;
 }
 
-char* bprintf_va( char const * fmt, va_list va )
+char* bprintf_va( char const* fmt, va_list va )
 {
 	local_persist thread_local char buffer[ ZPL_PRINTF_MAXLEN ];
-	zpl_snprintf_va( buffer, size_of( buffer ), fmt, va );
+	snprintf_va( buffer, size_of( buffer ), fmt, va );
 	return buffer;
 }
 
-sw asprintf_va( zpl_allocator allocator, char** buffer, char const * fmt, va_list va )
+sw asprintf_va( allocator allocator, char** buffer, char const* fmt, va_list va )
 {
 	local_persist thread_local char tmp[ ZPL_PRINTF_MAXLEN ];
 	ZPL_ASSERT_NOT_NULL( buffer );
 	sw res;
-	res     = zpl_snprintf_va( tmp, size_of( tmp ), fmt, va );
+	res     = snprintf_va( tmp, size_of( tmp ), fmt, va );
 	*buffer = alloc_str( allocator, tmp );
 	return res;
 }
 
-sw zpl_printf( char const * fmt, ... )
+sw printf( char const* fmt, ... )
 {
 	sw      res;
 	va_list va;
 	va_start( va, fmt );
-	res = zpl_printf_va( fmt, va );
+	res = printf_va( fmt, va );
 	va_end( va );
 	return res;
 }
 
-sw zpl_printf_err( char const * fmt, ... )
+sw printf_err( char const* fmt, ... )
 {
 	sw      res;
 	va_list va;
 	va_start( va, fmt );
-	res = zpl_printf_err_va( fmt, va );
+	res = printf_err_va( fmt, va );
 	va_end( va );
 	return res;
 }
 
-sw zpl_fprintf( struct zpl_file* f, char const * fmt, ... )
+sw fprintf( struct file* f, char const* fmt, ... )
 {
 	sw      res;
 	va_list va;
 	va_start( va, fmt );
-	res = zpl_fprintf_va( f, fmt, va );
+	res = fprintf_va( f, fmt, va );
 	va_end( va );
 	return res;
 }
 
-char* bprintf( char const * fmt, ... )
+char* bprintf( char const* fmt, ... )
 {
 	va_list va;
 	char*   str;
@@ -78,7 +79,7 @@ char* bprintf( char const * fmt, ... )
 	return str;
 }
 
-sw asprintf( zpl_allocator allocator, char** buffer, char const * fmt, ... )
+sw asprintf( allocator allocator, char** buffer, char const* fmt, ... )
 {
 	sw      res;
 	va_list va;
@@ -88,12 +89,12 @@ sw asprintf( zpl_allocator allocator, char** buffer, char const * fmt, ... )
 	return res;
 }
 
-sw zpl_snprintf( char* str, sw n, char const * fmt, ... )
+sw snprintf( char* str, sw n, char const* fmt, ... )
 {
 	sw      res;
 	va_list va;
 	va_start( va, fmt );
-	res = zpl_snprintf_va( str, n, fmt, va );
+	res = snprintf_va( str, n, fmt, va );
 	va_end( va );
 	return res;
 }
@@ -132,7 +133,7 @@ typedef struct
 	s32 precision;
 } zpl__format_info;
 
-internal sw zpl__print_string( char* text, sw max_len, zpl__format_info* info, char const * str )
+internal sw zpl__print_string( char* text, sw max_len, zpl__format_info* info, char const* str )
 {
 	sw    res = 0, len = 0;
 	sw    remaining = max_len;
@@ -145,9 +146,9 @@ internal sw zpl__print_string( char* text, sw max_len, zpl__format_info* info, c
 	}
 
 	if ( info && info->precision >= 0 )
-		len = zpl_strnlen( str, info->precision );
+		len = strnlen( str, info->precision );
 	else
-		len = zpl_strlen( str );
+		len = strlen( str );
 
 	if ( info && ( info->width == 0 && info->flags & ZPL_FMT_WIDTH ) )
 	{
@@ -160,7 +161,7 @@ internal sw zpl__print_string( char* text, sw max_len, zpl__format_info* info, c
 			len = info->precision < len ? info->precision : len;
 		if ( res + len > max_len )
 			return res;
-		res += strlcpy( text, str, len );
+		res  += strlcpy( text, str, len );
 		text += res;
 
 		if ( info->width > res )
@@ -255,7 +256,7 @@ internal sw zpl__print_f64( char* text, sw max_len, zpl__format_info* info, b32 
 
 		value = zpl_cast( u64 ) arg;
 		len   = zpl__print_u64( text, remaining, NULL, value );
-		text += len;
+		text  += len;
 
 		if ( len >= remaining )
 			remaining = min( remaining, 1 );
@@ -276,12 +277,12 @@ internal sw zpl__print_f64( char* text, sw max_len, zpl__format_info* info, b32 
 			{
 				value = zpl_cast( u64 )( arg * mult );
 				len   = zpl__print_u64( text, remaining, NULL, value );
-				text += len;
+				text  += len;
 				if ( len >= remaining )
 					remaining = min( remaining, 1 );
 				else
 					remaining -= len;
-				arg -= zpl_cast( f64 ) value / mult;
+				arg  -= zpl_cast( f64 ) value / mult;
 				mult *= 10;
 			}
 		}
@@ -312,7 +313,7 @@ internal sw zpl__print_f64( char* text, sw max_len, zpl__format_info* info, b32 
 				*( text_begin + len + width ) = *( text_begin + len );
 		}
 
-		len = width;
+		len  = width;
 		text += len;
 		if ( len >= remaining )
 			remaining = min( remaining, 1 );
@@ -329,10 +330,10 @@ internal sw zpl__print_f64( char* text, sw max_len, zpl__format_info* info, b32 
 	return ( text - text_begin );
 }
 
-ZPL_NEVER_INLINE sw zpl_snprintf_va( char* text, sw max_len, char const * fmt, va_list va )
+ZPL_NEVER_INLINE sw snprintf_va( char* text, sw max_len, char const* fmt, va_list va )
 {
-	char const * text_begin = text;
-	sw           remaining  = max_len, res;
+	char const* text_begin = text;
+	sw          remaining  = max_len, res;
 
 	while ( *fmt )
 	{
@@ -428,34 +429,34 @@ ZPL_NEVER_INLINE sw zpl_snprintf_va( char* text, sw max_len, char const * fmt, v
 		{
 			case 'h' :
 				if ( *fmt == 'h' )
-				{ // hh => char
+				{    // hh => char
 					info.flags |= ZPL_FMT_CHAR;
 					fmt++;
 				}
 				else
-				{ // h => short
+				{    // h => short
 					info.flags |= ZPL_FMT_SHORT;
 				}
 				break;
 
 			case 'l' :
 				if ( *fmt == 'l' )
-				{ // ll => long long
+				{    // ll => long long
 					info.flags |= ZPL_FMT_LLONG;
 					fmt++;
 				}
 				else
-				{ // l => long
+				{    // l => long
 					info.flags |= ZPL_FMT_LONG;
 				}
 				break;
 
 				break;
 
-			case 'z' : // NOTE: uw
+			case 'z' :    // NOTE: uw
 				info.flags |= ZPL_FMT_UNSIGNED;
 				// fallthrough
-			case 't' : // NOTE: sw
+			case 't' :    // NOTE: sw
 				info.flags |= ZPL_FMT_SIZE;
 				break;
 
@@ -479,12 +480,12 @@ ZPL_NEVER_INLINE sw zpl_snprintf_va( char* text, sw max_len, char const * fmt, v
 				break;
 
 			case 'x' :
-				info.base = 16;
+				info.base  = 16;
 				info.flags |= ( ZPL_FMT_UNSIGNED | ZPL_FMT_LOWER );
 				break;
 
 			case 'X' :
-				info.base = 16;
+				info.base  = 16;
 				info.flags |= ( ZPL_FMT_UNSIGNED | ZPL_FMT_UPPER );
 				break;
 
@@ -513,7 +514,7 @@ ZPL_NEVER_INLINE sw zpl_snprintf_va( char* text, sw max_len, char const * fmt, v
 				break;
 
 			case 'p' :
-				info.base = 16;
+				info.base  = 16;
 				info.flags |= ( ZPL_FMT_LOWER | ZPL_FMT_UNSIGNED | ZPL_FMT_ALT | ZPL_FMT_INTPTR );
 				break;
 

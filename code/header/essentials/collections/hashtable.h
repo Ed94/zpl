@@ -1,6 +1,6 @@
-// file: header/essentials/collections/hashtable.h
+// a_file: header/essentials/collections/hashtable.h
 
-/** @file hashtable.c
+/** @a_file hashtable.c
 @brief Instantiated hash table
 @defgroup hashtable Instantiated hash table
 
@@ -16,7 +16,7 @@
      FUNC    - the name will prefix function names
      VALUE   - the type of the value to be stored
 
-    tablename_init(NAME * h, zpl_allocator a);
+    tablename_init(NAME * h, allocator a);
     tablename_destroy(NAME * h);
     tablename_get(NAME * h, u64 key);
     tablename_set(NAME * h, u64 key, VALUE value);
@@ -65,7 +65,7 @@ typedef struct hash_table_find_result
 		zpl_array( ZPL_JOIN2( NAME, Entry ) ) entries;                                                                                                                             \
 	} NAME;                                                                                                                                                                        \
                                                                                                                                                                                    \
-	PREFIX void   ZPL_JOIN2( FUNC, init )( NAME * h, zpl_allocator a );                                                                                                            \
+	PREFIX void   ZPL_JOIN2( FUNC, init )( NAME * h, allocator a );                                                                                                                \
 	PREFIX void   ZPL_JOIN2( FUNC, destroy )( NAME * h );                                                                                                                          \
 	PREFIX void   ZPL_JOIN2( FUNC, clear )( NAME * h );                                                                                                                            \
 	PREFIX VALUE* ZPL_JOIN2( FUNC, get )( NAME * h, u64 key );                                                                                                                     \
@@ -84,7 +84,7 @@ typedef struct hash_table_find_result
  */
 
 #define ZPL_TABLE_DEFINE( NAME, FUNC, VALUE )                                                                                                                                      \
-	void ZPL_JOIN2( FUNC, init )( NAME * h, zpl_allocator a )                                                                                                                      \
+	void ZPL_JOIN2( FUNC, init )( NAME * h, allocator a )                                                                                                                          \
 	{                                                                                                                                                                              \
 		array_init( h->hashes, a );                                                                                                                                                \
 		array_init( h->entries, a );                                                                                                                                               \

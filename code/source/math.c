@@ -1,11 +1,12 @@
-// file: source/math.c
+// a_file: source/math.c
+
 
 #if defined( ZPL_COMPILER_TINYC ) && defined( ZPL_NO_MATH_H )
-#undef ZPL_NO_MATH_H
+#	undef ZPL_NO_MATH_H
 #endif
 
 #if ! defined( ZPL_NO_MATH_H )
-#include <math.h>
+#	include <math.h>
 #endif
 
 ZPL_BEGIN_NAMESPACE
@@ -20,6 +21,7 @@ f32 to_radians( f32 degrees )
 {
 	return degrees * ZPL_TAU / 360.0f;
 }
+
 f32 to_degrees( f32 radians )
 {
 	return radians * 360.0f / ZPL_TAU;
@@ -29,7 +31,7 @@ f32 angle_diff( f32 radians_a, f32 radians_b )
 {
 	f32 delta = mod( radians_b - radians_a, ZPL_TAU );
 	delta     = mod( delta + 1.5f * ZPL_TAU, ZPL_TAU );
-	delta -= 0.5f * ZPL_TAU;
+	delta     -= 0.5f * ZPL_TAU;
 	return delta;
 }
 
@@ -37,12 +39,12 @@ f32 copy_sign( f32 x, f32 y )
 {
 	s32 ix, iy;
 	f32 r;
-	zpl_memcopy( &ix, &x, size_of( x ) );
-	zpl_memcopy( &iy, &y, size_of( y ) );
+	memcopy( &ix, &x, size_of( x ) );
+	memcopy( &iy, &y, size_of( y ) );
 
 	ix &= 0x7fffffff;
 	ix |= iy & 0x80000000;
-	zpl_memcopy( &r, &ix, size_of( ix ) );
+	memcopy( &r, &ix, size_of( ix ) );
 	return r;
 }
 
@@ -65,12 +67,12 @@ f64 copy_sign64( f64 x, f64 y )
 {
 	s64 ix, iy;
 	f64 r;
-	zpl_memcopy( &ix, &x, size_of( x ) );
-	zpl_memcopy( &iy, &y, size_of( y ) );
+	memcopy( &ix, &x, size_of( x ) );
+	memcopy( &iy, &y, size_of( y ) );
 
 	ix &= 0x7fffffffffffffff;
 	ix |= iy & 0x8000000000000000;
-	zpl_memcopy( &r, &ix, size_of( ix ) );
+	memcopy( &r, &ix, size_of( ix ) );
 	return r;
 }
 
@@ -78,22 +80,27 @@ f64 floor64( f64 x )
 {
 	return zpl_cast( f64 )( ( x >= 0.0 ) ? zpl_cast( s64 ) x : zpl_cast( s64 )( x - 0.9999999999999999 ) );
 }
+
 f64 ceil64( f64 x )
 {
 	return zpl_cast( f64 )( ( x < 0 ) ? zpl_cast( s64 ) x : ( zpl_cast( s64 ) x ) + 1 );
 }
+
 f64 round64( f64 x )
 {
 	return zpl_cast( f64 )( ( x >= 0.0 ) ? floor64( x + 0.5 ) : ceil64( x - 0.5 ) );
 }
+
 f64 remainder64( f64 x, f64 y )
 {
 	return x - ( round64( x / y ) * y );
 }
+
 f64 abs64( f64 x )
 {
 	return x < 0 ? -x : x;
 }
+
 f64 sign64( f64 x )
 {
 	return x < 0 ? -1.0 : +1.0;
@@ -116,12 +123,13 @@ f32 quake_rsqrt( f32 a )
 		int i;
 		f32 f;
 	} t;
+
 	f32       x2;
 	f32 const three_halfs = 1.5f;
 
 	x2  = a * 0.5f;
 	t.f = a;
-	t.i = 0x5f375a86 - ( t.i >> 1 ); /* What the fuck? */
+	t.i = 0x5f375a86 - ( t.i >> 1 );                  /* What the fuck? */
 	t.f = t.f * ( three_halfs - ( x2 * t.f * t.f ) ); /* 1st iteration */
 	t.f = t.f * ( three_halfs - ( x2 * t.f * t.f ) ); /* 2nd iteration, this can be removed */
 
@@ -129,12 +137,13 @@ f32 quake_rsqrt( f32 a )
 }
 
 #if defined( ZPL_NO_MATH_H )
-#if defined( _MSC_VER )
+#	if defined( _MSC_VER )
 
 f32 rsqrt( f32 a )
 {
 	return _mm_cvtss_f32( _mm_rsqrt_ss( _mm_set_ss( a ) ) );
 }
+
 f32 sqrt( f32 a )
 {
 	return _mm_cvtss_f32( _mm_sqrt_ss( _mm_set_ss( a ) ) );
@@ -170,19 +179,19 @@ f32 tan( f32 radians )
 {
 	f32 rr = radians * radians;
 	f32 a  = 9.5168091e-03f;
-	a *= rr;
-	a += 2.900525e-03f;
-	a *= rr;
-	a += 2.45650893e-02f;
-	a *= rr;
-	a += 5.33740603e-02f;
-	a *= rr;
-	a += 1.333923995e-01f;
-	a *= rr;
-	a += 3.333314036e-01f;
-	a *= rr;
-	a += 1.0f;
-	a *= radians;
+	a      *= rr;
+	a      += 2.900525e-03f;
+	a      *= rr;
+	a      += 2.45650893e-02f;
+	a      *= rr;
+	a      += 5.33740603e-02f;
+	a      *= rr;
+	a      += 1.333923995e-01f;
+	a      *= rr;
+	a      += 3.333314036e-01f;
+	a      *= rr;
+	a      += 1.0f;
+	a      *= radians;
 	return a;
 }
 
@@ -190,6 +199,7 @@ f32 arcsin( f32 a )
 {
 	return arctan2( a, sqrt( ( 1.0f + a ) * ( 1.0f - a ) ) );
 }
+
 f32 arccos( f32 a )
 {
 	return arctan2( sqrt( ( 1.0f + a ) * ( 1.0f - a ) ), a );
@@ -232,8 +242,9 @@ f32 exp( f32 a )
 		f32 f;
 		int i;
 	} u, v;
-	u.i = (int)( 6051102 * a + 1056478197 );
-	v.i = (int)( 1056478197 - 6051102 * a );
+
+	u.i = ( int )( 6051102 * a + 1056478197 );
+	v.i = ( int )( 1056478197 - 6051102 * a );
 	return u.f / v.f;
 }
 
@@ -244,6 +255,7 @@ f32 log( f32 a )
 		f32 f;
 		int i;
 	} u = { a };
+
 	return ( u.i - 1064866805 ) * 8.262958405176314e-8f; /* 1 / 12102203.0; */
 }
 
@@ -257,7 +269,7 @@ f32 pow( f32 a, f32 b )
 		b       = -b;
 	}
 
-	e = (int)b;
+	e = ( int )b;
 	f = exp( b - e );
 
 	while ( e )
@@ -272,40 +284,48 @@ f32 pow( f32 a, f32 b )
 	return flipped ? 1.0f / r : r;
 }
 
-#else
+#	else
 
 f32 rsqrt( f32 a )
 {
 	return 1.0f / __builtin_sqrt( a );
 }
+
 f32 sqrt( f32 a )
 {
 	return __builtin_sqrt( a );
 }
+
 f32 sin( f32 radians )
 {
 	return __builtin_sinf( radians );
 }
+
 f32 cos( f32 radians )
 {
 	return __builtin_cosf( radians );
 }
+
 f32 tan( f32 radians )
 {
 	return __builtin_tanf( radians );
 }
+
 f32 arcsin( f32 a )
 {
 	return __builtin_asinf( a );
 }
+
 f32 arccos( f32 a )
 {
 	return __builtin_acosf( a );
 }
+
 f32 arctan( f32 a )
 {
 	return __builtin_atanf( a );
 }
+
 f32 arctan2( f32 y, f32 x )
 {
 	return __builtin_atan2f( y, x );
@@ -315,6 +335,7 @@ f32 exp( f32 x )
 {
 	return __builtin_expf( x );
 }
+
 f32 log( f32 x )
 {
 	return __builtin_logf( x );
@@ -326,40 +347,48 @@ f32 pow( f32 x, f32 y )
 	return __builtin_powf( x, y );
 }
 
-#endif
+#	endif
 #else
 f32 rsqrt( f32 a )
 {
 	return 1.0f / sqrtf( a );
 }
+
 f32 sqrt( f32 a )
 {
 	return sqrtf( a );
 };
+
 f32 sin( f32 radians )
 {
 	return sinf( radians );
 };
+
 f32 cos( f32 radians )
 {
 	return cosf( radians );
 };
+
 f32 tan( f32 radians )
 {
 	return tanf( radians );
 };
+
 f32 arcsin( f32 a )
 {
 	return asinf( a );
 };
+
 f32 arccos( f32 a )
 {
 	return acosf( a );
 };
+
 f32 arctan( f32 a )
 {
 	return atanf( a );
 };
+
 f32 arctan2( f32 y, f32 x )
 {
 	return atan2f( y, x );
@@ -369,10 +398,12 @@ f32 exp( f32 x )
 {
 	return expf( x );
 }
+
 f32 log( f32 x )
 {
 	return logf( x );
 }
+
 f32 pow( f32 x, f32 y )
 {
 	return powf( x, y );
@@ -383,6 +414,7 @@ f32 exp2( f32 x )
 {
 	return exp( ZPL_LOG_TWO * x );
 }
+
 f32 log2( f32 x )
 {
 	return log( x ) / ZPL_LOG_TWO;
@@ -402,15 +434,17 @@ f32 fast_exp2( f32 x )
 
 f32 round( f32 x )
 {
-	return (float)( ( x >= 0.0f ) ? floor( x + 0.5f ) : ceil( x - 0.5f ) );
+	return ( float )( ( x >= 0.0f ) ? floor( x + 0.5f ) : ceil( x - 0.5f ) );
 }
+
 f32 floor( f32 x )
 {
-	return (float)( ( x >= 0.0f ) ? (int)x : (int)( x - 0.9999999999999999f ) );
+	return ( float )( ( x >= 0.0f ) ? ( int )x : ( int )( x - 0.9999999999999999f ) );
 }
+
 f32 ceil( f32 x )
 {
-	return (float)( ( x < 0.0f ) ? (int)x : ( (int)x ) + 1 );
+	return ( float )( ( x < 0.0f ) ? ( int )x : ( ( int )x ) + 1 );
 }
 
 f32 half_to_float( half value )
@@ -420,6 +454,7 @@ f32 half_to_float( half value )
 		unsigned int i;
 		f32          f;
 	} result;
+
 	int s = ( value >> 15 ) & 0x001;
 	int e = ( value >> 10 ) & 0x01f;
 	int m = value & 0x3ff;
@@ -429,7 +464,7 @@ f32 half_to_float( half value )
 		if ( m == 0 )
 		{
 			/* Plus or minus zero */
-			result.i = (unsigned int)( s << 31 );
+			result.i = ( unsigned int )( s << 31 );
 			return result.f;
 		}
 		else
@@ -450,13 +485,13 @@ f32 half_to_float( half value )
 		if ( m == 0 )
 		{
 			/* Positive or negative infinity */
-			result.i = (unsigned int)( ( s << 31 ) | 0x7f800000 );
+			result.i = ( unsigned int )( ( s << 31 ) | 0x7f800000 );
 			return result.f;
 		}
 		else
 		{
 			/* Nan */
-			result.i = (unsigned int)( ( s << 31 ) | 0x7f800000 | ( m << 13 ) );
+			result.i = ( unsigned int )( ( s << 31 ) | 0x7f800000 | ( m << 13 ) );
 			return result.f;
 		}
 	}
@@ -464,7 +499,7 @@ f32 half_to_float( half value )
 	e = e + ( 127 - 15 );
 	m = m << 13;
 
-	result.i = (unsigned int)( ( s << 31 ) | ( e << 23 ) | m );
+	result.i = ( unsigned int )( ( s << 31 ) | ( e << 23 ) | m );
 	return result.f;
 }
 
@@ -475,10 +510,11 @@ half float_to_half( f32 value )
 		unsigned int i;
 		f32          f;
 	} v;
+
 	int i, s, e, m;
 
 	v.f = value;
-	i   = (int)v.i;
+	i   = ( int )v.i;
 
 	s = ( i >> 16 ) & 0x00008000;
 	e = ( ( i >> 23 ) & 0x000000ff ) - ( 127 - 15 );
@@ -487,25 +523,25 @@ half float_to_half( f32 value )
 	if ( e <= 0 )
 	{
 		if ( e < -10 )
-			return (half)s;
+			return ( half )s;
 		m = ( m | 0x00800000 ) >> ( 1 - e );
 
 		if ( m & 0x00001000 )
 			m += 0x00002000;
 
-		return (half)( s | ( m >> 13 ) );
+		return ( half )( s | ( m >> 13 ) );
 	}
 	else if ( e == 0xff - ( 127 - 15 ) )
 	{
 		if ( m == 0 )
 		{
-			return (half)( s | 0x7c00 ); /* NOTE: infinity */
+			return ( half )( s | 0x7c00 ); /* NOTE: infinity */
 		}
 		else
 		{
 			/* NOTE: NAN */
 			m >>= 13;
-			return (half)( s | 0x7c00 | m | ( m == 0 ) );
+			return ( half )( s | 0x7c00 | m | ( m == 0 ) );
 		}
 	}
 	else
@@ -527,10 +563,10 @@ half float_to_half( f32 value )
 			for ( j = 0; j < 10; j++ )
 				f *= f; /* NOTE: Cause overflow */
 
-			return (half)( s | 0x7c00 );
+			return ( half )( s | 0x7c00 );
 		}
 
-		return (half)( s | ( e << 10 ) | ( m >> 13 ) );
+		return ( half )( s | ( e << 10 ) | ( m >> 13 ) );
 	}
 }
 
@@ -569,6 +605,7 @@ vec2 vec2f_zero( void )
 	vec2 v = { 0, 0 };
 	return v;
 }
+
 vec2 vec2f( f32 x, f32 y )
 {
 	vec2 v;
@@ -576,6 +613,7 @@ vec2 vec2f( f32 x, f32 y )
 	v.y = y;
 	return v;
 }
+
 vec2 vec2fv( f32 x[ 2 ] )
 {
 	vec2 v;
@@ -589,6 +627,7 @@ vec3 vec3f_zero( void )
 	vec3 v = { 0, 0, 0 };
 	return v;
 }
+
 vec3 vec3f( f32 x, f32 y, f32 z )
 {
 	vec3 v;
@@ -597,6 +636,7 @@ vec3 vec3f( f32 x, f32 y, f32 z )
 	v.z = z;
 	return v;
 }
+
 vec3 vec3fv( f32 x[ 3 ] )
 {
 	vec3 v;
@@ -611,6 +651,7 @@ vec4 vec4f_zero( void )
 	vec4 v = { 0, 0, 0, 0 };
 	return v;
 }
+
 vec4 vec4f( f32 x, f32 y, f32 z, f32 w )
 {
 	vec4 v;
@@ -620,6 +661,7 @@ vec4 vec4f( f32 x, f32 y, f32 z, f32 w )
 	v.w = w;
 	return v;
 }
+
 vec4 vec4fv( f32 x[ 4 ] )
 {
 	vec4 v;
@@ -634,6 +676,7 @@ f32 vec2_max( vec2 v )
 {
 	return max( v.x, v.y );
 }
+
 f32 vec2_side( vec2 p, vec2 q, vec2 r )
 {
 	return ( ( q.x - p.x ) * ( r.y - p.y ) - ( r.x - p.x ) * ( q.y - p.y ) );
@@ -643,14 +686,17 @@ void vec2_add( vec2* d, vec2 v0, vec2 v1 )
 {
 	ZPL_VEC2_3OP( d, v0, +, v1, +0 );
 }
+
 void vec2_sub( vec2* d, vec2 v0, vec2 v1 )
 {
 	ZPL_VEC2_3OP( d, v0, -, v1, +0 );
 }
+
 void vec2_mul( vec2* d, vec2 v, f32 s )
 {
 	ZPL_VEC2_2OP( d, v, *s );
 }
+
 void vec2_div( vec2* d, vec2 v, f32 s )
 {
 	ZPL_VEC2_2OP( d, v, / s );
@@ -665,14 +711,17 @@ void vec3_add( vec3* d, vec3 v0, vec3 v1 )
 {
 	ZPL_VEC3_3OP( d, v0, +, v1, +0 );
 }
+
 void vec3_sub( vec3* d, vec3 v0, vec3 v1 )
 {
 	ZPL_VEC3_3OP( d, v0, -, v1, +0 );
 }
+
 void vec3_mul( vec3* d, vec3 v, f32 s )
 {
 	ZPL_VEC3_2OP( d, v, *s );
 }
+
 void vec3_div( vec3* d, vec3 v, f32 s )
 {
 	ZPL_VEC3_2OP( d, v, / s );
@@ -682,14 +731,17 @@ void vec4_add( vec4* d, vec4 v0, vec4 v1 )
 {
 	ZPL_VEC4_3OP( d, v0, +, v1, +0 );
 }
+
 void vec4_sub( vec4* d, vec4 v0, vec4 v1 )
 {
 	ZPL_VEC4_3OP( d, v0, -, v1, +0 );
 }
+
 void vec4_mul( vec4* d, vec4 v, f32 s )
 {
 	ZPL_VEC4_2OP( d, v, *s );
 }
+
 void vec4_div( vec4* d, vec4 v, f32 s )
 {
 	ZPL_VEC4_2OP( d, v, / s );
@@ -699,14 +751,17 @@ void vec2_addeq( vec2* d, vec2 v )
 {
 	ZPL_VEC2_3OP( d, ( *d ), +, v, +0 );
 }
+
 void vec2_subeq( vec2* d, vec2 v )
 {
 	ZPL_VEC2_3OP( d, ( *d ), -, v, +0 );
 }
+
 void vec2_muleq( vec2* d, f32 s )
 {
 	ZPL_VEC2_2OP( d, ( *d ), *s );
 }
+
 void vec2_diveq( vec2* d, f32 s )
 {
 	ZPL_VEC2_2OP( d, ( *d ), / s );
@@ -716,14 +771,17 @@ void vec3_addeq( vec3* d, vec3 v )
 {
 	ZPL_VEC3_3OP( d, ( *d ), +, v, +0 );
 }
+
 void vec3_subeq( vec3* d, vec3 v )
 {
 	ZPL_VEC3_3OP( d, ( *d ), -, v, +0 );
 }
+
 void vec3_muleq( vec3* d, f32 s )
 {
 	ZPL_VEC3_2OP( d, ( *d ), *s );
 }
+
 void vec3_diveq( vec3* d, f32 s )
 {
 	ZPL_VEC3_2OP( d, ( *d ), / s );
@@ -733,14 +791,17 @@ void vec4_addeq( vec4* d, vec4 v )
 {
 	ZPL_VEC4_3OP( d, ( *d ), +, v, +0 );
 }
+
 void vec4_subeq( vec4* d, vec4 v )
 {
 	ZPL_VEC4_3OP( d, ( *d ), -, v, +0 );
 }
+
 void vec4_muleq( vec4* d, f32 s )
 {
 	ZPL_VEC4_2OP( d, ( *d ), *s );
 }
+
 void vec4_diveq( vec4* d, f32 s )
 {
 	ZPL_VEC4_2OP( d, ( *d ), / s );
@@ -757,10 +818,12 @@ f32 vec2_dot( vec2 v0, vec2 v1 )
 {
 	return v0.x * v1.x + v0.y * v1.y;
 }
+
 f32 vec3_dot( vec3 v0, vec3 v1 )
 {
 	return v0.x * v1.x + v0.y * v1.y + v0.z * v1.z;
 }
+
 f32 vec4_dot( vec4 v0, vec4 v1 )
 {
 	return v0.x * v1.x + v0.y * v1.y + v0.z * v1.z + v0.w * v1.w;
@@ -770,6 +833,7 @@ void vec2_cross( f32* d, vec2 v0, vec2 v1 )
 {
 	*d = v0.x * v1.y - v1.x * v0.y;
 }
+
 void vec3_cross( vec3* d, vec3 v0, vec3 v1 )
 {
 	d->x = v0.y * v1.z - v0.z * v1.y;
@@ -781,10 +845,12 @@ f32 vec2_mag2( vec2 v )
 {
 	return vec2_dot( v, v );
 }
+
 f32 vec3_mag2( vec3 v )
 {
 	return vec3_dot( v, v );
 }
+
 f32 vec4_mag2( vec4 v )
 {
 	return vec4_dot( v, v );
@@ -795,10 +861,12 @@ f32 vec2_mag( vec2 v )
 {
 	return sqrt( vec2_dot( v, v ) );
 }
+
 f32 vec3_mag( vec3 v )
 {
 	return sqrt( vec3_dot( v, v ) );
 }
+
 f32 vec4_mag( vec4 v )
 {
 	return sqrt( vec4_dot( v, v ) );
@@ -809,11 +877,13 @@ void vec2_norm( vec2* d, vec2 v )
 	f32 inv_mag = rsqrt( vec2_dot( v, v ) );
 	vec2_mul( d, v, inv_mag );
 }
+
 void vec3_norm( vec3* d, vec3 v )
 {
 	f32 inv_mag = rsqrt( vec3_dot( v, v ) );
 	vec3_mul( d, v, inv_mag );
 }
+
 void vec4_norm( vec4* d, vec4 v )
 {
 	f32 inv_mag = rsqrt( vec4_dot( v, v ) );
@@ -828,6 +898,7 @@ void vec2_norm0( vec2* d, vec2 v )
 	else
 		*d = vec2f_zero();
 }
+
 void vec3_norm0( vec3* d, vec3 v )
 {
 	f32 mag = vec3_mag( v );
@@ -836,6 +907,7 @@ void vec3_norm0( vec3* d, vec3 v )
 	else
 		*d = vec3f_zero();
 }
+
 void vec4_norm0( vec4* d, vec4 v )
 {
 	f32 mag = vec4_mag( v );
@@ -869,7 +941,7 @@ void vec2_refract( vec2* d, vec2 i, vec2 n, f32 eta )
 	vec2_mul( &a, i, eta );
 	vec2_mul( &b, n, eta * dv * sqrt( k ) );
 	vec2_sub( d, a, b );
-	vec2_muleq( d, (float)( k >= 0.0f ) );
+	vec2_muleq( d, ( float )( k >= 0.0f ) );
 }
 
 void vec3_refract( vec3* d, vec3 i, vec3 n, f32 eta )
@@ -882,7 +954,7 @@ void vec3_refract( vec3* d, vec3 i, vec3 n, f32 eta )
 	vec3_mul( &a, i, eta );
 	vec3_mul( &b, n, eta * dv * sqrt( k ) );
 	vec3_sub( d, a, b );
-	vec3_muleq( d, (float)( k >= 0.0f ) );
+	vec3_muleq( d, ( float )( k >= 0.0f ) );
 }
 
 f32 vec2_aspect_ratio( vec2 v )
@@ -894,10 +966,12 @@ void mat2_transpose( mat2* m )
 {
 	float22_transpose( float22_m( m ) );
 }
+
 void mat2_identity( mat2* m )
 {
 	float22_identity( float22_m( m ) );
 }
+
 void mat2_mul( mat2* out, mat2* m1, mat2* m2 )
 {
 	float22_mul( float22_m( out ), float22_m( m1 ), float22_m( m2 ) );
@@ -913,7 +987,7 @@ void float22_identity( f32 m[ 2 ][ 2 ] )
 
 void mat2_copy( mat2* out, mat2* m )
 {
-	zpl_memcopy( out, m, sizeof( mat3 ) );
+	memcopy( out, m, sizeof( mat3 ) );
 }
 
 void mat2_mul_vec2( vec2* out, mat2* m, vec2 in )
@@ -923,24 +997,27 @@ void mat2_mul_vec2( vec2* out, mat2* m, vec2 in )
 
 mat2* mat2_v( vec2 m[ 2 ] )
 {
-	return (mat2*)m;
+	return ( mat2* )m;
 }
+
 mat2* mat2_f( f32 m[ 2 ][ 2 ] )
 {
-	return (mat2*)m;
+	return ( mat2* )m;
 }
 
 float2* float22_m( mat2* m )
 {
-	return (float2*)m;
+	return ( float2* )m;
 }
+
 float2* float22_v( vec2 m[ 2 ] )
 {
-	return (float2*)m;
+	return ( float2* )m;
 }
+
 float2* float22_4( f32 m[ 4 ] )
 {
-	return (float2*)m;
+	return ( float2* )m;
 }
 
 void float22_transpose( f32 ( *vec )[ 2 ] )
@@ -963,12 +1040,12 @@ void float22_mul( f32 ( *out )[ 2 ], f32 ( *mat1 )[ 2 ], f32 ( *mat2 )[ 2 ] )
 	f32 temp1[ 2 ][ 2 ], temp2[ 2 ][ 2 ];
 	if ( mat1 == out )
 	{
-		zpl_memcopy( temp1, mat1, sizeof( temp1 ) );
+		memcopy( temp1, mat1, sizeof( temp1 ) );
 		mat1 = temp1;
 	}
 	if ( mat2 == out )
 	{
-		zpl_memcopy( temp2, mat2, sizeof( temp2 ) );
+		memcopy( temp2, mat2, sizeof( temp2 ) );
 		mat2 = temp2;
 	}
 	for ( j = 0; j < 2; j++ )
@@ -1009,6 +1086,7 @@ void mat3_transpose( mat3* m )
 {
 	float33_transpose( float33_m( m ) );
 }
+
 void mat3_identity( mat3* m )
 {
 	float33_identity( float33_m( m ) );
@@ -1016,7 +1094,7 @@ void mat3_identity( mat3* m )
 
 void mat3_copy( mat3* out, mat3* m )
 {
-	zpl_memcopy( out, m, sizeof( mat3 ) );
+	memcopy( out, m, sizeof( mat3 ) );
 }
 
 void mat3_mul( mat3* out, mat3* m1, mat3* m2 )
@@ -1044,24 +1122,27 @@ void mat3_mul_vec3( vec3* out, mat3* m, vec3 in )
 
 mat3* mat3_v( vec3 m[ 3 ] )
 {
-	return (mat3*)m;
+	return ( mat3* )m;
 }
+
 mat3* mat3_f( f32 m[ 3 ][ 3 ] )
 {
-	return (mat3*)m;
+	return ( mat3* )m;
 }
 
 float3* float33_m( mat3* m )
 {
-	return (float3*)m;
+	return ( float3* )m;
 }
+
 float3* float33_v( vec3 m[ 3 ] )
 {
-	return (float3*)m;
+	return ( float3* )m;
 }
+
 float3* float33_9( f32 m[ 9 ] )
 {
-	return (float3*)m;
+	return ( float3* )m;
 }
 
 void float33_transpose( f32 ( *vec )[ 3 ] )
@@ -1084,12 +1165,12 @@ void float33_mul( f32 ( *out )[ 3 ], f32 ( *mat1 )[ 3 ], f32 ( *mat2 )[ 3 ] )
 	f32 temp1[ 3 ][ 3 ], temp2[ 3 ][ 3 ];
 	if ( mat1 == out )
 	{
-		zpl_memcopy( temp1, mat1, sizeof( temp1 ) );
+		memcopy( temp1, mat1, sizeof( temp1 ) );
 		mat1 = temp1;
 	}
 	if ( mat2 == out )
 	{
-		zpl_memcopy( temp2, mat2, sizeof( temp2 ) );
+		memcopy( temp2, mat2, sizeof( temp2 ) );
 		mat2 = temp2;
 	}
 	for ( j = 0; j < 3; j++ )
@@ -1138,6 +1219,7 @@ void mat4_transpose( mat4* m )
 {
 	float44_transpose( float44_m( m ) );
 }
+
 void mat4_identity( mat4* m )
 {
 	float44_identity( float44_m( m ) );
@@ -1145,7 +1227,7 @@ void mat4_identity( mat4* m )
 
 void mat4_copy( mat4* out, mat4* m )
 {
-	zpl_memcopy( out, m, sizeof( mat4 ) );
+	memcopy( out, m, sizeof( mat4 ) );
 }
 
 void mat4_mul( mat4* out, mat4* m1, mat4* m2 )
@@ -1180,24 +1262,27 @@ void mat4_mul_vec4( vec4* out, mat4* m, vec4 in )
 
 mat4* mat4_v( vec4 m[ 4 ] )
 {
-	return (mat4*)m;
+	return ( mat4* )m;
 }
+
 mat4* mat4_f( f32 m[ 4 ][ 4 ] )
 {
-	return (mat4*)m;
+	return ( mat4* )m;
 }
 
 float4* float44_m( mat4* m )
 {
-	return (float4*)m;
+	return ( float4* )m;
 }
+
 float4* float44_v( vec4 m[ 4 ] )
 {
-	return (float4*)m;
+	return ( float4* )m;
 }
+
 float4* float44_16( f32 m[ 16 ] )
 {
-	return (float4*)m;
+	return ( float4* )m;
 }
 
 void float44_transpose( f32 ( *vec )[ 4 ] )
@@ -1229,12 +1314,12 @@ void float44_mul( f32 ( *out )[ 4 ], f32 ( *mat1 )[ 4 ], f32 ( *mat2 )[ 4 ] )
 	f32 temp1[ 4 ][ 4 ], temp2[ 4 ][ 4 ];
 	if ( mat1 == out )
 	{
-		zpl_memcopy( temp1, mat1, sizeof( temp1 ) );
+		memcopy( temp1, mat1, sizeof( temp1 ) );
 		mat1 = temp1;
 	}
 	if ( mat2 == out )
 	{
-		zpl_memcopy( temp2, mat2, sizeof( temp2 ) );
+		memcopy( temp2, mat2, sizeof( temp2 ) );
 		mat2 = temp2;
 	}
 	for ( j = 0; j < 4; j++ )
@@ -1370,6 +1455,7 @@ void mat4_to_scale( mat4* out, vec3 v )
 	out->col[ 1 ].y = v.y;
 	out->col[ 2 ].z = v.z;
 }
+
 void mat4_to_scalef( mat4* out, f32 s )
 {
 	mat4_identity( out );
@@ -1595,6 +1681,7 @@ quat quatf( f32 x, f32 y, f32 z, f32 w )
 	q.w = w;
 	return q;
 }
+
 quat quatfv( f32 e[ 4 ] )
 {
 	quat q;
@@ -1638,6 +1725,7 @@ void quat_add( quat* d, quat q0, quat q1 )
 {
 	vec4_add( &d->xyzw, q0.xyzw, q1.xyzw );
 }
+
 void quat_sub( quat* d, quat q0, quat q1 )
 {
 	vec4_sub( &d->xyzw, q0.xyzw, q1.xyzw );
@@ -1662,6 +1750,7 @@ void quat_mulf( quat* d, quat q0, f32 s )
 {
 	vec4_mul( &d->xyzw, q0.xyzw, s );
 }
+
 void quat_divf( quat* d, quat q0, f32 s )
 {
 	vec4_div( &d->xyzw, q0.xyzw, s );
@@ -1671,14 +1760,17 @@ void quat_addeq( quat* d, quat q )
 {
 	vec4_addeq( &d->xyzw, q.xyzw );
 }
+
 void quat_subeq( quat* d, quat q )
 {
 	vec4_subeq( &d->xyzw, q.xyzw );
 }
+
 void quat_muleq( quat* d, quat q )
 {
 	quat_mul( d, *d, q );
 }
+
 void quat_diveq( quat* d, quat q )
 {
 	quat_div( d, *d, q );
@@ -1688,6 +1780,7 @@ void quat_muleqf( quat* d, f32 s )
 {
 	vec4_muleq( &d->xyzw, s );
 }
+
 void quat_diveqf( quat* d, f32 s )
 {
 	vec4_diveq( &d->xyzw, s );
@@ -1698,6 +1791,7 @@ f32 quat_dot( quat q0, quat q1 )
 	f32 r = vec3_dot( q0.xyz, q1.xyz ) + q0.w * q1.w;
 	return r;
 }
+
 f32 quat_mag( quat q )
 {
 	f32 r = sqrt( quat_dot( q, q ) );
@@ -1714,6 +1808,7 @@ void quat_conj( quat* d, quat q )
 	d->xyz = vec3f( -q.x, -q.y, -q.z );
 	d->w   = q.w;
 }
+
 void quat_inverse( quat* d, quat q )
 {
 	quat_conj( d, q );
@@ -1739,10 +1834,12 @@ f32 quat_roll( quat q )
 {
 	return arctan2( 2.0f * q.x * q.y + q.z * q.w, q.x * q.x + q.w * q.w - q.y * q.y - q.z * q.z );
 }
+
 f32 quat_pitch( quat q )
 {
 	return arctan2( 2.0f * q.y * q.z + q.w * q.x, q.w * q.w - q.x * q.x - q.y * q.y + q.z * q.z );
 }
+
 f32 quat_yaw( quat q )
 {
 	return arcsin( -2.0f * ( q.x * q.z - q.w * q.y ) );
@@ -2045,15 +2142,18 @@ f32 lerp( f32 a, f32 b, f32 t )
 {
 	return a * ( 1.0f - t ) + b * t;
 }
+
 f32 unlerp( f32 t, f32 a, f32 b )
 {
 	return ( t - a ) / ( b - a );
 }
+
 f32 smooth_step( f32 a, f32 b, f32 t )
 {
 	f32 x = ( t - a ) / ( b - a );
 	return x * x * ( 3.0f - 2.0f * x );
 }
+
 f32 smoother_step( f32 a, f32 b, f32 t )
 {
 	f32 x = ( t - a ) / ( b - a );
@@ -2070,10 +2170,12 @@ void vec2_lerp( vec2* d, vec2 a, vec2 b, f32 t )
 {
 	ZPL_VEC_LERPN( 2, d, a, b, t );
 }
+
 void vec3_lerp( vec3* d, vec3 a, vec3 b, f32 t )
 {
 	ZPL_VEC_LERPN( 3, d, a, b, t );
 }
+
 void vec4_lerp( vec4* d, vec4 a, vec4 b, f32 t )
 {
 	ZPL_VEC_LERPN( 4, d, a, b, t );
@@ -2143,6 +2245,7 @@ void quat_lerp( quat* d, quat a, quat b, f32 t )
 {
 	vec4_lerp( &d->xyzw, a.xyzw, b.xyzw, t );
 }
+
 void quat_nlerp( quat* d, quat a, quat b, f32 t )
 {
 	quat_lerp( d, a, b, t );
@@ -2238,6 +2341,7 @@ aabb2 aabb2f( f32 minx, f32 miny, f32 maxx, f32 maxy )
 	r.max = vec2f( maxx, maxy );
 	return r;
 }
+
 aabb3 aabb3f( f32 minx, f32 miny, f32 minz, f32 maxx, f32 maxy, f32 maxz )
 {
 	aabb3 r;
@@ -2253,6 +2357,7 @@ aabb2 aabb2_rect2( rect2 a )
 	vec2_add( &r.max, a.pos, a.dim );
 	return r;
 }
+
 aabb3 aabb3_rect3( rect3 a )
 {
 	aabb3 r;
@@ -2268,6 +2373,7 @@ rect2 rect2_aabb2( aabb2 a )
 	vec2_sub( &r.dim, a.max, a.min );
 	return r;
 }
+
 rect3 rect3_aabb3( aabb3 a )
 {
 	rect3 r;
@@ -2344,18 +2450,21 @@ aabb2 aabb2_cut_left( aabb2* a, f32 b )
 	a->min.x = min( a->max.x, a->min.x + b );
 	return aabb2f( minx, a->min.y, a->min.x, a->max.y );
 }
+
 aabb2 aabb2_cut_right( aabb2* a, f32 b )
 {
 	f32 maxx = a->max.x;
 	a->max.x = max( a->min.x, a->max.x - b );
 	return aabb2f( a->max.x, a->min.y, maxx, a->max.y );
 }
+
 aabb2 aabb2_cut_top( aabb2* a, f32 b )
 {
 	f32 miny = a->min.y;
 	a->min.y = min( a->max.y, a->min.y + b );
 	return aabb2f( a->min.x, miny, a->max.x, a->min.y );
 }
+
 aabb2 aabb2_cut_bottom( aabb2* a, f32 b )
 {
 	f32 maxy = a->max.y;
@@ -2369,18 +2478,21 @@ aabb2 aabb2_get_left( const aabb2* a, f32 b )
 	f32 aminx = min( a->max.x, a->min.x + b );
 	return aabb2f( minx, a->min.y, aminx, a->max.y );
 }
+
 aabb2 aabb2_get_right( const aabb2* a, f32 b )
 {
 	f32 maxx  = a->max.x;
 	f32 amaxx = max( a->min.x, a->max.x - b );
 	return aabb2f( amaxx, a->min.y, maxx, a->max.y );
 }
+
 aabb2 aabb2_get_top( const aabb2* a, f32 b )
 {
 	f32 miny  = a->min.y;
 	f32 aminy = min( a->max.y, a->min.y + b );
 	return aabb2f( a->min.x, miny, a->max.x, aminy );
 }
+
 aabb2 aabb2_get_bottom( const aabb2* a, f32 b )
 {
 	f32 maxy  = a->max.y;
@@ -2392,14 +2504,17 @@ aabb2 aabb2_add_left( const aabb2* a, f32 b )
 {
 	return aabb2f( a->min.x - b, a->min.y, a->min.x, a->max.y );
 }
+
 aabb2 aabb2_add_right( const aabb2* a, f32 b )
 {
 	return aabb2f( a->max.x, a->min.y, a->max.x + b, a->max.y );
 }
+
 aabb2 aabb2_add_top( const aabb2* a, f32 b )
 {
 	return aabb2f( a->min.x, a->min.y - b, a->max.x, a->min.y );
 }
+
 aabb2 aabb2_add_bottom( const aabb2* a, f32 b )
 {
 	return aabb2f( a->min.x, a->max.y, a->max.x, a->max.y + b );
@@ -2418,6 +2533,7 @@ aabb2 aabb2_contract( const aabb2* a, f32 b )
 	}
 	return r;
 }
+
 aabb2 aabb2_expand( const aabb2* a, f32 b )
 {
 	return aabb2_contract( a, -b );

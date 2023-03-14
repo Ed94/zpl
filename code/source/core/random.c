@@ -1,4 +1,5 @@
-// file: source/core/random.c
+// a_file: source/core/random.c
+
 
 ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
@@ -21,7 +22,7 @@ internal u32 zpl__get_noise_from_time( void )
 
 	do
 	{
-		curr = time_rel();
+		curr  = time_rel();
 		accum += zpl_cast( u32 ) curr;
 	} while ( curr >= end );
 	return accum;
@@ -32,7 +33,7 @@ internal u32 zpl__get_noise_from_time( void )
 
 internal ZPL_ALWAYS_INLINE u32 zpl__permute_qpr( u32 x )
 {
-	local_persist u32 const prime = 4294967291; // 2^32 - 5
+	local_persist u32 const prime = 4294967291;    // 2^32 - 5
 	if ( x >= prime )
 	{
 		return x;
@@ -129,7 +130,7 @@ sw random_gen_isize( random* r )
 	u64 u           = random_gen_u64( r );
 #endif
 	sw i;
-	zpl_memcopy( &i, &u, size_of( u ) );
+	memcopy( &i, &u, size_of( u ) );
 	return i;
 }
 
@@ -137,9 +138,9 @@ s64 random_range_i64( random* r, s64 lower_inc, s64 higher_inc )
 {
 	u64 u    = random_gen_u64( r );
 	s64 diff = higher_inc - lower_inc + 1;
-	u %= diff;
+	u        %= diff;
 	s64 i;
-	zpl_memcopy( &i, &u, size_of( u ) );
+	memcopy( &i, &u, size_of( u ) );
 	i += lower_inc;
 	return i;
 }
@@ -152,9 +153,9 @@ sw random_range_isize( random* r, sw lower_inc, sw higher_inc )
 	u64 u           = random_gen_u64( r );
 #endif
 	sw diff = higher_inc - lower_inc + 1;
-	u %= diff;
+	u       %= diff;
 	sw i;
-	zpl_memcopy( &i, &u, size_of( u ) );
+	memcopy( &i, &u, size_of( u ) );
 	i += lower_inc;
 	return i;
 }
@@ -162,14 +163,14 @@ sw random_range_isize( random* r, sw lower_inc, sw higher_inc )
 ZPL_ALWAYS_INLINE f64 zpl__random_copy_sign64( f64 x, f64 y )
 {
 	s64 ix = 0, iy = 0;
-	zpl_memcopy( &ix, &x, size_of( s64 ) );
-	zpl_memcopy( &iy, &y, size_of( s64 ) );
+	memcopy( &ix, &x, size_of( s64 ) );
+	memcopy( &iy, &y, size_of( s64 ) );
 
 	ix &= 0x7fffffffffffffff;
 	ix |= iy & 0x8000000000000000;
 
 	f64 r = 0.0;
-	zpl_memcopy( &r, &ix, size_of( f64 ) );
+	memcopy( &r, &ix, size_of( f64 ) );
 	return r;
 }
 

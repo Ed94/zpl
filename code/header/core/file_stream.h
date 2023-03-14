@@ -1,6 +1,6 @@
-// file: header/core/file_stream.h
+// a_file: header/core/file_stream.h
 
-/** @file file_stream.c
+/** @a_file file_stream.c
 @brief File stream
 @defgroup fileio File stream
 
@@ -24,27 +24,27 @@ typedef enum
 
 /**
  * Opens a new memory stream
- * @param file
+ * @param a_file
  * @param allocator
  */
-ZPL_DEF b8 file_stream_new( zpl_file* file, zpl_allocator allocator );
+ZPL_DEF b8 file_stream_new( file* a_file, allocator allocator );
 
 /**
  * Opens a memory stream over an existing buffer
- * @param  file
+ * @param  a_file
  * @param  allocator
  * @param  buffer   Memory to create stream from
  * @param  size     Buffer's size
  * @param  flags
  */
-ZPL_DEF b8 file_stream_open( zpl_file* file, zpl_allocator allocator, u8* buffer, sw size, file_stream_flags flags );
+ZPL_DEF b8 file_stream_open( file* a_file, allocator allocator, u8* buffer, sw size, file_stream_flags flags );
 
 /**
  * Retrieves the stream's underlying buffer and buffer size.
- * @param file memory stream
+ * @param a_file memory stream
  * @param size (Optional) buffer size
  */
-ZPL_DEF u8* file_stream_buf( zpl_file* file, sw* size );
+ZPL_DEF u8* file_stream_buf( file* a_file, sw* size );
 
 extern file_operations const memory_file_operations;
 

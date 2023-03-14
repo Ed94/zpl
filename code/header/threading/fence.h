@@ -1,4 +1,4 @@
-// file: header/threading/fence.h
+// a_file: header/threading/fence.h
 
 // Fences
 

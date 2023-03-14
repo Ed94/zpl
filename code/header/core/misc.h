@@ -1,6 +1,6 @@
-// file: header/core/misc.h
+// a_file: header/core/misc.h
 
-/** @file misc.c
+/** @a_file misc.c
 @brief Various other stuff
 @defgroup misc Various other stuff
 
@@ -22,7 +22,7 @@ ZPL_DEF void        set_env( const char* name, const char* value );
 ZPL_DEF void        unset_env( const char* name );
 
 ZPL_DEF u32    system_command( const char* command, uw buffer_len, char* buffer );
-ZPL_DEF string system_command_str( const char* command, zpl_allocator backing );
+ZPL_DEF string system_command_str( const char* command, allocator backing );
 
 ZPL_DEF_INLINE u16 endian_swap16( u16 i );
 ZPL_DEF_INLINE u32 endian_swap32( u32 i );
@@ -64,10 +64,12 @@ ZPL_IMPL_INLINE void bit_set( u32* x, u32 bit )
 {
 	*x = *x | ( 1 << bit );
 }
+
 ZPL_IMPL_INLINE b8 bit_get( u32 x, u32 bit )
 {
 	return ( x & ( 1 << bit ) );
 }
+
 ZPL_IMPL_INLINE void bit_reset( u32* x, u32 bit )
 {
 	*x = *x & ~( 1 << bit );
@@ -79,7 +81,7 @@ ZPL_IMPL_INLINE sw count_set_bits( u64 mask )
 	while ( mask )
 	{
 		count += ( mask & 1 );
-		mask >>= 1;
+		mask  >>= 1;
 	}
 	return count;
 }

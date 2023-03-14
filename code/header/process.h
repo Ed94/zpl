@@ -1,6 +1,6 @@
-// file: header/process.h
+// a_file: header/process.h
 
-/** @file process.c
+/** @a_file process.c
 @brief Process creation and manipulation methods
 @defgroup process Process creation and manipulation methods
 
@@ -12,6 +12,7 @@ It also exposes standard I/O with configurable options.
 
 ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
+
 // TODO(zaklaus): Add Linux support
 
 typedef enum
@@ -23,8 +24,8 @@ typedef enum
 
 typedef struct
 {
-	zpl_file in, out, err;
-	void *   f_stdin, *f_stdout, *f_stderr;
+	file  in, out, err;
+	void *f_stdin, *f_stdout, *f_stderr;
 #ifdef ZPL_SYSTEM_WINDOWS
 	void* win32_handle;
 #else
@@ -38,7 +39,7 @@ typedef struct
 	char* workdir;
 
 	sw     env_count;
-	char** env; // format: "var=name"
+	char** env;    // format: "var=name"
 
 	u32 posx, posy;
 	u32 resx, resy;

@@ -1,4 +1,4 @@
-// file: source/process.c
+// a_file: source/process.c
 
 ////////////////////////////////////////////////////////////////
 //
@@ -9,7 +9,7 @@
 ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
 
-static ZPL_ALWAYS_INLINE void zpl__pr_close_file_handle( zpl_file* f )
+static ZPL_ALWAYS_INLINE void zpl__pr_close_file_handle( file* f )
 {
 	ZPL_ASSERT_NOT_NULL( f );
 	f->fd.p = NULL;
@@ -84,7 +84,7 @@ s32 pr_create( pr* process, const char** args, sw argc, pr_si si, pr_opts option
 	STARTUPINFOW        psi             = { 0 };
 	PROCESS_INFORMATION pi              = { 0 };
 	s32                 err_code        = 0;
-	zpl_allocator       a               = heap();
+	allocator           a               = heap();
 	const u32           use_std_handles = 0x00000100;
 
 	psi.cb      = size_of( psi );
@@ -102,7 +102,7 @@ s32 pr_create( pr* process, const char** args, sw argc, pr_si si, pr_opts option
 	}
 	else
 	{
-		env = (string)NULL;
+		env = ( string )NULL;
 	}
 
 	process->f_stdin  = zpl__pr_open_handle( ZPL_PR_HANDLE_MODE_WRITE, "wb", &psi.hStdInput );

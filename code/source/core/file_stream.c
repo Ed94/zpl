@@ -1,4 +1,5 @@
-// file: source/core/file_stream.c
+// a_file: source/core/file_stream.c
+
 
 ////////////////////////////////////////////////////////////////
 //
@@ -11,10 +12,10 @@ ZPL_BEGIN_C_DECLS
 
 typedef struct
 {
-	u8            magic;
-	u8*           buf; //< zpl_array OR plain buffer if we can't write
-	sw            cursor;
-	zpl_allocator allocator;
+	u8        magic;
+	u8*       buf;    //< zpl_array OR plain buffer if we can't write
+	sw        cursor;
+	allocator a_allocator;
 
 	file_stream_flags flags;
 	sw                cap;
@@ -28,53 +29,54 @@ ZPL_DEF_INLINE zpl__memory_fd* zpl__file_stream_from_fd( file_descriptor fd );
 ZPL_IMPL_INLINE file_descriptor zpl__file_stream_fd_make( zpl__memory_fd* d )
 {
 	file_descriptor fd = { 0 };
-	fd.p               = (void*)d;
+	fd.p               = ( void* )d;
 	return fd;
 }
 
 ZPL_IMPL_INLINE zpl__memory_fd* zpl__file_stream_from_fd( file_descriptor fd )
 {
-	zpl__memory_fd* d = (zpl__memory_fd*)fd.p;
+	zpl__memory_fd* d = ( zpl__memory_fd* )fd.p;
 	ZPL_ASSERT( d->magic == ZPL__FILE_STREAM_FD_MAGIC );
 	return d;
 }
 
-b8 file_stream_new( zpl_file* file, zpl_allocator allocator )
+b8 file_stream_new( file* a_file, allocator allocator )
 {
-	ZPL_ASSERT_NOT_NULL( file );
-	zpl__memory_fd* d = (zpl__memory_fd*)alloc( allocator, size_of( zpl__memory_fd ) );
+	ZPL_ASSERT_NOT_NULL( a_file );
+	zpl__memory_fd* d = ( zpl__memory_fd* )alloc( allocator, size_of( zpl__memory_fd ) );
 	if ( ! d )
 		return false;
-	zero_item( file );
-	d->magic     = ZPL__FILE_STREAM_FD_MAGIC;
-	d->allocator = allocator;
-	d->flags     = ZPL_FILE_STREAM_CLONE_WRITABLE;
-	d->cap       = 0;
+	zero_item( a_file );
+	d->magic       = ZPL__FILE_STREAM_FD_MAGIC;
+	d->a_allocator = allocator;
+	d->flags       = ZPL_FILE_STREAM_CLONE_WRITABLE;
+	d->cap         = 0;
 	if ( ! array_init( d->buf, allocator ) )
 		return false;
-	file->ops             = memory_file_operations;
-	file->fd              = zpl__file_stream_fd_make( d );
-	file->dir             = NULL;
-	file->last_write_time = 0;
-	file->filename        = NULL;
-	file->is_temp         = true;
+	a_file->ops             = memory_file_operations;
+	a_file->fd              = zpl__file_stream_fd_make( d );
+	a_file->dir             = NULL;
+	a_file->last_write_time = 0;
+	a_file->filename        = NULL;
+	a_file->is_temp         = true;
 	return true;
 }
-b8 file_stream_open( zpl_file* file, zpl_allocator allocator, u8* buffer, sw size, file_stream_flags flags )
+
+b8 file_stream_open( file* a_file, allocator allocator, u8* buffer, sw size, file_stream_flags flags )
 {
-	ZPL_ASSERT_NOT_NULL( file );
-	zpl__memory_fd* d = (zpl__memory_fd*)alloc( allocator, size_of( zpl__memory_fd ) );
+	ZPL_ASSERT_NOT_NULL( a_file );
+	zpl__memory_fd* d = ( zpl__memory_fd* )alloc( allocator, size_of( zpl__memory_fd ) );
 	if ( ! d )
 		return false;
-	zero_item( file );
-	d->magic     = ZPL__FILE_STREAM_FD_MAGIC;
-	d->allocator = allocator;
-	d->flags     = flags;
+	zero_item( a_file );
+	d->magic       = ZPL__FILE_STREAM_FD_MAGIC;
+	d->a_allocator = allocator;
+	d->flags       = flags;
 	if ( d->flags & ZPL_FILE_STREAM_CLONE_WRITABLE )
 	{
 		if ( ! array_init_reserve( d->buf, allocator, size ) )
 			return false;
-		zpl_memcopy( d->buf, buffer, size );
+		memcopy( d->buf, buffer, size );
 		d->cap = array_count( d->buf ) = size;
 	}
 	else
@@ -82,19 +84,19 @@ b8 file_stream_open( zpl_file* file, zpl_allocator allocator, u8* buffer, sw siz
 		d->buf = buffer;
 		d->cap = size;
 	}
-	file->ops             = memory_file_operations;
-	file->fd              = zpl__file_stream_fd_make( d );
-	file->dir             = NULL;
-	file->last_write_time = 0;
-	file->filename        = NULL;
-	file->is_temp         = true;
+	a_file->ops             = memory_file_operations;
+	a_file->fd              = zpl__file_stream_fd_make( d );
+	a_file->dir             = NULL;
+	a_file->last_write_time = 0;
+	a_file->filename        = NULL;
+	a_file->is_temp         = true;
 	return true;
 }
 
-u8* file_stream_buf( zpl_file* file, sw* size )
+u8* file_stream_buf( file* a_file, sw* size )
 {
-	ZPL_ASSERT_NOT_NULL( file );
-	zpl__memory_fd* d = zpl__file_stream_from_fd( file->fd );
+	ZPL_ASSERT_NOT_NULL( a_file );
+	zpl__memory_fd* d = zpl__file_stream_from_fd( a_file->fd );
 	if ( size )
 		*size = d->cap;
 	return d->buf;
@@ -120,7 +122,7 @@ internal ZPL_FILE_READ_AT_PROC( zpl__memory_file_read )
 {
 	unused( stop_at_newline );
 	zpl__memory_fd* d = zpl__file_stream_from_fd( fd );
-	zpl_memcopy( buffer, d->buf + offset, size );
+	memcopy( buffer, d->buf + offset, size );
 	if ( bytes_read )
 		*bytes_read = size;
 	return true;
@@ -139,15 +141,15 @@ internal ZPL_FILE_WRITE_AT_PROC( zpl__memory_file_write )
 	{
 		if ( array_capacity( d->buf ) < new_cap )
 		{
-			if ( ! array_grow( d->buf, (s64)( new_cap ) ) )
+			if ( ! array_grow( d->buf, ( s64 )( new_cap ) ) )
 				return false;
 		}
 	}
-	zpl_memcopy( d->buf + offset, buffer, rwlen );
+	memcopy( d->buf + offset, buffer, rwlen );
 
 	if ( ( d->flags & ZPL_FILE_STREAM_CLONE_WRITABLE ) && extralen > 0 )
 	{
-		zpl_memcopy( d->buf + offset + rwlen, ptr_add_const( buffer, rwlen ), extralen );
+		memcopy( d->buf + offset + rwlen, ptr_add_const( buffer, rwlen ), extralen );
 		d->cap = array_count( d->buf ) = new_cap;
 	}
 	else
@@ -162,11 +164,11 @@ internal ZPL_FILE_WRITE_AT_PROC( zpl__memory_file_write )
 
 internal ZPL_FILE_CLOSE_PROC( zpl__memory_file_close )
 {
-	zpl__memory_fd* d         = zpl__file_stream_from_fd( fd );
-	zpl_allocator   allocator = d->allocator;
+	zpl__memory_fd* d           = zpl__file_stream_from_fd( fd );
+	allocator       a_allocator = d->a_allocator;
 	if ( d->flags & ZPL_FILE_STREAM_CLONE_WRITABLE )
 		array_free( d->buf );
-	free( allocator, d );
+	free( a_allocator, d );
 }
 
 file_operations const memory_file_operations = { zpl__memory_file_read, zpl__memory_file_write, zpl__memory_file_seek, zpl__memory_file_close };

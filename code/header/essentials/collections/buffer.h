@@ -1,4 +1,4 @@
-// file: header/essentials/collections/buffer.h
+// a_file: header/essentials/collections/buffer.h
 
 ////////////////////////////////////////////////////////////////
 //
@@ -16,14 +16,15 @@
 // buffer_pop
 // buffer_clear
 
+
 ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
 
 typedef struct buffer_header
 {
-	zpl_allocator backing;
-	sw            count;
-	sw            capacity;
+	allocator backing;
+	sw        count;
+	sw        capacity;
 } buffer_header;
 
 #define buffer( Type ) Type*
@@ -41,7 +42,7 @@ typedef struct buffer_header
 	do                                                                                                                                                                             \
 	{                                                                                                                                                                              \
 		void**         nx      = zpl_cast( void** ) & ( x );                                                                                                                       \
-		buffer_header* zpl__bh = zpl_cast( buffer_header* ) alloc( ( allocator ), sizeof( buffer_header ) + (cap)*size_of( *( x ) ) );                                             \
+		buffer_header* zpl__bh = zpl_cast( buffer_header* ) alloc( ( allocator ), sizeof( buffer_header ) + ( cap )*size_of( *( x ) ) );                                           \
 		zpl__bh->backing       = allocator;                                                                                                                                        \
 		zpl__bh->count         = 0;                                                                                                                                                \
 		zpl__bh->capacity      = cap;                                                                                                                                              \
@@ -61,7 +62,7 @@ typedef struct buffer_header
 	{                                                                                                                                                                              \
 		ZPL_ASSERT( size_of( *( items ) ) == size_of( *( x ) ) );                                                                                                                  \
 		ZPL_ASSERT( buffer_count( x ) + item_count <= buffer_capacity( x ) );                                                                                                      \
-		zpl_memcopy( &( x )[ buffer_count( x ) ], ( items ), size_of( *( x ) ) * ( item_count ) );                                                                                 \
+		memcopy( &( x )[ buffer_count( x ) ], ( items ), size_of( *( x ) ) * ( item_count ) );                                                                                     \
 		buffer_count( x ) += ( item_count );                                                                                                                                       \
 	} while ( 0 )
 
@@ -69,7 +70,7 @@ typedef struct buffer_header
 	do                                                                                                                                                                             \
 	{                                                                                                                                                                              \
 		buffer_init_reserve( y, buffer_allocator( x ), buffer_capacity( x ) );                                                                                                     \
-		zpl_memcopy( y, x, buffer_capacity( x ) * size_of( *x ) );                                                                                                                 \
+		memcopy( y, x, buffer_capacity( x ) * size_of( *x ) );                                                                                                                     \
 		buffer_count( y ) = buffer_count( x );                                                                                                                                     \
 	} while ( 0 )
 

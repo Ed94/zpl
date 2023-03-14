@@ -1,22 +1,23 @@
-// file: source/core/time.c
+// a_file: source/core/time.c
+
 
 #if defined( ZPL_SYSTEM_MACOS ) || ZPL_SYSTEM_UNIX
-#include <sys/time.h>
-#include <time.h>
+#	include <sys/time.h>
+#	include <time.h>
 #endif
 
 #if defined( ZPL_SYSTEM_MACOS )
-#include <mach/clock.h>
-#include <mach/mach.h>
-#include <mach/mach_time.h>
+#	include <mach/clock.h>
+#	include <mach/mach.h>
+#	include <mach/mach_time.h>
 #endif
 
 #if defined( ZPL_SYSTEM_EMSCRIPTEN )
-#include <emscripten.h>
+#	include <emscripten.h>
 #endif
 
 #if defined( ZPL_SYSTEM_WINDOWS )
-#include <timezoneapi.h>
+#	include <timezoneapi.h>
 #endif
 
 ZPL_BEGIN_NAMESPACE
@@ -61,7 +62,8 @@ u64 rdtsc( void )
 	    "\tmftbu   %2         \n"
 	    "\tcmpw    %2,%0      \n"
 	    "\tbne     0b         \n"
-	    : "=r"( upper ), "=r"( lower ), "=r"( tmp ) );
+	    : "=r"( upper ), "=r"( lower ), "=r"( tmp )
+	);
 	result = upper;
 	result = result << 32;
 	result = result | lower;
@@ -71,15 +73,15 @@ u64 rdtsc( void )
 #elif defined( ZPL_SYSTEM_EMSCRIPTEN )
 u64 rdtsc( void )
 {
-	return (u64)( emscripten_get_now() * 1e+6 );
+	return ( u64 )( emscripten_get_now() * 1e+6 );
 }
 #elif defined( ZPL_CPU_ARM ) && ! defined( ZPL_COMPILER_TINYC )
 u64 rdtsc( void )
 {
-#if defined( __aarch64__ )
+#	if defined( __aarch64__ )
 	int64_t r = 0;
 	asm volatile( "mrs %0, cntvct_el0" : "=r"( r ) );
-#elif ( __ARM_ARCH >= 6 )
+#	elif ( __ARM_ARCH >= 6 )
 	uint32_t r = 0;
 	uint32_t pmccntr;
 	uint32_t pmuseren;
@@ -88,18 +90,18 @@ u64 rdtsc( void )
 	// Read the user mode perf monitor counter access permissions.
 	asm volatile( "mrc p15, 0, %0, c9, c14, 0" : "=r"( pmuseren ) );
 	if ( pmuseren & 1 )
-	{ // Allows reading perfmon counters for user mode code.
+	{    // Allows reading perfmon counters for user mode code.
 		asm volatile( "mrc p15, 0, %0, c9, c12, 1" : "=r"( pmcntenset ) );
 		if ( pmcntenset & 0x80000000ul )
-		{ // Is it counting?
+		{    // Is it counting?
 			asm volatile( "mrc p15, 0, %0, c9, c13, 0" : "=r"( pmccntr ) );
 			// The counter is set up to count every 64th cycle
-			return ( (int64_t)pmccntr ) * 64; // Should optimize to << 6
+			return ( ( int64_t )pmccntr ) * 64;    // Should optimize to << 6
 		}
 	}
-#else
-#error "No suitable method for rdtsc for this cpu type"
-#endif
+#	else
+#		error "No suitable method for rdtsc for this cpu type"
+#	endif
 
 	return r;
 }
@@ -166,7 +168,7 @@ void sleep_ms( u32 ms )
 
 #else
 
-#if defined( ZPL_SYSTEM_LINUX ) || defined( ZPL_SYSTEM_FREEBSD ) || defined( ZPL_SYSTEM_OPENBSD ) || defined( ZPL_SYSTEM_EMSCRIPTEN )
+#	if defined( ZPL_SYSTEM_LINUX ) || defined( ZPL_SYSTEM_FREEBSD ) || defined( ZPL_SYSTEM_OPENBSD ) || defined( ZPL_SYSTEM_EMSCRIPTEN )
 u64 zpl__unix_gettime( void )
 {
 	struct timespec t;
@@ -176,11 +178,11 @@ u64 zpl__unix_gettime( void )
 	result = 1000 * t.tv_sec + 1.0e-6 * t.tv_nsec;
 	return result;
 }
-#endif
+#	endif
 
 u64 time_rel_ms( void )
 {
-#if defined( ZPL_SYSTEM_OSX )
+#	if defined( ZPL_SYSTEM_OSX )
 	u64 result;
 
 	local_persist u64 timebase  = 0;
@@ -190,15 +192,15 @@ u64 time_rel_ms( void )
 	{
 		mach_timebase_info_data_t tb = { 0 };
 		mach_timebase_info( &tb );
-		timebase = tb.numer;
-		timebase /= tb.denom;
+		timebase  = tb.numer;
+		timebase  /= tb.denom;
 		timestart = mach_absolute_time();
 	}
 
 	// NOTE: mach_absolute_time() returns things in nanoseconds
 	result = 1.0e-6 * ( mach_absolute_time() - timestart ) * timebase;
 	return result;
-#else
+#	else
 	local_persist u64 unix_timestart = 0.0;
 
 	if ( ! unix_timestart )
@@ -209,13 +211,13 @@ u64 time_rel_ms( void )
 	u64 now = zpl__unix_gettime();
 
 	return ( now - unix_timestart );
-#endif
+#	endif
 }
 
 u64 time_utc_ms( void )
 {
 	struct timespec t;
-#if defined( ZPL_SYSTEM_OSX )
+#	if defined( ZPL_SYSTEM_OSX )
 	clock_serv_t    cclock;
 	mach_timespec_t mts;
 	host_get_clock_service( mach_host_self(), CALENDAR_CLOCK, &cclock );
@@ -223,10 +225,10 @@ u64 time_utc_ms( void )
 	mach_port_deallocate( mach_task_self(), cclock );
 	t.tv_sec  = mts.tv_sec;
 	t.tv_nsec = mts.tv_nsec;
-#else
+#	else
 	clock_gettime( 0 /*CLOCK_REALTIME*/, &t );
-#endif
-	return ( (u64)t.tv_sec * 1000 + t.tv_nsec * 1e-6 + ZPL__UNIX_TO_WIN32_EPOCH );
+#	endif
+	return ( ( u64 )t.tv_sec * 1000 + t.tv_nsec * 1e-6 + ZPL__UNIX_TO_WIN32_EPOCH );
 }
 
 void sleep_ms( u32 ms )
@@ -241,26 +243,26 @@ u64 time_tz_ms( void )
 	struct tm t;
 	u64       result = time_utc_ms() - ZPL__UNIX_TO_WIN32_EPOCH;
 	u16       ms     = result % 1000;
-	result *= 1e-3;
-	localtime_r( (const time_t*)&result, &t );
-	result = (u64)mktime( &t );
+	result           *= 1e-3;
+	localtime_r( ( const time_t* )&result, &t );
+	result = ( u64 )mktime( &t );
 	return ( result - timezone + t.tm_isdst * 3600 ) * 1000 + ms + ZPL__UNIX_TO_WIN32_EPOCH;
 }
 #endif
 
 f64 time_rel( void )
 {
-	return (f64)( time_rel_ms() * 1e-3 );
+	return ( f64 )( time_rel_ms() * 1e-3 );
 }
 
 f64 time_utc( void )
 {
-	return (f64)( time_utc_ms() * 1e-3 );
+	return ( f64 )( time_utc_ms() * 1e-3 );
 }
 
 f64 time_tz( void )
 {
-	return (f64)( time_tz_ms() * 1e-3 );
+	return ( f64 )( time_tz_ms() * 1e-3 );
 }
 
 ZPL_END_C_DECLS

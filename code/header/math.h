@@ -1,6 +1,6 @@
-// file: header/math.h
+// a_file: header/math.h
 
-/** @file math.c
+/** @a_file math.c
 @brief Math operations
 @defgroup math Math operations
 
@@ -18,10 +18,12 @@ typedef union vec2
 	{
 		f32 x, y;
 	};
+
 	struct
 	{
 		f32 s, t;
 	};
+
 	f32 e[ 2 ];
 } vec2;
 
@@ -31,10 +33,12 @@ typedef union vec3
 	{
 		f32 x, y, z;
 	};
+
 	struct
 	{
 		f32 r, g, b;
 	};
+
 	struct
 	{
 		f32 s, t, p;
@@ -51,22 +55,27 @@ typedef union vec4
 	{
 		f32 x, y, z, w;
 	};
+
 	struct
 	{
 		f32 r, g, b, a;
 	};
+
 	struct
 	{
 		f32 s, t, p, q;
 	};
+
 	struct
 	{
 		vec2 xy, zw;
 	};
+
 	struct
 	{
 		vec2 st, pq;
 	};
+
 	vec3 xyz;
 	vec3 rgb;
 	f32  e[ 4 ];
@@ -78,6 +87,7 @@ typedef union mat2
 	{
 		vec2 x, y;
 	};
+
 	vec2 col[ 2 ];
 	f32  e[ 4 ];
 } mat2;
@@ -88,6 +98,7 @@ typedef union mat3
 	{
 		vec3 x, y, z;
 	};
+
 	vec3 col[ 3 ];
 	f32  e[ 9 ];
 } mat3;
@@ -98,6 +109,7 @@ typedef union mat4
 	{
 		vec4 x, y, z, w;
 	};
+
 	vec4 col[ 4 ];
 	f32  e[ 16 ];
 } mat4;
@@ -108,6 +120,7 @@ typedef union quat
 	{
 		f32 x, y, z, w;
 	};
+
 	vec4 xyzw;
 	vec3 xyz;
 	f32  e[ 4 ];
@@ -119,6 +132,7 @@ typedef union plane
 	{
 		f32 a, b, c, d;
 	};
+
 	vec4 xyzw;
 	vec3 n;
 	f32  e[ 4 ];
@@ -142,6 +156,7 @@ typedef struct rect2
 {
 	vec2 pos, dim;
 } rect2;
+
 typedef struct rect3
 {
 	vec3 pos, dim;
@@ -151,6 +166,7 @@ typedef struct aabb2
 {
 	vec2 min, max;
 } aabb2;
+
 typedef struct aabb3
 {
 	vec3 min, max;
@@ -159,44 +175,44 @@ typedef struct aabb3
 typedef short half;
 
 #ifndef ZPL_CONSTANTS
-#define ZPL_CONSTANTS
-#define ZPL_EPSILON    1.19209290e-7f
-#define ZPL_ZERO       0.0f
-#define ZPL_ONE        1.0f
-#define ZPL_TWO_THIRDS 0.666666666666666666666666666666666666667f
+#	define ZPL_CONSTANTS
+#	define ZPL_EPSILON    1.19209290e-7f
+#	define ZPL_ZERO       0.0f
+#	define ZPL_ONE        1.0f
+#	define ZPL_TWO_THIRDS 0.666666666666666666666666666666666666667f
 
-#define ZPL_TAU          6.28318530717958647692528676655900576f
-#define ZPL_PI           3.14159265358979323846264338327950288f
-#define ZPL_ONE_OVER_TAU 0.636619772367581343075535053490057448f
-#define ZPL_ONE_OVER_PI  0.159154943091895335768883763372514362f
+#	define ZPL_TAU          6.28318530717958647692528676655900576f
+#	define ZPL_PI           3.14159265358979323846264338327950288f
+#	define ZPL_ONE_OVER_TAU 0.636619772367581343075535053490057448f
+#	define ZPL_ONE_OVER_PI  0.159154943091895335768883763372514362f
 
-#define ZPL_TAU_OVER_2 3.14159265358979323846264338327950288f
-#define ZPL_TAU_OVER_4 1.570796326794896619231321691639751442f
-#define ZPL_TAU_OVER_8 0.785398163397448309615660845819875721f
+#	define ZPL_TAU_OVER_2 3.14159265358979323846264338327950288f
+#	define ZPL_TAU_OVER_4 1.570796326794896619231321691639751442f
+#	define ZPL_TAU_OVER_8 0.785398163397448309615660845819875721f
 
-#define ZPL_E          2.71828182845904523536f
-#define ZPL_SQRT_TWO   1.41421356237309504880168872420969808f
-#define ZPL_SQRT_THREE 1.73205080756887729352744634150587236f
-#define ZPL_SQRT_FIVE  2.23606797749978969640917366873127623f
+#	define ZPL_E          2.71828182845904523536f
+#	define ZPL_SQRT_TWO   1.41421356237309504880168872420969808f
+#	define ZPL_SQRT_THREE 1.73205080756887729352744634150587236f
+#	define ZPL_SQRT_FIVE  2.23606797749978969640917366873127623f
 
-#define ZPL_LOG_TWO 0.693147180559945309417232121458176568f
-#define ZPL_LOG_TEN 2.30258509299404568401799145468436421f
-#endif // ZPL_CONSTANTS
+#	define ZPL_LOG_TWO 0.693147180559945309417232121458176568f
+#	define ZPL_LOG_TEN 2.30258509299404568401799145468436421f
+#endif    // ZPL_CONSTANTS
 
 #ifndef square
-#define square( x ) ( ( x ) * ( x ) )
+#	define square( x ) ( ( x ) * ( x ) )
 #endif
 
 #ifndef cube
-#define cube( x ) ( ( x ) * ( x ) * ( x ) )
+#	define cube( x ) ( ( x ) * ( x ) * ( x ) )
 #endif
 
 #ifndef sign
-#define sign( x ) ( ( x ) >= 0.0f ? 1.0f : -1.0f )
+#	define sign( x ) ( ( x ) >= 0.0f ? 1.0f : -1.0f )
 #endif
 
 #ifndef sign0
-#define sign0( x ) ( ( x == 0.0f ) ? 0.0f : ( ( x ) >= 0.0f ? 1.0f : -1.0f ) )
+#	define sign0( x ) ( ( x == 0.0f ) ? 0.0f : ( ( x ) >= 0.0f ? 1.0f : -1.0f ) )
 #endif
 
 ZPL_DEF f32 to_radians( f32 degrees );
@@ -233,8 +249,8 @@ ZPL_DEF f32 exp( f32 x );
 ZPL_DEF f32 exp2( f32 x );
 ZPL_DEF f32 log( f32 x );
 ZPL_DEF f32 log2( f32 x );
-ZPL_DEF f32 fast_exp( f32 x ); /* NOTE: Only valid from -1 <= x <= +1 */
-ZPL_DEF f32 fast_exp2( f32 x ); /* NOTE: Only valid from -1 <= x <= +1 */
+ZPL_DEF f32 fast_exp( f32 x );   /* NOTE: Only valid from -1 <= x <= +1 */
+ZPL_DEF f32 fast_exp2( f32 x );  /* NOTE: Only valid from -1 <= x <= +1 */
 ZPL_DEF f32 pow( f32 x, f32 y ); /* x^y */
 
 ZPL_DEF f32 round( f32 x );
@@ -519,6 +535,7 @@ ZPL_INLINE bool operator==( vec2 a, vec2 b )
 {
 	return ( a.x == b.x ) && ( a.y == b.y );
 }
+
 ZPL_INLINE bool operator!=( vec2 a, vec2 b )
 {
 	return ! operator==( a, b );
@@ -528,6 +545,7 @@ ZPL_INLINE vec2 operator+( vec2 a )
 {
 	return a;
 }
+
 ZPL_INLINE vec2 operator-( vec2 a )
 {
 	vec2 r = { -a.x, -a.y };
@@ -540,6 +558,7 @@ ZPL_INLINE vec2 operator+( vec2 a, vec2 b )
 	vec2_add( &r, a, b );
 	return r;
 }
+
 ZPL_INLINE vec2 operator-( vec2 a, vec2 b )
 {
 	vec2 r;
@@ -553,6 +572,7 @@ ZPL_INLINE vec2 operator*( vec2 a, float scalar )
 	vec2_mul( &r, a, scalar );
 	return r;
 }
+
 ZPL_INLINE vec2 operator*( float scalar, vec2 a )
 {
 	return operator*( a, scalar );
@@ -569,6 +589,7 @@ ZPL_INLINE vec2 operator*( vec2 a, vec2 b )
 	vec2 r = { a.x * b.x, a.y * b.y };
 	return r;
 }
+
 ZPL_INLINE vec2 operator/( vec2 a, vec2 b )
 {
 	vec2 r = { a.x / b.x, a.y / b.y };
@@ -579,14 +600,17 @@ ZPL_INLINE vec2& operator+=( vec2& a, vec2 b )
 {
 	return ( a = a + b );
 }
+
 ZPL_INLINE vec2& operator-=( vec2& a, vec2 b )
 {
 	return ( a = a - b );
 }
+
 ZPL_INLINE vec2& operator*=( vec2& a, float scalar )
 {
 	return ( a = a * scalar );
 }
+
 ZPL_INLINE vec2& operator/=( vec2& a, float scalar )
 {
 	return ( a = a / scalar );
@@ -596,6 +620,7 @@ ZPL_INLINE bool operator==( vec3 a, vec3 b )
 {
 	return ( a.x == b.x ) && ( a.y == b.y ) && ( a.z == b.z );
 }
+
 ZPL_INLINE bool operator!=( vec3 a, vec3 b )
 {
 	return ! operator==( a, b );
@@ -605,6 +630,7 @@ ZPL_INLINE vec3 operator+( vec3 a )
 {
 	return a;
 }
+
 ZPL_INLINE vec3 operator-( vec3 a )
 {
 	vec3 r = { -a.x, -a.y, -a.z };
@@ -617,6 +643,7 @@ ZPL_INLINE vec3 operator+( vec3 a, vec3 b )
 	vec3_add( &r, a, b );
 	return r;
 }
+
 ZPL_INLINE vec3 operator-( vec3 a, vec3 b )
 {
 	vec3 r;
@@ -630,6 +657,7 @@ ZPL_INLINE vec3 operator*( vec3 a, float scalar )
 	vec3_mul( &r, a, scalar );
 	return r;
 }
+
 ZPL_INLINE vec3 operator*( float scalar, vec3 a )
 {
 	return operator*( a, scalar );
@@ -646,6 +674,7 @@ ZPL_INLINE vec3 operator*( vec3 a, vec3 b )
 	vec3 r = { a.x * b.x, a.y * b.y, a.z * b.z };
 	return r;
 }
+
 ZPL_INLINE vec3 operator/( vec3 a, vec3 b )
 {
 	vec3 r = { a.x / b.x, a.y / b.y, a.z / b.z };
@@ -656,14 +685,17 @@ ZPL_INLINE vec3& operator+=( vec3& a, vec3 b )
 {
 	return ( a = a + b );
 }
+
 ZPL_INLINE vec3& operator-=( vec3& a, vec3 b )
 {
 	return ( a = a - b );
 }
+
 ZPL_INLINE vec3& operator*=( vec3& a, float scalar )
 {
 	return ( a = a * scalar );
 }
+
 ZPL_INLINE vec3& operator/=( vec3& a, float scalar )
 {
 	return ( a = a / scalar );
@@ -673,6 +705,7 @@ ZPL_INLINE bool operator==( vec4 a, vec4 b )
 {
 	return ( a.x == b.x ) && ( a.y == b.y ) && ( a.z == b.z ) && ( a.w == b.w );
 }
+
 ZPL_INLINE bool operator!=( vec4 a, vec4 b )
 {
 	return ! operator==( a, b );
@@ -682,6 +715,7 @@ ZPL_INLINE vec4 operator+( vec4 a )
 {
 	return a;
 }
+
 ZPL_INLINE vec4 operator-( vec4 a )
 {
 	vec4 r = { -a.x, -a.y, -a.z, -a.w };
@@ -694,6 +728,7 @@ ZPL_INLINE vec4 operator+( vec4 a, vec4 b )
 	vec4_add( &r, a, b );
 	return r;
 }
+
 ZPL_INLINE vec4 operator-( vec4 a, vec4 b )
 {
 	vec4 r;
@@ -707,6 +742,7 @@ ZPL_INLINE vec4 operator*( vec4 a, float scalar )
 	vec4_mul( &r, a, scalar );
 	return r;
 }
+
 ZPL_INLINE vec4 operator*( float scalar, vec4 a )
 {
 	return operator*( a, scalar );
@@ -723,6 +759,7 @@ ZPL_INLINE vec4 operator*( vec4 a, vec4 b )
 	vec4 r = { a.x * b.x, a.y * b.y, a.z * b.z, a.w * b.w };
 	return r;
 }
+
 ZPL_INLINE vec4 operator/( vec4 a, vec4 b )
 {
 	vec4 r = { a.x / b.x, a.y / b.y, a.z / b.z, a.w / b.w };
@@ -733,20 +770,23 @@ ZPL_INLINE vec4& operator+=( vec4& a, vec4 b )
 {
 	return ( a = a + b );
 }
+
 ZPL_INLINE vec4& operator-=( vec4& a, vec4 b )
 {
 	return ( a = a - b );
 }
+
 ZPL_INLINE vec4& operator*=( vec4& a, float scalar )
 {
 	return ( a = a * scalar );
 }
+
 ZPL_INLINE vec4& operator/=( vec4& a, float scalar )
 {
 	return ( a = a / scalar );
 }
 
-ZPL_INLINE mat2 operator+( mat2 const & a, mat2 const & b )
+ZPL_INLINE mat2 operator+( mat2 const& a, mat2 const& b )
 {
 	int  i, j;
 	mat2 r = { 0 };
@@ -758,7 +798,7 @@ ZPL_INLINE mat2 operator+( mat2 const & a, mat2 const & b )
 	return r;
 }
 
-ZPL_INLINE mat2 operator-( mat2 const & a, mat2 const & b )
+ZPL_INLINE mat2 operator-( mat2 const& a, mat2 const& b )
 {
 	int  i, j;
 	mat2 r = { 0 };
@@ -770,19 +810,21 @@ ZPL_INLINE mat2 operator-( mat2 const & a, mat2 const & b )
 	return r;
 }
 
-ZPL_INLINE mat2 operator*( mat2 const & a, mat2 const & b )
+ZPL_INLINE mat2 operator*( mat2 const& a, mat2 const& b )
 {
 	mat2 r;
-	mat2_mul( &r, (mat2*)&a, (mat2*)&b );
+	mat2_mul( &r, ( mat2* )&a, ( mat2* )&b );
 	return r;
 }
-ZPL_INLINE vec2 operator*( mat2 const & a, vec2 v )
+
+ZPL_INLINE vec2 operator*( mat2 const& a, vec2 v )
 {
 	vec2 r;
-	mat2_mul_vec2( &r, (mat2*)&a, v );
+	mat2_mul_vec2( &r, ( mat2* )&a, v );
 	return r;
 }
-ZPL_INLINE mat2 operator*( mat2 const & a, float scalar )
+
+ZPL_INLINE mat2 operator*( mat2 const& a, float scalar )
 {
 	mat2 r = { 0 };
 	int  i;
@@ -790,29 +832,33 @@ ZPL_INLINE mat2 operator*( mat2 const & a, float scalar )
 		r.e[ i ] = a.e[ i ] * scalar;
 	return r;
 }
-ZPL_INLINE mat2 operator*( float scalar, mat2 const & a )
+
+ZPL_INLINE mat2 operator*( float scalar, mat2 const& a )
 {
 	return operator*( a, scalar );
 }
-ZPL_INLINE mat2 operator/( mat2 const & a, float scalar )
+
+ZPL_INLINE mat2 operator/( mat2 const& a, float scalar )
 {
 	return operator*( a, 1.0f / scalar );
 }
 
-ZPL_INLINE mat2& operator+=( mat2& a, mat2 const & b )
+ZPL_INLINE mat2& operator+=( mat2& a, mat2 const& b )
 {
 	return ( a = a + b );
 }
-ZPL_INLINE mat2& operator-=( mat2& a, mat2 const & b )
+
+ZPL_INLINE mat2& operator-=( mat2& a, mat2 const& b )
 {
 	return ( a = a - b );
 }
-ZPL_INLINE mat2& operator*=( mat2& a, mat2 const & b )
+
+ZPL_INLINE mat2& operator*=( mat2& a, mat2 const& b )
 {
 	return ( a = a * b );
 }
 
-ZPL_INLINE mat3 operator+( mat3 const & a, mat3 const & b )
+ZPL_INLINE mat3 operator+( mat3 const& a, mat3 const& b )
 {
 	int  i, j;
 	mat3 r = { 0 };
@@ -824,7 +870,7 @@ ZPL_INLINE mat3 operator+( mat3 const & a, mat3 const & b )
 	return r;
 }
 
-ZPL_INLINE mat3 operator-( mat3 const & a, mat3 const & b )
+ZPL_INLINE mat3 operator-( mat3 const& a, mat3 const& b )
 {
 	int  i, j;
 	mat3 r = { 0 };
@@ -836,19 +882,21 @@ ZPL_INLINE mat3 operator-( mat3 const & a, mat3 const & b )
 	return r;
 }
 
-ZPL_INLINE mat3 operator*( mat3 const & a, mat3 const & b )
+ZPL_INLINE mat3 operator*( mat3 const& a, mat3 const& b )
 {
 	mat3 r;
-	mat3_mul( &r, (mat3*)&a, (mat3*)&b );
+	mat3_mul( &r, ( mat3* )&a, ( mat3* )&b );
 	return r;
 }
-ZPL_INLINE vec3 operator*( mat3 const & a, vec3 v )
+
+ZPL_INLINE vec3 operator*( mat3 const& a, vec3 v )
 {
 	vec3 r;
-	mat3_mul_vec3( &r, (mat3*)&a, v );
+	mat3_mul_vec3( &r, ( mat3* )&a, v );
 	return r;
 }
-ZPL_INLINE mat3 operator*( mat3 const & a, float scalar )
+
+ZPL_INLINE mat3 operator*( mat3 const& a, float scalar )
 {
 	mat3 r = { 0 };
 	int  i;
@@ -856,29 +904,33 @@ ZPL_INLINE mat3 operator*( mat3 const & a, float scalar )
 		r.e[ i ] = a.e[ i ] * scalar;
 	return r;
 }
-ZPL_INLINE mat3 operator*( float scalar, mat3 const & a )
+
+ZPL_INLINE mat3 operator*( float scalar, mat3 const& a )
 {
 	return operator*( a, scalar );
 }
-ZPL_INLINE mat3 operator/( mat3 const & a, float scalar )
+
+ZPL_INLINE mat3 operator/( mat3 const& a, float scalar )
 {
 	return operator*( a, 1.0f / scalar );
 }
 
-ZPL_INLINE mat3& operator+=( mat3& a, mat3 const & b )
+ZPL_INLINE mat3& operator+=( mat3& a, mat3 const& b )
 {
 	return ( a = a + b );
 }
-ZPL_INLINE mat3& operator-=( mat3& a, mat3 const & b )
+
+ZPL_INLINE mat3& operator-=( mat3& a, mat3 const& b )
 {
 	return ( a = a - b );
 }
-ZPL_INLINE mat3& operator*=( mat3& a, mat3 const & b )
+
+ZPL_INLINE mat3& operator*=( mat3& a, mat3 const& b )
 {
 	return ( a = a * b );
 }
 
-ZPL_INLINE mat4 operator+( mat4 const & a, mat4 const & b )
+ZPL_INLINE mat4 operator+( mat4 const& a, mat4 const& b )
 {
 	int  i, j;
 	mat4 r = { 0 };
@@ -890,7 +942,7 @@ ZPL_INLINE mat4 operator+( mat4 const & a, mat4 const & b )
 	return r;
 }
 
-ZPL_INLINE mat4 operator-( mat4 const & a, mat4 const & b )
+ZPL_INLINE mat4 operator-( mat4 const& a, mat4 const& b )
 {
 	int  i, j;
 	mat4 r = { 0 };
@@ -902,19 +954,21 @@ ZPL_INLINE mat4 operator-( mat4 const & a, mat4 const & b )
 	return r;
 }
 
-ZPL_INLINE mat4 operator*( mat4 const & a, mat4 const & b )
+ZPL_INLINE mat4 operator*( mat4 const& a, mat4 const& b )
 {
 	mat4 r;
-	mat4_mul( &r, (mat4*)&a, (mat4*)&b );
+	mat4_mul( &r, ( mat4* )&a, ( mat4* )&b );
 	return r;
 }
-ZPL_INLINE vec4 operator*( mat4 const & a, vec4 v )
+
+ZPL_INLINE vec4 operator*( mat4 const& a, vec4 v )
 {
 	vec4 r;
-	mat4_mul_vec4( &r, (mat4*)&a, v );
+	mat4_mul_vec4( &r, ( mat4* )&a, v );
 	return r;
 }
-ZPL_INLINE mat4 operator*( mat4 const & a, float scalar )
+
+ZPL_INLINE mat4 operator*( mat4 const& a, float scalar )
 {
 	mat4 r = { 0 };
 	int  i;
@@ -922,24 +976,28 @@ ZPL_INLINE mat4 operator*( mat4 const & a, float scalar )
 		r.e[ i ] = a.e[ i ] * scalar;
 	return r;
 }
-ZPL_INLINE mat4 operator*( float scalar, mat4 const & a )
+
+ZPL_INLINE mat4 operator*( float scalar, mat4 const& a )
 {
 	return operator*( a, scalar );
 }
-ZPL_INLINE mat4 operator/( mat4 const & a, float scalar )
+
+ZPL_INLINE mat4 operator/( mat4 const& a, float scalar )
 {
 	return operator*( a, 1.0f / scalar );
 }
 
-ZPL_INLINE mat4& operator+=( mat4& a, mat4 const & b )
+ZPL_INLINE mat4& operator+=( mat4& a, mat4 const& b )
 {
 	return ( a = a + b );
 }
-ZPL_INLINE mat4& operator-=( mat4& a, mat4 const & b )
+
+ZPL_INLINE mat4& operator-=( mat4& a, mat4 const& b )
 {
 	return ( a = a - b );
 }
-ZPL_INLINE mat4& operator*=( mat4& a, mat4 const & b )
+
+ZPL_INLINE mat4& operator*=( mat4& a, mat4 const& b )
 {
 	return ( a = a * b );
 }
@@ -948,6 +1006,7 @@ ZPL_INLINE bool operator==( quat a, quat b )
 {
 	return a.xyzw == b.xyzw;
 }
+
 ZPL_INLINE bool operator!=( quat a, quat b )
 {
 	return ! operator==( a, b );
@@ -957,6 +1016,7 @@ ZPL_INLINE quat operator+( quat q )
 {
 	return q;
 }
+
 ZPL_INLINE quat operator-( quat q )
 {
 	return quatf( -q.x, -q.y, -q.z, -q.w );
@@ -968,6 +1028,7 @@ ZPL_INLINE quat operator+( quat a, quat b )
 	quat_add( &r, a, b );
 	return r;
 }
+
 ZPL_INLINE quat operator-( quat a, quat b )
 {
 	quat r;
@@ -981,16 +1042,19 @@ ZPL_INLINE quat operator*( quat a, quat b )
 	quat_mul( &r, a, b );
 	return r;
 }
+
 ZPL_INLINE quat operator*( quat q, float s )
 {
 	quat r;
 	quat_mulf( &r, q, s );
 	return r;
 }
+
 ZPL_INLINE quat operator*( float s, quat q )
 {
 	return operator*( q, s );
 }
+
 ZPL_INLINE quat operator/( quat q, float s )
 {
 	quat r;
@@ -1003,16 +1067,19 @@ ZPL_INLINE quat& operator+=( quat& a, quat b )
 	quat_addeq( &a, b );
 	return a;
 }
+
 ZPL_INLINE quat& operator-=( quat& a, quat b )
 {
 	quat_subeq( &a, b );
 	return a;
 }
+
 ZPL_INLINE quat& operator*=( quat& a, quat b )
 {
 	quat_muleq( &a, b );
 	return a;
 }
+
 ZPL_INLINE quat& operator/=( quat& a, quat b )
 {
 	quat_diveq( &a, b );
@@ -1024,6 +1091,7 @@ ZPL_INLINE quat& operator*=( quat& a, float b )
 	quat_muleqf( &a, b );
 	return a;
 }
+
 ZPL_INLINE quat& operator/=( quat& a, float b )
 {
 	quat_diveqf( &a, b );

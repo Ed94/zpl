@@ -1,7 +1,8 @@
-// file: source/threading/affinity.c
+// a_file: source/threading/affinity.c
+
 
 #if defined( ZPL_SYSTEM_MACOS )
-#include <sys/sysctl.h>
+#	include <sys/sysctl.h>
 #endif
 
 ZPL_BEGIN_NAMESPACE
@@ -47,7 +48,7 @@ void affinity_init( affinity* a )
 					{
 						ZPL_ASSERT( a->core_count <= a->thread_count && a->thread_count < ZPL_WIN32_MAX_THREADS );
 						a->core_masks[ a->core_count++ ] = processor_info->ProcessorMask;
-						a->thread_count += thread;
+						a->thread_count                  += thread;
 					}
 				}
 			}
@@ -87,7 +88,7 @@ b32 affinity_set( affinity* a, sw core, sw thread )
 				return result != 0;
 			}
 		}
-		check_mask <<= 1; // NOTE: Onto the next bit
+		check_mask <<= 1;    // NOTE: Onto the next bit
 	}
 }
 
@@ -188,9 +189,9 @@ sw affinity_thread_count_for_core( affinity* a, sw core )
 }
 
 #elif defined( ZPL_SYSTEM_EMSCRIPTEN )
-#error No affinity implementation for Emscripten
+#	error No affinity implementation for Emscripten
 #else
-#error TODO: Unknown system
+#	error TODO: Unknown system
 #endif
 
 ZPL_END_C_DECLS

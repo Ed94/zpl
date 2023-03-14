@@ -1,4 +1,6 @@
-// file: source/core/file_tar.c
+// a_file: source/core/file_tar.c
+
+
 
 ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
@@ -29,7 +31,7 @@ internal uw zpl__tar_checksum( zpl__tar_header* hr )
 	return res;
 }
 
-internal b32 zpl__tar_write_null( zpl_file* archive, sw cnt )
+internal b32 zpl__tar_write_null( file* archive, sw cnt )
 {
 	char* out = bprintf( "%*r", cnt, '\0' );
 	if ( ! file_write( archive, out, cnt ) )
@@ -37,7 +39,7 @@ internal b32 zpl__tar_write_null( zpl_file* archive, sw cnt )
 	return 1;
 }
 
-sw tar_pack( zpl_file* archive, char const ** paths, sw paths_len )
+sw tar_pack( file* archive, char const** paths, sw paths_len )
 {
 	ZPL_ASSERT_NOT_NULL( archive );
 	ZPL_ASSERT_NOT_NULL( paths );
@@ -46,8 +48,8 @@ sw tar_pack( zpl_file* archive, char const ** paths, sw paths_len )
 	{
 		ZPL_ASSERT_NOT_NULL( paths[ i ] );
 		zpl__tar_header hr = { 0 };
-		zpl_file        file;
-		file_error      ferr = file_open_mode( &file, ZPL_FILE_MODE_READ, paths[ i ] );
+		file            a_file;
+		file_error      ferr = file_open_mode( &a_file, ZPL_FILE_MODE_READ, paths[ i ] );
 		if ( ferr == ZPL_FILE_ERROR_NOT_EXISTS )
 		{
 			return -( ZPL_TAR_ERROR_FILE_NOT_FOUND );
@@ -57,13 +59,13 @@ sw tar_pack( zpl_file* archive, char const ** paths, sw paths_len )
 			return -( ZPL_TAR_ERROR_IO_ERROR );
 		}
 
-		s64 fsize = file_size( &file );
-		zpl_snprintf( hr.name, 12, "%s", paths[ i ] );
-		zpl_snprintf( hr.size, 12, "%o", fsize );
-		zpl_snprintf( hr.mode, 8, "%o", 0664 );
-		zpl_snprintf( hr.mtime, 12, "%o", fs_last_write_time( paths[ i ] ) );
+		s64 fsize = file_size( &a_file );
+		snprintf( hr.name, 12, "%s", paths[ i ] );
+		snprintf( hr.size, 12, "%o", fsize );
+		snprintf( hr.mode, 8, "%o", 0664 );
+		snprintf( hr.mtime, 12, "%o", fs_last_write_time( paths[ i ] ) );
 		hr.type = ZPL_TAR_TYPE_REGULAR;
-		zpl_snprintf( hr.checksum, 8, "%o", zpl__tar_checksum( &hr ) );
+		snprintf( hr.checksum, 8, "%o", zpl__tar_checksum( &hr ) );
 
 		file_write( archive, zpl_cast( void* )( &hr ), size_of( zpl__tar_header ) );
 
@@ -77,9 +79,9 @@ sw tar_pack( zpl_file* archive, char const ** paths, sw paths_len )
 			sw   bytes_read     = 0;
 			do
 			{
-				if ( ! file_read_at_check( &file, buf, 4096, pos, &bytes_read ) )
+				if ( ! file_read_at_check( &a_file, buf, 4096, pos, &bytes_read ) )
 				{
-					file_close( &file );
+					file_close( &a_file );
 					return -( ZPL_TAR_ERROR_IO_ERROR );
 				}
 				else if ( bytes_read == 0 )
@@ -88,7 +90,7 @@ sw tar_pack( zpl_file* archive, char const ** paths, sw paths_len )
 				}
 
 				file_write( archive, buf, bytes_read );
-				pos += bytes_read;
+				pos            += bytes_read;
 				remaining_data -= bytes_read;
 			} while ( remaining_data > 0 );
 
@@ -96,13 +98,13 @@ sw tar_pack( zpl_file* archive, char const ** paths, sw paths_len )
 			{
 				if ( ! zpl__tar_write_null( archive, padding ) )
 				{
-					file_close( &file );
+					file_close( &a_file );
 					return -( ZPL_TAR_ERROR_IO_ERROR );
 				}
 			}
 		}
 
-		file_close( &file );
+		file_close( &a_file );
 	}
 
 	if ( ! zpl__tar_write_null( archive, size_of( zpl__tar_header ) * 2 ) )
@@ -113,17 +115,17 @@ sw tar_pack( zpl_file* archive, char const ** paths, sw paths_len )
 	return 0;
 }
 
-sw tar_pack_dir( zpl_file* archive, char const * path, zpl_allocator allocator )
+sw tar_pack_dir( file* archive, char const* path, allocator a_allocator )
 {
-	string        filelst = path_dirlist( allocator, path, true );
-	char const ** files   = zpl_cast( char const ** ) str_split_lines( allocator, filelst, false );
-	sw            err     = tar_pack( archive, files, array_count( files ) );
+	string       filelst = path_dirlist( a_allocator, path, true );
+	char const** files   = zpl_cast( char const** ) str_split_lines( a_allocator, filelst, false );
+	sw           err     = tar_pack( archive, files, array_count( files ) );
 	string_free( filelst );
 	array_free( files );
 	return err;
 }
 
-sw tar_unpack( zpl_file* archive, tar_unpack_proc* unpack_proc, void* user_data )
+sw tar_unpack( file* archive, tar_unpack_proc* unpack_proc, void* user_data )
 {
 	ZPL_ASSERT_NOT_NULL( archive );
 	ZPL_ASSERT_NOT_NULL( unpack_proc );
@@ -173,34 +175,34 @@ sw tar_unpack( zpl_file* archive, tar_unpack_proc* unpack_proc, void* user_data 
 
 ZPL_TAR_UNPACK_PROC( tar_default_list_file )
 {
-	(void)archive;
-	(void)user_data;
-	if ( file->error != ZPL_TAR_ERROR_NONE )
-		return 0; /* skip file */
+	( void )archive;
+	( void )user_data;
+	if ( a_file->error != ZPL_TAR_ERROR_NONE )
+		return 0; /* skip a_file */
 
-	if ( file->type != ZPL_TAR_TYPE_REGULAR )
+	if ( a_file->type != ZPL_TAR_TYPE_REGULAR )
 		return 0; /* we only care about regular files */
 
 	/* proceed as usual */
-	zpl_printf( "name: %s, offset: %d, length: %d\n", file->path, file->offset, file->length );
+	printf( "name: %s, offset: %d, length: %d\n", a_file->path, a_file->offset, a_file->length );
 	return 0;
 }
 
 ZPL_TAR_UNPACK_PROC( tar_default_unpack_file )
 {
-	if ( file->error != ZPL_TAR_ERROR_NONE )
-		return 0; /* skip file */
+	if ( a_file->error != ZPL_TAR_ERROR_NONE )
+		return 0; /* skip a_file */
 
-	if ( file->type != ZPL_TAR_TYPE_REGULAR )
+	if ( a_file->type != ZPL_TAR_TYPE_REGULAR )
 		return 0; /* we only care about regular files */
 
-	if ( ! str_compare( file->path, "..", 2 ) )
+	if ( ! str_compare( a_file->path, "..", 2 ) )
 		return 0;
 
 	char  tmp[ ZPL_MAX_PATH ] = { 0 };
 	char* base_path           = zpl_cast( char* ) user_data;
-	sw    base_len            = zpl_strlen( base_path );
-	sw    len                 = zpl_strlen( file->path );
+	sw    base_len            = strlen( base_path );
+	sw    len                 = strlen( a_file->path );
 	ZPL_ASSERT( base_len + len - 2 < ZPL_MAX_PATH ); /* todo: account for missing leading path sep */
 
 	strcpy( tmp, base_path );
@@ -211,7 +213,7 @@ ZPL_TAR_UNPACK_PROC( tar_default_unpack_file )
 		char sep[ 2 ] = { ZPL_PATH_SEPARATOR, 0 };
 		strcat( tmp, sep );
 	}
-	strcat( tmp, file->path );
+	strcat( tmp, a_file->path );
 	path_fix_slashes( tmp );
 
 	const char* last_slash = char_last_occurence( tmp, ZPL_PATH_SEPARATOR );
@@ -224,13 +226,13 @@ ZPL_TAR_UNPACK_PROC( tar_default_unpack_file )
 		tmp[ i ] = ZPL_PATH_SEPARATOR;
 	}
 
-	zpl_file f;
+	file f;
 	file_create( &f, tmp );
 	{
 		char buf[ 4096 ]    = { 0 };
-		sw   remaining_data = file->length;
+		sw   remaining_data = a_file->length;
 		sw   bytes_read     = 0;
-		s64  pos            = file->offset;
+		s64  pos            = a_file->offset;
 		do
 		{
 			if ( ! file_read_at_check( archive, buf, min( 4096, remaining_data ), pos, &bytes_read ) )
@@ -244,7 +246,7 @@ ZPL_TAR_UNPACK_PROC( tar_default_unpack_file )
 			}
 
 			file_write( &f, buf, bytes_read );
-			pos += bytes_read;
+			pos            += bytes_read;
 			remaining_data -= bytes_read;
 		} while ( remaining_data > 0 );
 	}

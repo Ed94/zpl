@@ -1,4 +1,5 @@
-// file: source/threading/sync.c
+// a_file: source/threading/sync.c
+
 
 ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
@@ -53,7 +54,7 @@ s32 sync_reach( sync* s )
 	s32 n;
 	mutex_lock( &s->mutex );
 	ZPL_ASSERT( s->current < s->target );
-	n = ++s->current; // NOTE: Record this value to avoid possible race if `return s->current` was done
+	n = ++s->current;    // NOTE: Record this value to avoid possible race if `return s->current` was done
 	if ( s->current == s->target )
 		sync_release( s );
 	mutex_unlock( &s->mutex );
@@ -72,12 +73,12 @@ void sync_reach_and_wait( sync* s )
 	}
 	else
 	{
-		s->waiting++; // NOTE: Waiting, so one more waiter
-		mutex_unlock( &s->mutex ); // NOTE: Release the mutex to other threads
-		semaphore_wait( &s->release ); // NOTE: Wait for merge completion
-		mutex_lock( &s->mutex ); // NOTE: On merge completion, lock mutex
-		s->waiting--; // NOTE: Done waiting
-		sync_release( s ); // NOTE: Restart the next waiter
+		s->waiting++;                     // NOTE: Waiting, so one more waiter
+		mutex_unlock( &s->mutex );        // NOTE: Release the mutex to other threads
+		semaphore_wait( &s->release );    // NOTE: Wait for merge completion
+		mutex_lock( &s->mutex );          // NOTE: On merge completion, lock mutex
+		s->waiting--;                     // NOTE: Done waiting
+		sync_release( s );                // NOTE: Restart the next waiter
 		mutex_unlock( &s->mutex );
 	}
 }

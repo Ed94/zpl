@@ -1,9 +1,10 @@
-// file: source/threading/thread.c
+// a_file: source/threading/thread.c
+
 
 ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
 
-b32 thread_is_running( thread const * t )
+b32 thread_is_running( thread const* t )
 {
 	return t->is_running != 0;
 }
@@ -114,13 +115,13 @@ u32 thread_current_id( void )
 {
 	u32 thread_id;
 #if defined( ZPL_SYSTEM_WINDOWS )
-#if defined( ZPL_ARCH_32_BIT ) && defined( ZPL_CPU_X86 )
+#	if defined( ZPL_ARCH_32_BIT ) && defined( ZPL_CPU_X86 )
 	thread_id = ( zpl_cast( u32* ) __readfsdword( 24 ) )[ 9 ];
-#elif defined( ZPL_ARCH_64_BIT ) && defined( ZPL_CPU_X86 )
+#	elif defined( ZPL_ARCH_64_BIT ) && defined( ZPL_CPU_X86 )
 	thread_id = ( zpl_cast( u32* ) __readgsqword( 48 ) )[ 18 ];
-#else
+#	else
 	thread_id = GetCurrentThreadId();
-#endif
+#	endif
 
 #elif defined( ZPL_SYSTEM_OSX ) && defined( ZPL_ARCH_64_BIT )
 	thread_id = pthread_mach_thread_np( pthread_self() );
@@ -131,24 +132,26 @@ u32 thread_current_id( void )
 #elif defined( __ARM_ARCH )
 	thread_id = pthread_self();
 #else
-#error Unsupported architecture for thread_current_id()
+#	error Unsupported architecture for thread_current_id()
 #endif
 
 	return thread_id;
 }
 
-void thread_set_name( thread* t, char const * name )
+void thread_set_name( thread* t, char const* name )
 {
 #if defined( ZPL_COMPILER_MSVC )
-#pragma pack( push, 8 )
+#	pragma pack( push, 8 )
+
 	typedef struct
 	{
-		DWORD        type;
-		char const * name;
-		DWORD        id;
-		DWORD        flags;
+		DWORD       type;
+		char const* name;
+		DWORD       id;
+		DWORD       flags;
 	} zplprivThreadName;
-#pragma pack( pop )
+
+#	pragma pack( pop )
 
 	zplprivThreadName tn;
 	tn.type  = 0x1000;

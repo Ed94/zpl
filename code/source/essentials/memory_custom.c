@@ -1,31 +1,32 @@
-// file: source/essentials/memory_custom.c
+// a_file: source/essentials/memory_custom.c
+
 
 #ifndef _IOSC11_SOURCE
-#define _IOSC11_SOURCE
+#	define _IOSC11_SOURCE
 #endif
 
 #include <stdlib.h>
 
 #if defined( ZPL_SYSTEM_WINDOWS )
-#include <malloc.h>
+#	include <malloc.h>
 #endif
 
 // include errno.h for MinGW
 #if defined( ZPL_COMPILER_GCC ) || ( defined( ZPL_COMPILER_TINYC ) && defined( ZPL_SYSTEM_WINDOWS ) )
-#include <errno.h>
+#	include <errno.h>
 #endif
 
 #if defined( ZPL_COMPILER_MINGW )
-#ifdef __MINGW32__
-#define _aligned_malloc __mingw_aligned_malloc
-#define _aligned_free   __mingw_aligned_free
-#endif // MINGW
+#	ifdef __MINGW32__
+#		define _aligned_malloc __mingw_aligned_malloc
+#		define _aligned_free   __mingw_aligned_free
+#	endif    // MINGW
 #endif
 
 ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
 
-char* alloc_str( zpl_allocator a, char const * str )
+char* alloc_str( allocator a, char const* str )
 {
 	return alloc_str_len( a, str, zpl__strlen( str ) );
 }
@@ -56,16 +57,19 @@ void heap_stats_init( void )
 	zero_item( &zpl__heap_stats_info );
 	zpl__heap_stats_info.magic = ZPL_HEAP_STATS_MAGIC;
 }
+
 sw heap_stats_used_memory( void )
 {
 	ZPL_ASSERT_MSG( zpl__heap_stats_info.magic == ZPL_HEAP_STATS_MAGIC, "heap_stats is not initialised yet, call heap_stats_init first!" );
 	return zpl__heap_stats_info.used_memory;
 }
+
 sw heap_stats_alloc_count( void )
 {
 	ZPL_ASSERT_MSG( zpl__heap_stats_info.magic == ZPL_HEAP_STATS_MAGIC, "heap_stats is not initialised yet, call heap_stats_init first!" );
 	return zpl__heap_stats_info.alloc_count;
 }
+
 void heap_stats_check( void )
 {
 	ZPL_ASSERT_MSG( zpl__heap_stats_info.magic == ZPL_HEAP_STATS_MAGIC, "heap_stats is not initialised yet, call heap_stats_init first!" );
@@ -126,8 +130,8 @@ ZPL_ALLOCATOR_PROC( heap_allocator_proc )
 			break;
 		case ZPL_ALLOCATION_RESIZE :
 			{
-				zpl_allocator a = heap_allocator();
-				ptr             = default_resize_align( a, old_memory, old_size, size, alignment );
+				allocator a = heap_allocator();
+				ptr         = default_resize_align( a, old_memory, old_size, size, alignment );
 			}
 			break;
 
@@ -151,8 +155,8 @@ ZPL_ALLOCATOR_PROC( heap_allocator_proc )
 
 		case ZPL_ALLOCATION_RESIZE :
 			{
-				zpl_allocator a = heap_allocator();
-				ptr             = default_resize_align( a, old_memory, old_size, size, alignment );
+				allocator a = heap_allocator();
+				ptr         = default_resize_align( a, old_memory, old_size, size, alignment );
 			}
 			break;
 #else
@@ -175,8 +179,8 @@ ZPL_ALLOCATOR_PROC( heap_allocator_proc )
 
 		case ZPL_ALLOCATION_RESIZE :
 			{
-				zpl_allocator a = heap_allocator();
-				ptr             = default_resize_align( a, old_memory, old_size, size, alignment );
+				allocator a = heap_allocator();
+				ptr         = default_resize_align( a, old_memory, old_size, size, alignment );
 			}
 			break;
 #endif
@@ -190,9 +194,9 @@ ZPL_ALLOCATOR_PROC( heap_allocator_proc )
 	{
 		zpl__heap_alloc_info* alloc_info = zpl_cast( zpl__heap_alloc_info* )( zpl_cast( char* ) ptr + alloc_info_remainder );
 		zero_item( alloc_info );
-		alloc_info->size           = size - track_size;
-		alloc_info->physical_start = ptr;
-		ptr                        = zpl_cast( void* )( alloc_info + 1 );
+		alloc_info->size                 = size - track_size;
+		alloc_info->physical_start       = ptr;
+		ptr                              = zpl_cast( void* )( alloc_info + 1 );
 		zpl__heap_stats_info.used_memory += alloc_info->size;
 		zpl__heap_stats_info.alloc_count++;
 	}
@@ -207,8 +211,8 @@ ZPL_ALLOCATOR_PROC( heap_allocator_proc )
 
 ZPL_ALLOCATOR_PROC( arena_allocator_proc )
 {
-	zpl_arena* arena = zpl_cast( zpl_arena* ) allocator_data;
-	void*      ptr   = NULL;
+	arena* a_arena = zpl_cast( arena* ) allocator_data;
+	void*  ptr     = NULL;
 
 	unused( old_size );
 
@@ -216,18 +220,18 @@ ZPL_ALLOCATOR_PROC( arena_allocator_proc )
 	{
 		case ZPL_ALLOCATION_ALLOC :
 			{
-				void* end        = pointer_add( arena->physical_start, arena->total_allocated );
+				void* end        = pointer_add( a_arena->physical_start, a_arena->total_allocated );
 				sw    total_size = align_forward_i64( size, alignment );
 
 				// NOTE: Out of memory
-				if ( arena->total_allocated + total_size > zpl_cast( sw ) arena->total_size )
+				if ( a_arena->total_allocated + total_size > zpl_cast( sw ) a_arena->total_size )
 				{
 					// zpl__printf_err("%s", "Arena out of memory\n");
 					return NULL;
 				}
 
-				ptr = align_forward( end, alignment );
-				arena->total_allocated += total_size;
+				ptr                      = align_forward( end, alignment );
+				a_arena->total_allocated += total_size;
 				if ( flags & ZPL_ALLOCATOR_FLAG_CLEAR_TO_ZERO )
 					zero_size( ptr, size );
 			}
@@ -239,14 +243,14 @@ ZPL_ALLOCATOR_PROC( arena_allocator_proc )
 			break;
 
 		case ZPL_ALLOCATION_FREE_ALL :
-			arena->total_allocated = 0;
+			a_arena->total_allocated = 0;
 			break;
 
 		case ZPL_ALLOCATION_RESIZE :
 			{
 				// TODO: Check if ptr is on top of stack and just extend
-				zpl_allocator a = arena_allocator( arena );
-				ptr             = default_resize_align( a, old_memory, old_size, size, alignment );
+				allocator a = arena_allocator( a_arena );
+				ptr         = default_resize_align( a, old_memory, old_size, size, alignment );
 			}
 			break;
 	}
@@ -257,18 +261,18 @@ ZPL_ALLOCATOR_PROC( arena_allocator_proc )
 // Pool Allocator
 //
 
-void pool_init_align( zpl_pool* pool, zpl_allocator backing, sw num_blocks, sw block_size, sw block_align )
+void pool_init_align( pool* a_pool, allocator backing, sw num_blocks, sw block_size, sw block_align )
 {
 	sw    actual_block_size, pool_size, block_index;
 	void *data, *curr;
 	uptr* end;
 
-	zero_item( pool );
+	zero_item( a_pool );
 
-	pool->backing     = backing;
-	pool->block_size  = block_size;
-	pool->block_align = block_align;
-	pool->num_blocks  = num_blocks;
+	a_pool->backing     = backing;
+	a_pool->block_size  = block_size;
+	a_pool->block_align = block_align;
+	a_pool->num_blocks  = num_blocks;
 
 	actual_block_size = block_size + block_align;
 	pool_size         = num_blocks * actual_block_size;
@@ -287,14 +291,14 @@ void pool_init_align( zpl_pool* pool, zpl_allocator backing, sw num_blocks, sw b
 	end  = zpl_cast( uptr* ) curr;
 	*end = zpl_cast( uptr ) NULL;
 
-	pool->physical_start = data;
-	pool->free_list      = data;
+	a_pool->physical_start = data;
+	a_pool->free_list      = data;
 }
 
 ZPL_ALLOCATOR_PROC( pool_allocator_proc )
 {
-	zpl_pool* pool = zpl_cast( zpl_pool* ) allocator_data;
-	void*     ptr  = NULL;
+	pool* a_pool = zpl_cast( pool* ) allocator_data;
+	void* ptr    = NULL;
 
 	unused( old_size );
 
@@ -303,14 +307,14 @@ ZPL_ALLOCATOR_PROC( pool_allocator_proc )
 		case ZPL_ALLOCATION_ALLOC :
 			{
 				uptr next_free;
-				ZPL_ASSERT( size == pool->block_size );
-				ZPL_ASSERT( alignment == pool->block_align );
-				ZPL_ASSERT( pool->free_list != NULL );
+				ZPL_ASSERT( size == a_pool->block_size );
+				ZPL_ASSERT( alignment == a_pool->block_align );
+				ZPL_ASSERT( a_pool->free_list != NULL );
 
-				next_free       = *zpl_cast( uptr* ) pool->free_list;
-				ptr             = pool->free_list;
-				pool->free_list = zpl_cast( void* ) next_free;
-				pool->total_size += pool->block_size;
+				next_free          = *zpl_cast( uptr* ) a_pool->free_list;
+				ptr                = a_pool->free_list;
+				a_pool->free_list  = zpl_cast( void* ) next_free;
+				a_pool->total_size += a_pool->block_size;
 				if ( flags & ZPL_ALLOCATOR_FLAG_CLEAR_TO_ZERO )
 					zero_size( ptr, size );
 			}
@@ -322,10 +326,10 @@ ZPL_ALLOCATOR_PROC( pool_allocator_proc )
 				if ( old_memory == NULL )
 					return NULL;
 
-				next            = zpl_cast( uptr* ) old_memory;
-				*next           = zpl_cast( uptr ) pool->free_list;
-				pool->free_list = old_memory;
-				pool->total_size -= pool->block_size;
+				next               = zpl_cast( uptr* ) old_memory;
+				*next              = zpl_cast( uptr ) a_pool->free_list;
+				a_pool->free_list  = old_memory;
+				a_pool->total_size -= a_pool->block_size;
 			}
 			break;
 
@@ -335,27 +339,27 @@ ZPL_ALLOCATOR_PROC( pool_allocator_proc )
 				void* curr;
 				uptr* end;
 
-				actual_block_size = pool->block_size + pool->block_align;
-				pool->total_size  = 0;
+				actual_block_size  = a_pool->block_size + a_pool->block_align;
+				a_pool->total_size = 0;
 
 				// NOTE: Init intrusive freelist
-				curr = pool->physical_start;
-				for ( block_index = 0; block_index < pool->num_blocks - 1; block_index++ )
+				curr = a_pool->physical_start;
+				for ( block_index = 0; block_index < a_pool->num_blocks - 1; block_index++ )
 				{
 					uptr* next = zpl_cast( uptr* ) curr;
 					*next      = zpl_cast( uptr ) curr + actual_block_size;
 					curr       = pointer_add( curr, actual_block_size );
 				}
 
-				end             = zpl_cast( uptr* ) curr;
-				*end            = zpl_cast( uptr ) NULL;
-				pool->free_list = pool->physical_start;
+				end               = zpl_cast( uptr* ) curr;
+				*end              = zpl_cast( uptr ) NULL;
+				a_pool->free_list = a_pool->physical_start;
 			}
 			break;
 
 		case ZPL_ALLOCATION_RESIZE :
 			// NOTE: Cannot resize
-			ZPL_PANIC( "You cannot resize something allocated by with a pool." );
+			ZPL_PANIC( "You cannot resize something allocated by with a a_pool." );
 			break;
 	}
 
@@ -383,9 +387,9 @@ b32 scratch_memory_is_in_use( scratch_memory* s, void* ptr )
 	return ptr >= s->free_point || ptr < s->alloc_point;
 }
 
-zpl_allocator scratch_allocator( scratch_memory* s )
+allocator scratch_allocator( scratch_memory* s )
 {
-	zpl_allocator a;
+	allocator a;
 	a.proc = scratch_allocator_proc;
 	a.data = s;
 	return a;
@@ -491,7 +495,7 @@ ZPL_ALLOCATOR_PROC( stack_allocator_proc )
 	{
 		case ZPL_ALLOCATION_ALLOC :
 			{
-				size += ZPL_STACK_ALLOC_OFFSET;
+				size             += ZPL_STACK_ALLOC_OFFSET;
 				u64 alloc_offset = s->allocated;
 
 				void* curr = zpl_cast( u64* ) align_forward( zpl_cast( u64* ) pointer_add( s->physical_start, s->allocated ), alignment );
@@ -513,8 +517,8 @@ ZPL_ALLOCATOR_PROC( stack_allocator_proc )
 
 				s->allocated = pointer_diff( s->physical_start, curr ) + size;
 
-				*(u64*)curr = alloc_offset;
-				curr        = pointer_add( curr, ZPL_STACK_ALLOC_OFFSET );
+				*( u64* )curr = alloc_offset;
+				curr          = pointer_add( curr, ZPL_STACK_ALLOC_OFFSET );
 
 				ptr = curr;
 			}
@@ -527,8 +531,8 @@ ZPL_ALLOCATOR_PROC( stack_allocator_proc )
 					void* curr = old_memory;
 					curr       = pointer_sub( curr, ZPL_STACK_ALLOC_OFFSET );
 
-					u64 alloc_offset = *(u64*)curr;
-					s->allocated     = (uw)alloc_offset;
+					u64 alloc_offset = *( u64* )curr;
+					s->allocated     = ( uw )alloc_offset;
 				}
 			}
 			break;

@@ -1,4 +1,5 @@
-// file: header/parsers/csv.h
+// a_file: header/parsers/csv.h
+
 
 ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
@@ -13,28 +14,28 @@ typedef enum csv_error
 
 typedef adt_node csv_object;
 
-ZPL_DEF_INLINE u8 csv_parse( csv_object* root, char* text, zpl_allocator allocator, b32 has_header );
-ZPL_DEF u8        csv_parse_delimiter( csv_object* root, char* text, zpl_allocator allocator, b32 has_header, char delim );
+ZPL_DEF_INLINE u8 csv_parse( csv_object* root, char* text, allocator allocator, b32 has_header );
+ZPL_DEF u8        csv_parse_delimiter( csv_object* root, char* text, allocator allocator, b32 has_header, char delim );
 ZPL_DEF void      csv_free( csv_object* obj );
 
-ZPL_DEF_INLINE void   csv_write( zpl_file* file, csv_object* obj );
-ZPL_DEF_INLINE string csv_write_string( zpl_allocator a, csv_object* obj );
-ZPL_DEF void          csv_write_delimiter( zpl_file* file, csv_object* obj, char delim );
-ZPL_DEF string        csv_write_string_delimiter( zpl_allocator a, csv_object* obj, char delim );
+ZPL_DEF_INLINE void   csv_write( file* a_file, csv_object* obj );
+ZPL_DEF_INLINE string csv_write_string( allocator a, csv_object* obj );
+ZPL_DEF void          csv_write_delimiter( file* a_file, csv_object* obj, char delim );
+ZPL_DEF string        csv_write_string_delimiter( allocator a, csv_object* obj, char delim );
 
 /* inline */
 
-ZPL_IMPL_INLINE u8 csv_parse( csv_object* root, char* text, zpl_allocator allocator, b32 has_header )
+ZPL_IMPL_INLINE u8 csv_parse( csv_object* root, char* text, allocator allocator, b32 has_header )
 {
 	return csv_parse_delimiter( root, text, allocator, has_header, ',' );
 }
 
-ZPL_IMPL_INLINE void csv_write( zpl_file* file, csv_object* obj )
+ZPL_IMPL_INLINE void csv_write( file* a_file, csv_object* obj )
 {
-	csv_write_delimiter( file, obj, ',' );
+	csv_write_delimiter( a_file, obj, ',' );
 }
 
-ZPL_IMPL_INLINE string csv_write_string( zpl_allocator a, csv_object* obj )
+ZPL_IMPL_INLINE string csv_write_string( allocator a, csv_object* obj )
 {
 	return csv_write_string_delimiter( a, obj, ',' );
 }

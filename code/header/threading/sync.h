@@ -8,9 +8,9 @@ ZPL_BEGIN_C_DECLS
 
 typedef struct zpl_sync
 {
-	zpl_i32 target; // Target Number of threads
-	zpl_i32 current; // Threads to hit
-	zpl_i32 waiting; // Threads waiting
+	zpl_i32 target;     // Target Number of threads
+	zpl_i32 current;    // Threads to hit
+	zpl_i32 waiting;    // Threads waiting
 
 	zpl_mutex     start;
 	zpl_mutex     mutex;

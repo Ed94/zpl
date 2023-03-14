@@ -1,4 +1,5 @@
-// file: source/regex.c
+// a_file: source/regex.c
+
 
 ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
@@ -60,8 +61,8 @@ static char const ZPL_RE__META_CHARS[] = "^$()[].*+?|\\";
 static char const ZPL_RE__WHITESPACE[] = " \r\t\n\v\f";
 #define ZPL_RE__LITERAL( str ) ( str ), size_of( str ) - 1
 
-static re_ctx re__exec_single( re* re, sw op, char const * str, sw str_len, sw offset, re_capture* captures, sw max_capture_count );
-static re_ctx re__exec( re* re, sw op, char const * str, sw str_len, sw offset, re_capture* captures, sw max_capture_count );
+static re_ctx re__exec_single( re* re, sw op, char const* str, sw str_len, sw offset, re_capture* captures, sw max_capture_count );
+static re_ctx re__exec( re* re, sw op, char const* str, sw str_len, sw offset, re_capture* captures, sw max_capture_count );
 
 static re_ctx re__ctx_no_match( sw op )
 {
@@ -79,16 +80,16 @@ static re_ctx re__ctx_internal_failure( sw op )
 	return c;
 }
 
-static u8 re__hex( char const * s )
+static u8 re__hex( char const* s )
 {
 	return ( ( char_to_hex_digit( *s ) << 4 ) & 0xf0 ) | ( char_to_hex_digit( *( s + 1 ) ) & 0x0f );
 }
 
-static sw re__strfind( char const * s, sw len, char c, sw offset )
+static sw re__strfind( char const* s, sw len, char c, sw offset )
 {
 	if ( offset < len )
 	{
-		char const * found = (char const *)zpl_memchr( s + offset, c, len - offset );
+		char const* found = ( char const* )memchr( s + offset, c, len - offset );
 		if ( found )
 			return found - s;
 	}
@@ -135,7 +136,7 @@ static b32 re__match_escape( char c, int code )
 	return 0;
 }
 
-static re_ctx re__consume( re* re, sw op, char const * str, sw str_len, sw offset, re_capture* captures, sw max_capture_count, b32 is_greedy )
+static re_ctx re__consume( re* re, sw op, char const* str, sw str_len, sw offset, re_capture* captures, sw max_capture_count, b32 is_greedy )
 {
 	re_ctx c, best_c, next_c;
 
@@ -171,7 +172,7 @@ static re_ctx re__consume( re* re, sw op, char const * str, sw str_len, sw offse
 	return best_c;
 }
 
-static re_ctx re__exec_single( re* re, sw op, char const * str, sw str_len, sw offset, re_capture* captures, sw max_capture_count )
+static re_ctx re__exec_single( re* re, sw op, char const* str, sw str_len, sw offset, re_capture* captures, sw max_capture_count )
 {
 	re_ctx ctx;
 	sw     buffer_len;
@@ -232,7 +233,7 @@ static re_ctx re__exec_single( re* re, sw op, char const * str, sw str_len, sw o
 		case ZPL_RE_OP_BRANCH_END :
 			{
 				skip = re->buf[ op++ ];
-				op += skip;
+				op   += skip;
 			}
 			break;
 
@@ -258,7 +259,7 @@ static re_ctx re__exec_single( re* re, sw op, char const * str, sw str_len, sw o
 
 				for ( i = 0; i < buffer_len; i++ )
 				{
-					char cmatch = (char)re->buf[ op + i ];
+					char cmatch = ( char )re->buf[ op + i ];
 					if ( ! cmatch )
 					{
 						i++;
@@ -290,7 +291,7 @@ static re_ctx re__exec_single( re* re, sw op, char const * str, sw str_len, sw o
 
 				for ( i = 0; i < buffer_len; i++ )
 				{
-					char cmatch = (char)re->buf[ op + i ];
+					char cmatch = ( char )re->buf[ op + i ];
 					if ( ! cmatch )
 					{
 						i++;
@@ -312,17 +313,17 @@ static re_ctx re__exec_single( re* re, sw op, char const * str, sw str_len, sw o
 			{
 				match_len = re->buf[ op++ ];
 
-				if ( ( match_len > ( str_len - offset ) ) || str_compare( str + offset, (const char*)re->buf + op, match_len ) != 0 )
+				if ( ( match_len > ( str_len - offset ) ) || str_compare( str + offset, ( const char* )re->buf + op, match_len ) != 0 )
 					return re__ctx_no_match( op + match_len );
 
-				op += match_len;
+				op     += match_len;
 				offset += match_len;
 			}
 			break;
 
 		case ZPL_RE_OP_META_MATCH :
 			{
-				char cin    = (char)re->buf[ op++ ];
+				char cin    = ( char )re->buf[ op++ ];
 				char cmatch = str[ offset++ ];
 
 				if ( ! cin )
@@ -421,7 +422,7 @@ static re_ctx re__exec_single( re* re, sw op, char const * str, sw str_len, sw o
 	return ctx;
 }
 
-static re_ctx re__exec( re* re, sw op, char const * str, sw str_len, sw offset, re_capture* captures, sw max_capture_count )
+static re_ctx re__exec( re* re, sw op, char const* str, sw str_len, sw offset, re_capture* captures, sw max_capture_count )
 {
 	re_ctx c;
 	c.op     = op;
@@ -451,7 +452,7 @@ static regex_error re__emit_ops( re* re, sw op_count, ... )
 		else
 		{
 			sw new_cap  = ( re->buf_cap * 2 ) + op_count;
-			re->buf     = (char*)resize( re->backing, re->buf, re->buf_cap, new_cap );
+			re->buf     = ( char* )resize( re->backing, re->buf, re->buf_cap, new_cap );
 			re->buf_cap = new_cap;
 		}
 	}
@@ -462,14 +463,14 @@ static regex_error re__emit_ops( re* re, sw op_count, ... )
 		s32 v = va_arg( va, s32 );
 		if ( v > 256 )
 			return ZPL_RE_ERROR_TOO_LONG;
-		re->buf[ re->buf_len++ ] = (char)v;
+		re->buf[ re->buf_len++ ] = ( char )v;
 	}
 	va_end( va );
 
 	return ZPL_RE_ERROR_NONE;
 }
 
-static regex_error re__emit_ops_buffer( re* re, sw op_count, char const * buffer )
+static regex_error re__emit_ops_buffer( re* re, sw op_count, char const* buffer )
 {
 	if ( re->buf_len + op_count > re->buf_cap )
 	{
@@ -480,7 +481,7 @@ static regex_error re__emit_ops_buffer( re* re, sw op_count, char const * buffer
 		else
 		{
 			sw new_cap  = ( re->buf_cap * 2 ) + op_count;
-			re->buf     = (char*)resize( re->backing, re->buf, re->buf_cap, new_cap );
+			re->buf     = ( char* )resize( re->backing, re->buf, re->buf_cap, new_cap );
 			re->buf_cap = new_cap;
 		}
 	}
@@ -545,7 +546,7 @@ static int re__encode_escape( char code )
 	return code;
 }
 
-static regex_error re__parse_group( re* re, char const * pattern, sw len, sw offset, sw* new_offset )
+static regex_error re__parse_group( re* re, char const* pattern, sw len, sw offset, sw* new_offset )
 {
 	regex_error err           = ZPL_RE_ERROR_NONE;
 	char        buffer[ 256 ] = { 0 };
@@ -563,11 +564,11 @@ static regex_error re__parse_group( re* re, char const * pattern, sw len, sw off
 	{
 		if ( pattern[ offset ] == ']' )
 		{
-			err = re__emit_ops( re, 2, (s32)op, (s32)buffer_len );
+			err = re__emit_ops( re, 2, ( s32 )op, ( s32 )buffer_len );
 			if ( err )
 				break;
 
-			err = re__emit_ops_buffer( re, buffer_len, (const char*)buffer );
+			err = re__emit_ops_buffer( re, buffer_len, ( const char* )buffer );
 			if ( err )
 				break;
 			offset++;
@@ -608,7 +609,7 @@ static regex_error re__parse_group( re* re, char const * pattern, sw len, sw off
 		}
 		else
 		{
-			buffer[ buffer_len++ ] = (unsigned char)pattern[ offset ];
+			buffer[ buffer_len++ ] = ( unsigned char )pattern[ offset ];
 		}
 
 		offset++;
@@ -634,7 +635,7 @@ static regex_error re__compile_quantifier( re* re, sw last_buf_len, unsigned cha
 
 		re->buf[ last_buf_len + 1 ]--;
 		re->buf_len--;
-		err = re__emit_ops( re, 4, (s32)quantifier, (s32)ZPL_RE_OP_EXACT_MATCH, 1, (s32)last_char );
+		err = re__emit_ops( re, 4, ( s32 )quantifier, ( s32 )ZPL_RE_OP_EXACT_MATCH, 1, ( s32 )last_char );
 		if ( err )
 			return err;
 		return ZPL_RE_ERROR_NONE;
@@ -646,13 +647,13 @@ static regex_error re__compile_quantifier( re* re, sw last_buf_len, unsigned cha
 	if ( err )
 		return err;
 
-	zpl_memmove( re->buf + last_buf_len + 1, re->buf + last_buf_len, move_size );
+	memmove( re->buf + last_buf_len + 1, re->buf + last_buf_len, move_size );
 	re->buf[ last_buf_len ] = quantifier;
 
 	return ZPL_RE_ERROR_NONE;
 }
 
-static regex_error re__parse( re* re, char const * pattern, sw len, sw offset, sw level, sw* new_offset )
+static regex_error re__parse( re* re, char const* pattern, sw len, sw offset, sw level, sw* new_offset )
 {
 	regex_error err          = ZPL_RE_ERROR_NONE;
 	sw          last_buf_len = re->buf_len;
@@ -683,7 +684,7 @@ static regex_error re__parse( re* re, char const * pattern, sw len, sw offset, s
 				{
 					sw capture   = re->capture_count++;
 					last_buf_len = re->buf_len;
-					err          = re__emit_ops( re, 2, ZPL_RE_OP_BEGIN_CAPTURE, (s32)capture );
+					err          = re__emit_ops( re, 2, ZPL_RE_OP_BEGIN_CAPTURE, ( s32 )capture );
 					if ( err )
 						return err;
 
@@ -692,7 +693,7 @@ static regex_error re__parse( re* re, char const * pattern, sw len, sw offset, s
 					if ( ( offset > len ) || ( pattern[ offset - 1 ] != ')' ) )
 						return ZPL_RE_ERROR_MISMATCHED_CAPTURES;
 
-					err = re__emit_ops( re, 2, ZPL_RE_OP_END_CAPTURE, (s32)capture );
+					err = re__emit_ops( re, 2, ZPL_RE_OP_END_CAPTURE, ( s32 )capture );
 					if ( err )
 						return err;
 				}
@@ -701,7 +702,7 @@ static regex_error re__parse( re* re, char const * pattern, sw len, sw offset, s
 			case ')' :
 				{
 					if ( branch_op != -1 )
-						re->buf[ branch_op + 1 ] = (unsigned char)( re->buf_len - ( branch_op + 2 ) );
+						re->buf[ branch_op + 1 ] = ( unsigned char )( re->buf_len - ( branch_op + 2 ) );
 
 					if ( level == 0 )
 						return ZPL_RE_ERROR_MISMATCHED_CAPTURES;
@@ -735,7 +736,7 @@ static regex_error re__parse( re* re, char const * pattern, sw len, sw offset, s
 						if ( err )
 							return err;
 
-						zpl_memmove( re->buf + branch_begin + 2, re->buf + branch_begin, size );
+						memmove( re->buf + branch_begin + 2, re->buf + branch_begin, size );
 						re->buf[ branch_begin ]     = ZPL_RE_OP_BRANCH_START;
 						re->buf[ branch_begin + 1 ] = ( size + 2 ) & 0xff;
 						branch_op                   = re->buf_len - 2;
@@ -783,7 +784,7 @@ static regex_error re__parse( re* re, char const * pattern, sw len, sw offset, s
 					if ( ( re->buf[ last_buf_len ] < ZPL_RE_OP_EXACT_MATCH ) || ( re->buf[ last_buf_len ] > ZPL_RE_OP_ANY_BUT ) )
 						return ZPL_RE_ERROR_INVALID_QUANTIFIER;
 
-					err = re__compile_quantifier( re, last_buf_len, (unsigned char)ZPL_RE_OP_ZERO_OR_ONE );
+					err = re__compile_quantifier( re, last_buf_len, ( unsigned char )ZPL_RE_OP_ZERO_OR_ONE );
 					if ( err )
 						return err;
 				}
@@ -795,8 +796,8 @@ static regex_error re__parse( re* re, char const * pattern, sw len, sw offset, s
 					if ( ( offset + 1 < len ) && char_is_hex_digit( *( pattern + offset ) ) )
 					{
 						unsigned char hex_value = re__hex( ( pattern + offset ) );
-						offset += 2;
-						err = re__emit_ops( re, 2, ZPL_RE_OP_META_MATCH, (int)hex_value );
+						offset                  += 2;
+						err                     = re__emit_ops( re, 2, ZPL_RE_OP_META_MATCH, ( int )hex_value );
 						if ( err )
 							return err;
 					}
@@ -805,13 +806,13 @@ static regex_error re__parse( re* re, char const * pattern, sw len, sw offset, s
 						int code = re__encode_escape( pattern[ offset++ ] );
 						if ( ! code || ( code > 0xff ) )
 						{
-							err = re__emit_ops( re, 3, ZPL_RE_OP_META_MATCH, 0, (int)( ( code >> 8 ) & 0xff ) );
+							err = re__emit_ops( re, 3, ZPL_RE_OP_META_MATCH, 0, ( int )( ( code >> 8 ) & 0xff ) );
 							if ( err )
 								return err;
 						}
 						else
 						{
-							err = re__emit_ops( re, 2, ZPL_RE_OP_META_MATCH, (int)code );
+							err = re__emit_ops( re, 2, ZPL_RE_OP_META_MATCH, ( int )code );
 							if ( err )
 								return err;
 						}
@@ -822,8 +823,8 @@ static regex_error re__parse( re* re, char const * pattern, sw len, sw offset, s
 			/* NOTE(bill): Exact match */
 			default :
 				{
-					char const * match_start;
-					sw           size = 0;
+					char const* match_start;
+					sw          size = 0;
 					offset--;
 					match_start = pattern + offset;
 					while ( ( offset < len ) && ( re__strfind( ZPL_RE__LITERAL( ZPL_RE__META_CHARS ), pattern[ offset ], 0 ) < 0 ) )
@@ -832,10 +833,10 @@ static regex_error re__parse( re* re, char const * pattern, sw len, sw offset, s
 					}
 
 					last_buf_len = re->buf_len;
-					err          = re__emit_ops( re, 2, ZPL_RE_OP_EXACT_MATCH, (int)size );
+					err          = re__emit_ops( re, 2, ZPL_RE_OP_EXACT_MATCH, ( int )size );
 					if ( err )
 						return err;
-					err = re__emit_ops_buffer( re, size, (char const *)match_start );
+					err = re__emit_ops_buffer( re, size, ( char const* )match_start );
 					if ( err )
 						return err;
 				}
@@ -848,11 +849,11 @@ static regex_error re__parse( re* re, char const * pattern, sw len, sw offset, s
 	return ZPL_RE_ERROR_NONE;
 }
 
-regex_error re_compile_from_buffer( re* re, char const * pattern, sw pattern_len, void* buffer, sw buffer_len )
+regex_error re_compile_from_buffer( re* re, char const* pattern, sw pattern_len, void* buffer, sw buffer_len )
 {
 	regex_error err;
 	re->capture_count = 0;
-	re->buf           = (char*)buffer;
+	re->buf           = ( char* )buffer;
 	re->buf_len       = 0;
 	re->buf_cap       = re->buf_len;
 	re->can_realloc   = 0;
@@ -861,7 +862,7 @@ regex_error re_compile_from_buffer( re* re, char const * pattern, sw pattern_len
 	return err;
 }
 
-regex_error re_compile( re* re, zpl_allocator backing, char const * pattern, sw pattern_len )
+regex_error re_compile( re* re, allocator backing, char const* pattern, sw pattern_len )
 {
 	regex_error err;
 	sw          cap    = pattern_len + 128;
@@ -869,7 +870,7 @@ regex_error re_compile( re* re, zpl_allocator backing, char const * pattern, sw 
 
 	re->backing       = backing;
 	re->capture_count = 0;
-	re->buf           = (char*)alloc( backing, cap );
+	re->buf           = ( char* )alloc( backing, cap );
 	re->buf_len       = 0;
 	re->buf_cap       = cap;
 	re->can_realloc   = 1;
@@ -887,7 +888,7 @@ sw re_capture_count( re* re )
 	return re->capture_count;
 }
 
-b32 re_match( re* re, char const * str, sw len, re_capture* captures, sw max_capture_count, sw* offset )
+b32 re_match( re* re, char const* str, sw len, re_capture* captures, sw max_capture_count, sw* offset )
 {
 	if ( re && re->buf_len > 0 )
 	{
@@ -924,10 +925,10 @@ b32 re_match( re* re, char const * str, sw len, re_capture* captures, sw max_cap
 	return 1;
 }
 
-b32 re_match_all( re* re, char const * str, sw str_len, sw max_capture_count, re_capture** out_captures )
+b32 re_match_all( re* re, char const* str, sw str_len, sw max_capture_count, re_capture** out_captures )
 {
-	char* end = (char*)str + str_len;
-	char* p   = (char*)str;
+	char* end = ( char* )str + str_len;
+	char* p   = ( char* )str;
 
 	buffer_make( re_capture, cps, heap(), max_capture_count );
 
