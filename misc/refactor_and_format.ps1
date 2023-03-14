@@ -8,6 +8,8 @@ $path_source = Join-Path $path_code source
 $path_misc   = Join-Path $path_root misc
 
 $file_spec = Join-Path $path_misc zpl.refactor
+
+
 $refactor  = Join-Path $path_misc refactor.exe
 
 # Gather the files to be formatted.
@@ -36,7 +38,7 @@ foreach ( $file in $targetFiles )
         "-spec=$($file_spec)"
     )
 
-    $refactors += (Start-Process $refactor $refactorParams -NoNewWindow -PassThru)
+    $refactors += (Start-Process refactor $refactorParams -NoNewWindow -PassThru)
 }
 
 foreach ( $process in $refactors )
@@ -47,7 +49,7 @@ foreach ( $process in $refactors )
     }
 }
 
-Write-Host "`nRefactoring completen`n`n"
+Write-Host "`nRefactoring complete`n`n"
 
 
 Write-Host "Beginning format...`n"
