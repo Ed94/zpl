@@ -7,6 +7,7 @@
 //
 //
 
+ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
 
 typedef struct {
@@ -146,3 +147,4 @@ zpl_file_operations const zpl_memory_file_operations = { zpl__memory_file_read, 
     zpl__memory_file_seek, zpl__memory_file_close };
 
 ZPL_END_C_DECLS
+ZPL_END_NAMESPACE

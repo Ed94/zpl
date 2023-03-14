@@ -1,6 +1,7 @@
 // file: source/core/sort.c
 
 
+ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
 
 #define ZPL__COMPARE_PROC(Type)                                                                                        \
@@ -169,3 +170,4 @@ void zpl_reverse(void *base, zpl_isize count, zpl_isize size) {
 }
 
 ZPL_END_C_DECLS
+ZPL_END_NAMESPACE

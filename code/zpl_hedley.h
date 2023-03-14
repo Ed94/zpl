@@ -1720,7 +1720,7 @@ ZPL_DIAGNOSTIC_POP
 #if defined(ZPL_C_DECL)
 #  undef ZPL_C_DECL
 #endif
-#if defined(__cplusplus)
+#if defined(__cplusplus) && !defined(ZPL_DISABLE_C_DECLS)
 #  define ZPL_BEGIN_C_DECLS extern "C" {
 #  define ZPL_END_C_DECLS }
 #  define ZPL_C_DECL extern "C"

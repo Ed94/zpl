@@ -2,6 +2,7 @@
 
 /* Various macro based helpers */
 
+ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
 
 #ifndef cast
@@ -152,3 +153,4 @@ else                             \
 #endif
 
 ZPL_END_C_DECLS
+ZPL_END_NAMESPACE

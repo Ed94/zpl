@@ -9,6 +9,7 @@
  @{
  */
 
+ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
 
 //! Checks if value is power of 2.
@@ -265,3 +266,4 @@ ZPL_IMPL_INLINE zpl_b32 zpl_is_power_of_two(zpl_isize x) {
 }
 
 ZPL_END_C_DECLS
+ZPL_END_NAMESPACE

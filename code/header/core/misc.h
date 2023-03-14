@@ -9,6 +9,7 @@
  @{
  */
 
+ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
 
 ZPL_DEF void zpl_yield(void);
@@ -72,3 +73,4 @@ ZPL_IMPL_INLINE zpl_isize zpl_count_set_bits(zpl_u64 mask) {
 }
 
 ZPL_END_C_DECLS
+ZPL_END_NAMESPACE

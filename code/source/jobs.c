@@ -5,6 +5,7 @@
 // Thread Pool
 //
 
+ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
 
 ZPL_RING_DEFINE(zpl__jobs_ring_, zpl_thread_job);
@@ -187,3 +188,4 @@ zpl_b32 zpl_jobs_process(zpl_jobs_system *pool) {
 }
 
 ZPL_END_C_DECLS
+ZPL_END_NAMESPACE

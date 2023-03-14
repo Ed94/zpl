@@ -1,5 +1,7 @@
 // file: source/adt.c
 
+
+ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
 
 #define zpl__adt_fprintf(s_, fmt_, ...)                                                                                \
@@ -578,3 +580,4 @@ zpl_adt_error zpl_adt_str_to_number(zpl_adt_node *node) {
 #undef zpl__adt_fprintf
 
 ZPL_END_C_DECLS
+ZPL_END_NAMESPACE

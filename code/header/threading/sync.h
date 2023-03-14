@@ -3,6 +3,7 @@
 // NOTE: Thread Merge Operation
 // Based on Sean Barrett's stb_sync
 
+ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
 
 typedef struct zpl_sync {
@@ -23,3 +24,4 @@ ZPL_DEF zpl_i32  zpl_sync_reach         (zpl_sync *s);
 ZPL_DEF void     zpl_sync_reach_and_wait(zpl_sync *s);
 
 ZPL_END_C_DECLS
+ZPL_END_NAMESPACE

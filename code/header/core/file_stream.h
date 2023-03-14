@@ -9,6 +9,7 @@ File streaming operations on memory.
 @{
 */
 
+ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
 
 typedef enum {
@@ -49,3 +50,4 @@ extern zpl_file_operations const zpl_memory_file_operations;
 //! @}
 
 ZPL_END_C_DECLS
+ZPL_END_NAMESPACE

@@ -5,6 +5,7 @@
 #    include <dlfcn.h>
 #endif
 
+ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
 
 ////////////////////////////////////////////////////////////////
@@ -43,3 +44,4 @@ ZPL_BEGIN_C_DECLS
 #endif
 
 ZPL_END_C_DECLS
+ZPL_END_NAMESPACE

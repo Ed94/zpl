@@ -3,6 +3,7 @@
 
 #include <string.h>
 
+ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
 
 
@@ -236,3 +237,4 @@ void *zpl_memcopy(void *dest, void const *source, zpl_isize n) {
 }
 
 ZPL_END_C_DECLS
+ZPL_END_NAMESPACE

@@ -10,6 +10,7 @@
  */
 
 
+ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
 
 //! Return CPU timestamp.
@@ -78,3 +79,4 @@ ZPL_IMPL_INLINE zpl_f64 zpl_utc_time_now() {
 }
 
 ZPL_END_C_DECLS
+ZPL_END_NAMESPACE

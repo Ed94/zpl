@@ -7,6 +7,7 @@
 @{
 */
 
+ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
 
 typedef void *zpl_dll_handle;
@@ -19,3 +20,4 @@ ZPL_DEF zpl_dll_proc   zpl_dll_proc_address(zpl_dll_handle dll, char const *proc
 //! @}
 
 ZPL_END_C_DECLS
+ZPL_END_NAMESPACE

@@ -9,7 +9,7 @@ Several hashing methods used by zpl internally but possibly useful outside of it
 @{
 */
 
-
+ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
 
 ZPL_DEF zpl_u32 zpl_adler32(void const *data, zpl_isize len);
@@ -44,3 +44,4 @@ ZPL_IMPL_INLINE zpl_u32 zpl_murmur32(void const *data, zpl_isize len) { return z
 ZPL_IMPL_INLINE zpl_u64 zpl_murmur64(void const *data, zpl_isize len) { return zpl_murmur64_seed(data, len, 0x9747b28c); }
 
 ZPL_END_C_DECLS
+ZPL_END_NAMESPACE

@@ -1,6 +1,7 @@
 // file: header/parsers/json.h
 
 
+ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
 
 typedef enum zpl_json_error {
@@ -23,3 +24,4 @@ ZPL_DEF zpl_b8 zpl_json_write(zpl_file *file, zpl_json_object *obj, zpl_isize in
 ZPL_DEF zpl_string zpl_json_write_string(zpl_allocator a, zpl_json_object *obj, zpl_isize indent);
 
 ZPL_END_C_DECLS
+ZPL_END_NAMESPACE

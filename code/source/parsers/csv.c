@@ -8,6 +8,7 @@
 #endif
 
 
+ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
 
 zpl_u8 zpl_csv_parse_delimiter(zpl_csv_object *root, char *text, zpl_allocator allocator, zpl_b32 has_header, char delim) {
@@ -224,3 +225,4 @@ zpl_string zpl_csv_write_string_delimiter(zpl_allocator a, zpl_csv_object *obj, 
 }
 
 ZPL_END_C_DECLS
+ZPL_END_NAMESPACE

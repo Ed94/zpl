@@ -14,6 +14,7 @@ Use zpl_tar_pack_dir to pack an entire directory recursively. Empty folders are 
 */
 
 
+ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
 
 typedef enum {
@@ -97,3 +98,4 @@ ZPL_IMPL_INLINE zpl_isize zpl_tar_unpack_dir(zpl_file *archive, char const *dest
 }
 
 ZPL_END_C_DECLS
+ZPL_END_NAMESPACE

@@ -1,6 +1,7 @@
 // file: source/essentials/debug.c
 
 
+ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
 
 void zpl_assert_handler(char const *condition, char const *file, zpl_i32 line, char const *msg, ...) {
@@ -35,3 +36,4 @@ zpl_i32 zpl_assert_crash(char const *condition) {
 #endif
 
 ZPL_END_C_DECLS
+ZPL_END_NAMESPACE

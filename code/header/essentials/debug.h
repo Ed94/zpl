@@ -2,6 +2,7 @@
 
 /* Debugging stuff */
 
+ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
 
 #ifndef ZPL_DEBUG_TRAP
@@ -52,3 +53,4 @@ ZPL_DEF zpl_i32 zpl_assert_crash(char const *condition);
 ZPL_DEF void zpl_exit(zpl_u32 code);
 
 ZPL_END_C_DECLS
+ZPL_END_NAMESPACE

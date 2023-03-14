@@ -10,6 +10,7 @@
  @{
  */
 
+ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
 
 typedef void (*zpl_jobs_proc)(void *data);
@@ -103,3 +104,4 @@ ZPL_DEF zpl_b32 zpl_jobs_done(zpl_jobs_system *pool);
 ZPL_DEF zpl_b32 zpl_jobs_process(zpl_jobs_system *pool);
 
 ZPL_END_C_DECLS
+ZPL_END_NAMESPACE

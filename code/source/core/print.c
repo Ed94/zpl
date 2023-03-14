@@ -1,6 +1,7 @@
 // file: source/core/print.c
 
 
+ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
 
 zpl_isize zpl_printf_va(char const *fmt, va_list va) {
@@ -454,3 +455,4 @@ ZPL_NEVER_INLINE zpl_isize zpl_snprintf_va(char *text, zpl_isize max_len, char c
 }
 
 ZPL_END_C_DECLS
+ZPL_END_NAMESPACE

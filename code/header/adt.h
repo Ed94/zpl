@@ -1,5 +1,6 @@
 // file: header/adt.h
 
+ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
 
 typedef enum zpl_adt_type {
@@ -407,3 +408,4 @@ ZPL_IMPL_INLINE zpl_adt_node *zpl_adt_inset_int(zpl_adt_node *parent, char const
 }
 
 ZPL_END_C_DECLS
+ZPL_END_NAMESPACE

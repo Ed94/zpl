@@ -22,6 +22,7 @@ funcname_init(VALUE * pad, zpl_allocator a, zpl_isize max_size)
  funcname_get(VALUE * pad)                                  
 funcname_get_array(VALUE * pad, zpl_usize max_size, zpl_allocator a)
 */
+ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
 
 #define ZPL_RING(PREFIX, FUNC, VALUE)                                                                           \
@@ -98,3 +99,4 @@ return vals;                                                                    
 }
 
 ZPL_END_C_DECLS
+ZPL_END_NAMESPACE

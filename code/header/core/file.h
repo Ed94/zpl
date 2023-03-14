@@ -9,6 +9,7 @@ File I/O operations as well as path and folder structure manipulation methods. W
 @{
 */
 
+ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
 
 typedef zpl_u32 zpl_file_mode;
@@ -391,3 +392,4 @@ ZPL_IMPL_INLINE zpl_b32 zpl_file_write(zpl_file *f, void const *buffer, zpl_isiz
 }
 
 ZPL_END_C_DECLS
+ZPL_END_NAMESPACE

@@ -1,6 +1,7 @@
 // file: source/core/random.c
 
 
+ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
 
 #if defined(ZPL_MODULE_THREADING)
@@ -166,3 +167,4 @@ zpl_f64 zpl_random_range_f64(zpl_random *r, zpl_f64 lower_inc, zpl_f64 higher_in
 }
 
 ZPL_END_C_DECLS
+ZPL_END_NAMESPACE

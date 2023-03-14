@@ -29,7 +29,7 @@
  @{
 */
 
-
+ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
 
 typedef struct zpl_hash_table_find_result {
@@ -236,3 +236,4 @@ typedef struct zpl_hash_table_find_result {
 //! @}
 
 ZPL_END_C_DECLS
+ZPL_END_NAMESPACE

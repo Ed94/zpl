@@ -10,6 +10,7 @@ It also exposes standard I/O with configurable options.
 @{
 */
 
+ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
 // TODO(zaklaus): Add Linux support
 
@@ -51,3 +52,4 @@ ZPL_DEF zpl_i32 zpl_pr_join(zpl_pr *process);
 
 //! @}
 ZPL_END_C_DECLS
+ZPL_END_NAMESPACE

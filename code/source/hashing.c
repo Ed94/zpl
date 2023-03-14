@@ -6,6 +6,7 @@
 //
 //
 
+ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
 
 zpl_u32 zpl_adler32(void const *data, zpl_isize len) {
@@ -408,3 +409,4 @@ zpl_u64 zpl_murmur64_seed(void const *data_, zpl_isize len, zpl_u64 seed) {
 }
 
 ZPL_END_C_DECLS
+ZPL_END_NAMESPACE

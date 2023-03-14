@@ -1,6 +1,7 @@
 // file: source/threading/sync.c
 
 
+ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
 
 void zpl_sync_init(zpl_sync *s) {
@@ -70,3 +71,4 @@ void zpl_sync_reach_and_wait(zpl_sync *s) {
 }
 
 ZPL_END_C_DECLS
+ZPL_END_NAMESPACE

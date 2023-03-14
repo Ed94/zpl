@@ -8,6 +8,7 @@ Various printing methods.
 @{
 */
 
+ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
 
 #ifndef ZPL_PRINTF_MAXLEN
@@ -34,3 +35,4 @@ ZPL_DEF zpl_isize zpl_snprintf(char *str, zpl_isize n, char const *fmt, ...);
 ZPL_DEF zpl_isize zpl_snprintf_va(char *str, zpl_isize n, char const *fmt, va_list va);
 
 ZPL_END_C_DECLS
+ZPL_END_NAMESPACE

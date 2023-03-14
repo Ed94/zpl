@@ -42,6 +42,7 @@ Supported Matching:
     @{
 */
 
+ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
 
 typedef struct zpl_re {
@@ -88,3 +89,4 @@ ZPL_DEF zpl_b32         zpl_re_match(zpl_re *re, char const *str, zpl_isize str_
 ZPL_DEF zpl_b32         zpl_re_match_all(zpl_re *re, char const *str, zpl_isize str_len, zpl_isize max_capture_count, zpl_re_capture **out_captures);
 
 ZPL_END_C_DECLS
+ZPL_END_NAMESPACE

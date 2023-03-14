@@ -61,6 +61,7 @@ void foo(void) {
 #endif
 
 
+ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
 
 typedef struct zpl_array_header {
@@ -241,3 +242,5 @@ ZPL_IMPL_INLINE zpl_b8 zpl__array_reserve(void **x, zpl_isize new_capacity) {
 #define zpl_array_reserve(x, new_capacity) zpl__array_reserve(cast(void **) & (x), (new_capacity))
 
 ZPL_END_C_DECLS
+ZPL_END_NAMESPACE
+

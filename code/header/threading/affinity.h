@@ -1,6 +1,7 @@
 // file: header/threading/affinity.h
 
 
+ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
 
 #if defined(ZPL_SYSTEM_WINDOWS) || defined (ZPL_SYSTEM_CYGWIN)
@@ -42,3 +43,4 @@ ZPL_DEF zpl_b32   zpl_affinity_set    (zpl_affinity *a, zpl_isize core, zpl_isiz
 ZPL_DEF zpl_isize zpl_affinity_thread_count_for_core(zpl_affinity *a, zpl_isize core);
 
 ZPL_END_C_DECLS
+ZPL_END_NAMESPACE

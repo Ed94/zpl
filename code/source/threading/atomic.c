@@ -1,6 +1,7 @@
 // file: source/threading/atomic.c
 
 
+ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
 
 ////////////////////////////////////////////////////////////////
@@ -518,3 +519,4 @@ zpl_b32 zpl_atomic64_try_acquire_lock(zpl_atomic64 *a) {
 #endif
 
 ZPL_END_C_DECLS
+ZPL_END_NAMESPACE

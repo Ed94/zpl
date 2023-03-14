@@ -20,6 +20,7 @@
 #   include <windows.h>
 #endif
 
+ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
 
 
@@ -478,3 +479,4 @@ void zpl_path_fix_slashes(char *path) {
 }
 
 ZPL_END_C_DECLS
+ZPL_END_NAMESPACE

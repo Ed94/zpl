@@ -1,6 +1,7 @@
 // file: header/threading/sem.h
 
 
+ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
 
 #if defined(ZPL_SYSTEM_MACOS)
@@ -27,3 +28,4 @@ ZPL_DEF void zpl_semaphore_wait   (zpl_semaphore *s);
 ZPL_DEF zpl_i32 zpl_semaphore_trywait(zpl_semaphore *s);
 
 ZPL_END_C_DECLS
+ZPL_END_NAMESPACE

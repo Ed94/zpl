@@ -1,6 +1,7 @@
 // file: source/core/misc.c
 
 
+ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
 
 void zpl_yield(void) {
@@ -137,3 +138,4 @@ zpl_string zpl_system_command_str(const char *command, zpl_allocator backing) {
 }
 
 ZPL_END_C_DECLS
+ZPL_END_NAMESPACE

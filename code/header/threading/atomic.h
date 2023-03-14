@@ -19,6 +19,7 @@
 #define zpl_atomicarg(X) X
 #endif
 
+ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
 
 #if defined(ZPL_COMPILER_MSVC)
@@ -75,3 +76,4 @@ ZPL_DEF void      zpl_atomic_ptr_spin_unlock     (zpl_atomic_ptr *a);
 ZPL_DEF zpl_b32   zpl_atomic_ptr_try_acquire_lock(zpl_atomic_ptr *a);
 
 ZPL_END_C_DECLS
+ZPL_END_NAMESPACE

@@ -9,6 +9,7 @@ Methods for sorting arrays using either Quick/Merge-sort combo or Radix sort. It
 @{
 */
 
+ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
 
 #define ZPL_COMPARE_PROC(name) int name(void const *a, void const *b)
@@ -92,3 +93,4 @@ ZPL_IMPL_INLINE zpl_isize zpl_binary_search(void const *base, zpl_isize count, z
 }
 
 ZPL_END_C_DECLS
+ZPL_END_NAMESPACE

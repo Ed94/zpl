@@ -7,6 +7,7 @@
 //
 //
 
+ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
 
 typedef struct zpl_virtual_memory {
@@ -36,3 +37,4 @@ ZPL_DEF zpl_b32 zpl_vm_purge(zpl_virtual_memory vm);
 ZPL_DEF zpl_isize zpl_virtual_memory_page_size(zpl_isize *alignment_out);
 
 ZPL_END_C_DECLS
+ZPL_END_NAMESPACE

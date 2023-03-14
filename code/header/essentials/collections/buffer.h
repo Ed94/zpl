@@ -17,6 +17,7 @@
 // zpl_buffer_clear
 
 
+ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
 
 typedef struct zpl_buffer_header {
@@ -74,3 +75,4 @@ do {                                                                            
 do { zpl_buffer_count(x) = 0; } while (0)
 
 ZPL_END_C_DECLS
+ZPL_END_NAMESPACE

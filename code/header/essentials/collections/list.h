@@ -12,6 +12,7 @@
 // zpl_list_remove
 
 
+ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
 
 #if 0
@@ -79,3 +80,4 @@ ZPL_IMPL_INLINE zpl_list *zpl_list_remove(zpl_list *list) {
 }
 
 ZPL_END_C_DECLS
+ZPL_END_NAMESPACE

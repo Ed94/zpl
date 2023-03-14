@@ -9,6 +9,7 @@ OpenGL gamedev friendly library for math.
 @{
 */
 
+ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
 
 typedef union zpl_vec2 {
@@ -695,3 +696,4 @@ ZPL_INLINE zpl_quat &operator/=(zpl_quat &a, float b) { zpl_quat_diveqf(&a, b); 
 ZPL_INLINE zpl_vec3 operator*(zpl_quat q, zpl_vec3 v) { zpl_vec3 r; zpl_quat_rotate_vec3(&r, q, v); return r; }
 #endif
 
+ZPL_END_NAMESPACE

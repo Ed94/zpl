@@ -1,6 +1,7 @@
 // file: source/threading/sem.c
 
 
+ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
 
 void zpl_semaphore_release(zpl_semaphore *s) { zpl_semaphore_post(s, 1); }
@@ -34,3 +35,4 @@ void zpl_semaphore_release(zpl_semaphore *s) { zpl_semaphore_post(s, 1); }
 #endif
 
 ZPL_END_C_DECLS
+ZPL_END_NAMESPACE

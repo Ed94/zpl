@@ -1,6 +1,7 @@
 // file: source/core/stringlib.c
 
 
+ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
 
 zpl_string zpl_string_make_reserve(zpl_allocator a, zpl_isize capacity) {
@@ -202,3 +203,4 @@ zpl_string zpl_string_append_fmt(zpl_string str, const char *fmt, ...) {
 }
 
 ZPL_END_C_DECLS
+ZPL_END_NAMESPACE

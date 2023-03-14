@@ -6,6 +6,7 @@
 struct zpl_thread;
 #endif
 
+ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
 
 typedef zpl_isize (*zpl_thread_proc)(struct zpl_thread *thread);
@@ -39,3 +40,4 @@ ZPL_DEF zpl_u32  zpl_thread_current_id      (void);
 ZPL_DEF void     zpl_thread_set_name        (zpl_thread *t, char const *name);
 
 ZPL_END_C_DECLS
+ZPL_END_NAMESPACE

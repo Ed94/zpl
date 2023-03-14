@@ -20,6 +20,7 @@
 #include <io.h>
 #endif
 
+ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
 
 #if defined(ZPL_SYSTEM_WINDOWS) || defined (ZPL_SYSTEM_CYGWIN)
@@ -492,3 +493,4 @@ char *zpl_file_read_lines(zpl_allocator alloc, zpl_array(char *)*lines, char con
 #endif
 
 ZPL_END_C_DECLS
+ZPL_END_NAMESPACE

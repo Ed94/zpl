@@ -1,6 +1,7 @@
 // file: source/threading/mutex.c
 
 
+ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
 
 void zpl_mutex_init(zpl_mutex *m) {
@@ -44,3 +45,4 @@ void zpl_mutex_unlock(zpl_mutex *m) {
 }
 
 ZPL_END_C_DECLS
+ZPL_END_NAMESPACE

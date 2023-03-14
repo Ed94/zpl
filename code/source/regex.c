@@ -1,6 +1,7 @@
 // file: source/regex.c
 
 
+ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
 
 typedef enum zplreOp {
@@ -763,3 +764,4 @@ zpl_b32 zpl_re_match_all(zpl_re *re, char const *str, zpl_isize str_len, zpl_isi
 }
 
 ZPL_END_C_DECLS
+ZPL_END_NAMESPACE

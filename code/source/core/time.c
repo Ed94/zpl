@@ -20,6 +20,7 @@
 #    include <timezoneapi.h>
 #endif
 
+ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
 
 //! @}
@@ -235,3 +236,4 @@ zpl_f64 zpl_time_tz(void) {
 
 
 ZPL_END_C_DECLS
+ZPL_END_NAMESPACE

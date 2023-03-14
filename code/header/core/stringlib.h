@@ -1,6 +1,7 @@
 // file: header/core/stringlib.h
 
 
+ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
 
 typedef char *zpl_string;
@@ -80,3 +81,4 @@ ZPL_IMPL_INLINE zpl_string zpl_string_trim_space(zpl_string str) { return zpl_st
 
 
 ZPL_END_C_DECLS
+ZPL_END_NAMESPACE

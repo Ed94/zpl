@@ -6,6 +6,7 @@
 //
 //
 
+ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
 
 void zpl_opts_init(zpl_opts *opts, zpl_allocator a, char const *app) {
@@ -247,3 +248,4 @@ zpl_b32 zpl_opts_compile(zpl_opts *opts, int argc, char **argv) {
 }
 
 ZPL_END_C_DECLS
+ZPL_END_NAMESPACE

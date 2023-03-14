@@ -6,6 +6,7 @@
 //
 //
 
+ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
 
 static ZPL_ALWAYS_INLINE void zpl__pr_close_file_handle(zpl_file *f) {
@@ -217,3 +218,4 @@ void zpl_pr_terminate(zpl_pr *process, zpl_i32 err_code) {
 }
 
 ZPL_END_C_DECLS
+ZPL_END_NAMESPACE

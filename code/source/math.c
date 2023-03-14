@@ -9,6 +9,7 @@
 #    include <math.h>
 #endif
 
+ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
 
 ////////////////////////////////////////////////////////////////
@@ -1827,3 +1828,4 @@ zpl_aabb2 zpl_aabb2_expand(const zpl_aabb2 *a, zpl_f32 b) {
 }
 
 ZPL_END_C_DECLS
+ZPL_END_NAMESPACE

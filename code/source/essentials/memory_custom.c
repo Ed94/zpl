@@ -23,6 +23,7 @@
 #    endif //MINGW
 #endif
 
+ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
 
 char *zpl_alloc_str(zpl_allocator a, char const *str) {
@@ -452,3 +453,4 @@ ZPL_ALLOCATOR_PROC(zpl_stack_allocator_proc) {
 }
 
 ZPL_END_C_DECLS
+ZPL_END_NAMESPACE

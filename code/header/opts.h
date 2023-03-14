@@ -10,6 +10,7 @@
 @{
  */
 
+ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
 
 typedef enum {
@@ -132,3 +133,4 @@ ZPL_DEF zpl_b32 zpl_opts_positionals_filled(zpl_opts *opts);
 //! @}
 
 ZPL_END_C_DECLS
+ZPL_END_NAMESPACE

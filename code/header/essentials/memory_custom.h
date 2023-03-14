@@ -6,6 +6,7 @@
 //
 //
 
+ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
 
 typedef enum zpl_alloc_type {
@@ -470,3 +471,5 @@ ZPL_IMPL_INLINE zpl_allocator zpl_stack_allocator(zpl_stack_memory *s) {
 }
 
 ZPL_END_C_DECLS
+ZPL_END_NAMESPACE
+

@@ -6,6 +6,7 @@ ZPL_BEGIN_C_DECLS
 /* Basic types */
 
 #if defined(ZPL_COMPILER_MSVC)
+ZPL_BEGIN_NAMESPACE
 #    if _MSC_VER < 1300
         typedef unsigned char zpl_u8;
         typedef signed char zpl_i8;
@@ -23,9 +24,11 @@ ZPL_BEGIN_C_DECLS
 #    endif
     typedef unsigned __int64 zpl_u64;
     typedef signed __int64 zpl_i64;
+ZPL_END_NAMESPACE
 #else
 #    include <stdint.h>
 
+ZPL_BEGIN_NAMESPACE
     typedef uint8_t zpl_u8;
     typedef int8_t zpl_i8;
     typedef uint16_t zpl_u16;
@@ -34,8 +37,10 @@ ZPL_BEGIN_C_DECLS
     typedef int32_t zpl_i32;
     typedef uint64_t zpl_u64;
     typedef int64_t zpl_i64;
+ZPL_END_NAMESPACE
 #endif
 
+ZPL_BEGIN_NAMESPACE
 ZPL_STATIC_ASSERT(sizeof(zpl_u8) == sizeof(zpl_i8), "sizeof(zpl_u8) != sizeof(zpl_i8)");
 ZPL_STATIC_ASSERT(sizeof(zpl_u16) == sizeof(zpl_i16), "sizeof(zpl_u16) != sizeof(zpl_i16)");
 ZPL_STATIC_ASSERT(sizeof(zpl_u32) == sizeof(zpl_i32), "sizeof(zpl_u32) != sizeof(zpl_i32)");
@@ -89,6 +94,7 @@ typedef zpl_i32 zpl_char32;
 typedef zpl_i8 zpl_b8;
 typedef zpl_i16 zpl_b16;
 typedef zpl_i32 zpl_b32;
+ZPL_END_NAMESPACE
 
 #if !defined(__cplusplus)
 #    if (defined(_MSC_VER) && _MSC_VER < 1800) || (!defined(_MSC_VER) && !defined(__STDC_VERSION__))
@@ -98,8 +104,9 @@ typedef zpl_i32 zpl_b32;
 #        ifndef false
 #            define false(0 != 0)
 #        endif
-
+        ZPL_BEGIN_NAMESPACE
         typedef zpl_b8 bool;
+        ZPL_END_NAMESPACE
 #    else
 #        include <stdbool.h>
 #    endif

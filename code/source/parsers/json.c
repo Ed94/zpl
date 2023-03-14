@@ -13,6 +13,7 @@
 #define ZPL_JSON_ASSERT(msg)
 #endif
 
+ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
 
 char *zpl__json_parse_object(zpl_adt_node *obj, char *base, zpl_allocator a, zpl_u8 *err_code);
@@ -512,3 +513,4 @@ zpl_b8 zpl__json_write_value(zpl_file *f, zpl_adt_node *o, zpl_adt_node *t, zpl_
 #undef zpl__json_append_node
 
 ZPL_END_C_DECLS
+ZPL_END_NAMESPACE

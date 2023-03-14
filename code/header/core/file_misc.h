@@ -1,6 +1,7 @@
 // file: header/core/file_misc.h
 
 
+ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
 
 #ifndef ZPL_PATH_SEPARATOR
@@ -141,3 +142,4 @@ ZPL_IMPL_INLINE char const *zpl_path_extension(char const *path) {
 }
 
 ZPL_END_C_DECLS
+ZPL_END_NAMESPACE

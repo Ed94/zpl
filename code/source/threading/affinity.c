@@ -5,6 +5,7 @@
 #    include <sys/sysctl.h>
 #endif
 
+ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
 
 #if defined(ZPL_SYSTEM_WINDOWS) || defined(ZPL_SYSTEM_CYGWIN)
@@ -170,3 +171,4 @@ ZPL_BEGIN_C_DECLS
 #endif
 
 ZPL_END_C_DECLS
+ZPL_END_NAMESPACE

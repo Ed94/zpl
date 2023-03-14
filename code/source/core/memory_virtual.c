@@ -6,6 +6,7 @@
 //
 //
 
+ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
 
 zpl_virtual_memory zpl_vm(void *data, zpl_isize size) {
@@ -114,3 +115,4 @@ zpl_virtual_memory zpl_vm(void *data, zpl_isize size) {
 #endif
 
 ZPL_END_C_DECLS
+ZPL_END_NAMESPACE

@@ -1,6 +1,7 @@
 // file: header/core/random.h
 
 
+ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
 
 typedef struct zpl_random {
@@ -19,3 +20,4 @@ ZPL_DEF zpl_isize zpl_random_range_isize(zpl_random *r, zpl_isize lower_inc, zpl
 ZPL_DEF zpl_f64   zpl_random_range_f64(zpl_random *r, zpl_f64 lower_inc, zpl_f64 higher_inc);
 
 ZPL_END_C_DECLS
+ZPL_END_NAMESPACE

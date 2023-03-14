@@ -1,6 +1,7 @@
 // file: header/parsers/csv.h
 
 
+ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
 
 typedef enum zpl_csv_error {
@@ -37,3 +38,4 @@ ZPL_IMPL_INLINE zpl_string zpl_csv_write_string(zpl_allocator a, zpl_csv_object 
 
 
 ZPL_END_C_DECLS
+ZPL_END_NAMESPACE

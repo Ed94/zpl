@@ -1,6 +1,10 @@
 // file: source/core/file_tar.c
 
 
+
+ZPL_BEGIN_NAMESPACE
+ZPL_BEGIN_C_DECLS
+
 typedef struct {
   char name[100];
   char mode[8];
@@ -223,3 +227,6 @@ ZPL_TAR_UNPACK_PROC(zpl_tar_default_unpack_file) {
     zpl_file_close(&f);
     return 0;
 }
+
+ZPL_END_C_DECLS
+ZPL_END_NAMESPACE

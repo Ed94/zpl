@@ -1,6 +1,7 @@
 // file: source/threading/fence.c
 
 
+ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
 
 #if defined(_MSC_VER)
@@ -66,3 +67,4 @@ void zpl_lfence(void) {
 }
 
 ZPL_END_C_DECLS
+ZPL_END_NAMESPACE
