@@ -68,7 +68,7 @@ License:
 #    define ZPL_NS // Used in macros, properly exposes symbol anywhere
 #endif
 
-#if defined(__cplusplus) && !defined(ZPL_EXTERN) && !defined(ZPL_DISABLE_C_DECL)
+#if defined(__cplusplus) && !defined(ZPL_EXTERN) && !defined(ZPL_DISABLE_C_DECLS)
 #    define ZPL_EXTERN extern "C"
 #else
 #    define ZPL_EXTERN extern
