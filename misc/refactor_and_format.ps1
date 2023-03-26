@@ -31,29 +31,38 @@ write-host "Beginning refactor...`n"
 
 $refactors = @(@())
 
-foreach ( $file in $targetFiles )
-{
-    $refactorParams = @(
-        "-src=$($file)",
-        "-spec=$($file_spec)"
-    )
+# foreach ( $file in $targetFiles )
+# {
+#     $refactorParams = @(
+#         "-src=$($file)",
+#         "-spec=$($file_spec)"
+#     )
 
-    $refactors += (Start-Process refactor $refactorParams -NoNewWindow -PassThru)
-}
+#     $refactors += (Start-Process refactor $refactorParams -NoNewWindow -PassThru)
+# }
 
-foreach ( $process in $refactors )
-{
-    if ( $process )
-    {
-        $process.WaitForExit()
-    }
-}
+$refactorParams = @(
+    "-debug",
+    "-num=$($targetFiles.Count)"
+    "-src=$($targetFiles)",
+    "-spec=$($file_spec)"
+)
+
+Start-Process refactor $refactorParams -NoNewWindow -PassThru -Wait
+
+# foreach ( $process in $refactors )
+# {
+#     if ( $process )
+#     {
+#         $process.WaitForExit()
+#     }
+# }
 
 Write-Host "`nRefactoring complete`n`n"
 
 
-Write-Host "Beginning format...`n"
+# Write-Host "Beginning format...`n"
 
-clang-format $formatParams $targetFiles
+# clang-format $formatParams $targetFiles
 
-Write-Host "`nFormatting complete"
+# Write-Host "`nFormatting complete"
