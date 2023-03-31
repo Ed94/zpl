@@ -64,6 +64,7 @@ word zpl_isize,   sw
 word arena,     a_arena
 word array,     a_array
 word alloc,     a_allocator
+word allocator, allocator
 word file,      a_file
 word file_size, fsize
 word list,      a_list
