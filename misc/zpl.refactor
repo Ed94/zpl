@@ -20,6 +20,8 @@ not include header/essentials/collections/array.h
 not include header/essentials/collections/list.h
 not include header/core/file.h
 not include header/opts.h
+not include source/core/file.c
+not include source/opts.c
 
 // Removes the namespace.
 namespace zpl_
