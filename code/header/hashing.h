@@ -12,36 +12,43 @@ Several hashing methods used by zpl internally but possibly useful outside of it
 ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
 
-ZPL_DEF zpl_u32 zpl_adler32(void const *data, zpl_isize len);
+ZPL_DEF u32 adler32( void const* data, sw len );
 
-ZPL_DEF zpl_u32 zpl_crc32(void const *data, zpl_isize len);
-ZPL_DEF zpl_u64 zpl_crc64(void const *data, zpl_isize len);
+ZPL_DEF u32 crc32( void const* data, sw len );
+ZPL_DEF u64 crc64( void const* data, sw len );
 
 // These use FNV-1 algorithm
-ZPL_DEF zpl_u32 zpl_fnv32(void const *data, zpl_isize len);
-ZPL_DEF zpl_u64 zpl_fnv64(void const *data, zpl_isize len);
-ZPL_DEF zpl_u32 zpl_fnv32a(void const *data, zpl_isize len);
-ZPL_DEF zpl_u64 zpl_fnv64a(void const *data, zpl_isize len);
+ZPL_DEF u32 fnv32( void const* data, sw len );
+ZPL_DEF u64 fnv64( void const* data, sw len );
+ZPL_DEF u32 fnv32a( void const* data, sw len );
+ZPL_DEF u64 fnv64a( void const* data, sw len );
 
-ZPL_DEF zpl_u8 *zpl_base64_encode(zpl_allocator a, void const *data, zpl_isize len);
-ZPL_DEF zpl_u8 *zpl_base64_decode(zpl_allocator a, void const *data, zpl_isize len);
+ZPL_DEF u8* base64_encode( AllocatorInfo a, void const* data, sw len );
+ZPL_DEF u8* base64_decode( AllocatorInfo a, void const* data, sw len );
 
 //! Based on MurmurHash3
-ZPL_DEF zpl_u32 zpl_murmur32_seed(void const *data, zpl_isize len, zpl_u32 seed);
+ZPL_DEF u32 murmur32_seed( void const* data, sw len, u32 seed );
 
 //! Based on MurmurHash2
-ZPL_DEF zpl_u64 zpl_murmur64_seed(void const *data, zpl_isize len, zpl_u64 seed);
+ZPL_DEF u64 murmur64_seed( void const* data, sw len, u64 seed );
 
 //! Default seed of 0x9747b28c
-ZPL_DEF_INLINE zpl_u32 zpl_murmur32(void const *data, zpl_isize len);
+ZPL_DEF_INLINE u32 murmur32( void const* data, sw len );
 
 //! Default seed of 0x9747b28c
-ZPL_DEF_INLINE zpl_u64 zpl_murmur64(void const *data, zpl_isize len);
+ZPL_DEF_INLINE u64 murmur64( void const* data, sw len );
 
 //! @}
 
-ZPL_IMPL_INLINE zpl_u32 zpl_murmur32(void const *data, zpl_isize len) { return zpl_murmur32_seed(data, len, 0x9747b28c); }
-ZPL_IMPL_INLINE zpl_u64 zpl_murmur64(void const *data, zpl_isize len) { return zpl_murmur64_seed(data, len, 0x9747b28c); }
+ZPL_IMPL_INLINE u32 murmur32( void const* data, sw len )
+{
+	return murmur32_seed( data, len, 0x9747b28c );
+}
+
+ZPL_IMPL_INLINE u64 murmur64( void const* data, sw len )
+{
+	return murmur64_seed( data, len, 0x9747b28c );
+}
 
 ZPL_END_C_DECLS
 ZPL_END_NAMESPACE

@@ -1,8 +1,8 @@
 // file: source/dll.c
 
 
-#if defined(ZPL_SYSTEM_UNIX) || defined(ZPL_SYSTEM_MACOS)
-#    include <dlfcn.h>
+#if defined( ZPL_SYSTEM_UNIX ) || defined( ZPL_SYSTEM_MACOS )
+#	include <dlfcn.h>
 #endif
 
 ZPL_BEGIN_NAMESPACE
@@ -14,32 +14,38 @@ ZPL_BEGIN_C_DECLS
 //
 //
 
-#if defined(ZPL_SYSTEM_WINDOWS)
-    zpl_dll_handle zpl_dll_load(char const *filepath) {
-        return cast(zpl_dll_handle) LoadLibraryA(filepath);
-    }
+#if defined( ZPL_SYSTEM_WINDOWS )
+dll_handle dll_load( char const* filepath )
+{
+	return zpl_cast( dll_handle ) LoadLibraryA( filepath );
+}
 
-    void zpl_dll_unload(zpl_dll_handle dll) {
-        FreeLibrary(cast(HMODULE) dll);
-    }
+void dll_unload( dll_handle dll )
+{
+	FreeLibrary( zpl_cast( HMODULE ) dll );
+}
 
-    zpl_dll_proc zpl_dll_proc_address(zpl_dll_handle dll, char const *proc_name) {
-        return cast(zpl_dll_proc) GetProcAddress(cast(HMODULE) dll, proc_name);
-    }
+dll_proc dll_proc_address( dll_handle dll, char const* proc_name )
+{
+	return zpl_cast( dll_proc ) GetProcAddress( zpl_cast( HMODULE ) dll, proc_name );
+}
 
-#else // POSIX
+#else    // POSIX
 
-    zpl_dll_handle zpl_dll_load(char const *filepath) {
-        return cast(zpl_dll_handle) dlopen(filepath, RTLD_LAZY | RTLD_GLOBAL);
-    }
+dll_handle dll_load( char const* filepath )
+{
+	return zpl_cast( dll_handle ) dlopen( filepath, RTLD_LAZY | RTLD_GLOBAL );
+}
 
-    void zpl_dll_unload(zpl_dll_handle dll) {
-        dlclose(dll);
-    }
+void dll_unload( dll_handle dll )
+{
+	dlclose( dll );
+}
 
-    zpl_dll_proc zpl_dll_proc_address(zpl_dll_handle dll, char const *proc_name) {
-        return cast(zpl_dll_proc) dlsym(dll, proc_name);
-    }
+dll_proc dll_proc_address( dll_handle dll, char const* proc_name )
+{
+	return zpl_cast( dll_proc ) dlsym( dll, proc_name );
+}
 
 #endif
 

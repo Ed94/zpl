@@ -17,35 +17,38 @@ Use zpl_tar_pack_dir to pack an entire directory recursively. Empty folders are 
 ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
 
-typedef enum {
-    ZPL_TAR_ERROR_NONE,
-    ZPL_TAR_ERROR_INTERRUPTED,
-    ZPL_TAR_ERROR_IO_ERROR,
-    ZPL_TAR_ERROR_BAD_CHECKSUM,
-    ZPL_TAR_ERROR_FILE_NOT_FOUND,
-    ZPL_TAR_ERROR_INVALID_INPUT,
-} zpl_tar_errors;
+typedef enum
+{
+	ZPL_TAR_ERROR_NONE,
+	ZPL_TAR_ERROR_INTERRUPTED,
+	ZPL_TAR_ERROR_IO_ERROR,
+	ZPL_TAR_ERROR_BAD_CHECKSUM,
+	ZPL_TAR_ERROR_FILE_NOT_FOUND,
+	ZPL_TAR_ERROR_INVALID_INPUT,
+} tar_errors;
 
-typedef enum {
-    ZPL_TAR_TYPE_REGULAR    = '0',
-    ZPL_TAR_TYPE_LINK       = '1',
-    ZPL_TAR_TYPE_SYMBOL     = '2',
-    ZPL_TAR_TYPE_CHR        = '3',
-    ZPL_TAR_TYPE_BLK        = '4',
-    ZPL_TAR_TYPE_DIR        = '5',
-    ZPL_TAR_TYPE_FIFO       = '6'
-} zpl_tar_file_type;
+typedef enum
+{
+	ZPL_TAR_TYPE_REGULAR = '0',
+	ZPL_TAR_TYPE_LINK    = '1',
+	ZPL_TAR_TYPE_SYMBOL  = '2',
+	ZPL_TAR_TYPE_CHR     = '3',
+	ZPL_TAR_TYPE_BLK     = '4',
+	ZPL_TAR_TYPE_DIR     = '5',
+	ZPL_TAR_TYPE_FIFO    = '6'
+} tar_file_type;
 
-typedef struct {
-    char type;
-    char *path;
-    zpl_i64 offset;
-    zpl_i64 length;
-    zpl_isize error;
-} zpl_tar_record;
+typedef struct
+{
+	char  type;
+	char* path;
+	s64   offset;
+	s64   length;
+	sw    error;
+} tar_record;
 
-#define ZPL_TAR_UNPACK_PROC(name) ZPL_NS(zpl_isize) name(ZPL_NS(zpl_file) *archive, ZPL_NS(zpl_tar_record) *file, void* user_data)
-typedef ZPL_TAR_UNPACK_PROC(zpl_tar_unpack_proc);
+#define ZPL_TAR_UNPACK_PROC( name ) ZPL_NS( sw ) name( ZPL_NS( FileInfo ) * archive, ZPL_NS( tar_record ) * file, void* user_data )
+typedef ZPL_TAR_UNPACK_PROC( tar_unpack_proc );
 
 /**
  * @brief Packs a list of files
@@ -56,7 +59,7 @@ typedef ZPL_TAR_UNPACK_PROC(zpl_tar_unpack_proc);
  * @param paths_len number of files provided
  * @return error
  */
-ZPL_DEF zpl_isize zpl_tar_pack(zpl_file *archive, char const **paths, zpl_isize paths_len);
+ZPL_DEF sw tar_pack( FileInfo* archive, char const** paths, sw paths_len );
 
 /**
  * @brief Packs an entire directory
@@ -66,7 +69,7 @@ ZPL_DEF zpl_isize zpl_tar_pack(zpl_file *archive, char const **paths, zpl_isize 
  * @param alloc memory allocator to use (ex. zpl_heap())
  * @return error
  */
-ZPL_DEF zpl_isize zpl_tar_pack_dir(zpl_file *archive, char const *path, zpl_allocator alloc);
+ZPL_DEF sw tar_pack_dir( FileInfo* archive, char const* path, AllocatorInfo alloc );
 
 /**
  * @brief Unpacks an existing archive
@@ -77,7 +80,7 @@ ZPL_DEF zpl_isize zpl_tar_pack_dir(zpl_file *archive, char const *path, zpl_allo
  * @param user_data user provided data
  * @return error
  */
-ZPL_DEF zpl_isize zpl_tar_unpack(zpl_file *archive, zpl_tar_unpack_proc *unpack_proc, void *user_data);
+ZPL_DEF sw tar_unpack( FileInfo* archive, tar_unpack_proc* unpack_proc, void* user_data );
 
 /**
  * @brief Unpacks an existing archive into directory
@@ -86,15 +89,16 @@ ZPL_DEF zpl_isize zpl_tar_unpack(zpl_file *archive, zpl_tar_unpack_proc *unpack_
  * @param dest directory to unpack files to
  * @return error
  */
-ZPL_DEF_INLINE zpl_isize zpl_tar_unpack_dir(zpl_file *archive, char const *dest);
+ZPL_DEF_INLINE sw tar_unpack_dir( FileInfo* archive, char const* dest );
 
-ZPL_DEF ZPL_TAR_UNPACK_PROC(zpl_tar_default_list_file);
-ZPL_DEF ZPL_TAR_UNPACK_PROC(zpl_tar_default_unpack_file);
+ZPL_DEF ZPL_TAR_UNPACK_PROC( tar_default_list_file );
+ZPL_DEF ZPL_TAR_UNPACK_PROC( tar_default_unpack_file );
 
 //! @}
 
-ZPL_IMPL_INLINE zpl_isize zpl_tar_unpack_dir(zpl_file *archive, char const *dest) {
-    return zpl_tar_unpack(archive, zpl_tar_default_unpack_file, cast(void*)dest);
+ZPL_IMPL_INLINE sw tar_unpack_dir( FileInfo* archive, char const* dest )
+{
+	return tar_unpack( archive, tar_default_unpack_file, zpl_cast( void* ) dest );
 }
 
 ZPL_END_C_DECLS

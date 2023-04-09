@@ -6,22 +6,23 @@
 ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
 
-typedef struct zpl_sync {
-    zpl_i32 target;  // Target Number of threads
-    zpl_i32 current; // Threads to hit
-    zpl_i32 waiting; // Threads waiting
+typedef struct sync
+{
+	s32 target;     // Target Number of threads
+	s32 current;    // Threads to hit
+	s32 waiting;    // Threads waiting
 
-    zpl_mutex start;
-    zpl_mutex mutex;
-    zpl_semaphore release;
-} zpl_sync;
+	mutex     start;
+	mutex     mutex;
+	semaphore release;
+} sync;
 
-ZPL_DEF void     zpl_sync_init          (zpl_sync *s);
-ZPL_DEF void     zpl_sync_destroy       (zpl_sync *s);
-ZPL_DEF void     zpl_sync_set_target    (zpl_sync *s, zpl_i32 count);
-ZPL_DEF void     zpl_sync_release       (zpl_sync *s);
-ZPL_DEF zpl_i32  zpl_sync_reach         (zpl_sync *s);
-ZPL_DEF void     zpl_sync_reach_and_wait(zpl_sync *s);
+ZPL_DEF void sync_init( sync* s );
+ZPL_DEF void sync_destroy( sync* s );
+ZPL_DEF void sync_set_target( sync* s, s32 count );
+ZPL_DEF void sync_release( sync* s );
+ZPL_DEF s32  sync_reach( sync* s );
+ZPL_DEF void sync_reach_and_wait( sync* s );
 
 ZPL_END_C_DECLS
 ZPL_END_NAMESPACE

@@ -9,242 +9,328 @@
 ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
 
-void zpl_opts_init(zpl_opts *opts, zpl_allocator a, char const *app) {
-    zpl_opts opts_ = { 0 };
-    *opts = opts_;
-    opts->alloc = a;
-    opts->appname = app;
+void opts_init( Opts* opts, AllocatorInfo a, char const* app )
+{
+	Opts opts_    = { 0 };
+	*opts         = opts_;
+	opts->alloc   = a;
+	opts->appname = app;
 
-    zpl_array_init(opts->entries, a);
-    zpl_array_init(opts->positioned, a);
-    zpl_array_init(opts->errors, a);
+	array_init( opts->entries, a );
+	array_init( opts->positioned, a );
+	array_init( opts->errors, a );
 }
 
-void zpl_opts_free(zpl_opts *opts) {
-    for (zpl_i32 i = 0; i < zpl_array_count(opts->entries); ++i) {
-        zpl_opts_entry *e = opts->entries + i;
-        if (e->type == ZPL_OPTS_STRING) {
-            zpl_string_free(e->text);
-        }
-    }
+void opts_free( Opts* opts )
+{
+	for ( s32 i = 0; i < array_count( opts->entries ); ++i )
+	{
+		opts_entry* e = opts->entries + i;
+		if ( e->type == ZPL_OPTS_STRING )
+		{
+			string_free( e->text );
+		}
+	}
 
-    zpl_array_free(opts->entries);
-    zpl_array_free(opts->positioned);
-    zpl_array_free(opts->errors);
+	array_free( opts->entries );
+	array_free( opts->positioned );
+	array_free( opts->errors );
 }
 
-void zpl_opts_add(zpl_opts *opts, char const *name, char const *lname, const char *desc, zpl_u8 type) {
-    zpl_opts_entry e = { 0 };
+void opts_add( Opts* opts, char const* name, char const* lname, const char* desc, u8 type )
+{
+	opts_entry e = { 0 };
 
-    e.name = name;
-    e.lname = lname;
-    e.desc = desc;
-    e.type = type;
-    e.met = false;
-    e.pos = false;
+	e.name  = name;
+	e.lname = lname;
+	e.desc  = desc;
+	e.type  = type;
+	e.met   = false;
+	e.pos   = false;
 
-    zpl_array_append(opts->entries, e);
+	array_append( opts->entries, e );
 }
 
-zpl_opts_entry *zpl__opts_find(zpl_opts *opts, char const *name, zpl_usize len, zpl_b32 longname) {
-    zpl_opts_entry *e = 0;
+opts_entry* _opts_find( Opts* opts, char const* name, uw len, b32 longname )
+{
+	opts_entry* e = 0;
 
-    for (int i = 0; i < zpl_array_count(opts->entries); ++i) {
-        e = opts->entries + i;
-        char const *n = (longname ? e->lname : e->name);
-        if(!n) continue;
+	for ( int i = 0; i < array_count( opts->entries ); ++i )
+	{
+		e             = opts->entries + i;
+		char const* n = ( longname ? e->lname : e->name );
+		if ( ! n )
+			continue;
 
-        if (zpl_strnlen(name, len) == zpl_strlen(n) && !zpl_strncmp(n, name, len)) { return e; }
-    }
+		if ( strnlen( name, len ) == strlen( n ) && ! str_compare( n, name, len ) )
+		{
+			return e;
+		}
+	}
 
-    return NULL;
+	return NULL;
 }
 
-void zpl_opts_positional_add(zpl_opts *opts, char const *name) {
-    zpl_opts_entry *e = zpl__opts_find(opts, name, zpl_strlen(name), true);
+void opts_positional_add( Opts* opts, char const* name )
+{
+	opts_entry* e = _opts_find( opts, name, strlen( name ), true );
 
-    if (e) {
-        e->pos = true;
-        zpl_array_append_at(opts->positioned, e, 0);
-    }
+	if ( e )
+	{
+		e->pos = true;
+		array_append_at( opts->positioned, e, 0 );
+	}
 }
 
-zpl_b32 zpl_opts_positionals_filled(zpl_opts *opts) { return zpl_array_count(opts->positioned) == 0; }
-
-zpl_string zpl_opts_string(zpl_opts *opts, char const *name, char const *fallback) {
-    zpl_opts_entry *e = zpl__opts_find(opts, name, zpl_strlen(name), true);
-
-    return (char *)((e && e->met) ? e->text : fallback);
+b32 opts_positionals_filled( Opts* opts )
+{
+	return array_count( opts->positioned ) == 0;
 }
 
-zpl_f64 zpl_opts_real(zpl_opts *opts, char const *name, zpl_f64 fallback) {
-    zpl_opts_entry *e = zpl__opts_find(opts, name, zpl_strlen(name), true);
+String opts_string( Opts* opts, char const* name, char const* fallback )
+{
+	opts_entry* e = _opts_find( opts, name, strlen( name ), true );
 
-    return (e && e->met) ? e->real : fallback;
+	return ( char* )( ( e && e->met ) ? e->text : fallback );
 }
 
-zpl_i64 zpl_opts_integer(zpl_opts *opts, char const *name, zpl_i64 fallback) {
-    zpl_opts_entry *e = zpl__opts_find(opts, name, zpl_strlen(name), true);
+f64 opts_real( Opts* opts, char const* name, f64 fallback )
+{
+	opts_entry* e = _opts_find( opts, name, strlen( name ), true );
 
-    return (e && e->met) ? e->integer : fallback;
+	return ( e && e->met ) ? e->real : fallback;
 }
 
-void zpl__opts_set_value(zpl_opts *opts, zpl_opts_entry *t, char *b) {
-    t->met = true;
+s64 opts_integer( Opts* opts, char const* name, s64 fallback )
+{
+	opts_entry* e = _opts_find( opts, name, strlen( name ), true );
 
-    switch (t->type) {
-        case ZPL_OPTS_STRING: {
-            t->text = zpl_string_make(opts->alloc, b);
-        } break;
-
-        case ZPL_OPTS_FLOAT: {
-            t->real = zpl_str_to_f64(b, NULL);
-        } break;
-
-        case ZPL_OPTS_INT: {
-            t->integer = zpl_str_to_i64(b, NULL, 10);
-        } break;
-    }
-
-    for (zpl_isize i=0; i < zpl_array_count(opts->positioned); i++) {
-        if (!zpl_strcmp(opts->positioned[i]->lname, t->lname)) {
-            zpl_array_remove_at(opts->positioned, i);
-            break;
-        }
-    }
+	return ( e && e->met ) ? e->integer : fallback;
 }
 
-zpl_b32 zpl_opts_has_arg(zpl_opts *opts, char const *name) {
-    zpl_opts_entry *e = zpl__opts_find(opts, name, zpl_strlen(name), true);
+void _opts_set_value( Opts* opts, opts_entry* t, char* b )
+{
+	t->met = true;
 
-    if (e) { return e->met; }
+	switch ( t->type )
+	{
+		case ZPL_OPTS_STRING :
+			{
+				t->text = string_make( opts->alloc, b );
+			}
+			break;
 
-    return false;
+		case ZPL_OPTS_FLOAT :
+			{
+				t->real = str_to_f64( b, NULL );
+			}
+			break;
+
+		case ZPL_OPTS_INT :
+			{
+				t->integer = str_to_i64( b, NULL, 10 );
+			}
+			break;
+	}
+
+	for ( sw i = 0; i < array_count( opts->positioned ); i++ )
+	{
+		if ( ! str_compare( opts->positioned[ i ]->lname, t->lname ) )
+		{
+			array_remove_at( opts->positioned, i );
+			break;
+		}
+	}
 }
 
-void zpl_opts_print_help(zpl_opts *opts) {
-    zpl_printf("USAGE: %s", opts->appname);
+b32 opts_has_arg( Opts* opts, char const* name )
+{
+	opts_entry* e = _opts_find( opts, name, strlen( name ), true );
 
-    for (zpl_isize i = zpl_array_count(opts->entries); i >= 0; --i) {
-        zpl_opts_entry *e = opts->entries + i;
+	if ( e )
+	{
+		return e->met;
+	}
 
-        if (e->pos == (zpl_b32) true) { zpl_printf(" [%s]", e->lname); }
-    }
-
-    zpl_printf("\nOPTIONS:\n");
-
-    for (zpl_isize i = 0; i < zpl_array_count(opts->entries); ++i) {
-        zpl_opts_entry *e = opts->entries + i;
-
-        if(e->name) {
-            if(e->lname) { zpl_printf("\t-%s, --%s: %s\n", e->name, e->lname, e->desc); }
-            else { zpl_printf("\t-%s: %s\n", e->name, e->desc); }
-        } else { zpl_printf("\t--%s: %s\n", e->lname, e->desc); }
-    }
+	return false;
 }
 
-void zpl_opts_print_errors(zpl_opts *opts) {
-    for (int i = 0; i < zpl_array_count(opts->errors); ++i) {
-        zpl_opts_err *err = (opts->errors + i);
+void opts_print_help( Opts* opts )
+{
+	printf( "USAGE: %s", opts->appname );
 
-        zpl_printf("ERROR: ");
+	for ( sw i = array_count( opts->entries ); i >= 0; --i )
+	{
+		opts_entry* e = opts->entries + i;
 
-        switch (err->type) {
-            case ZPL_OPTS_ERR_OPTION: zpl_printf("Invalid option \"%s\"", err->val); break;
+		if ( e->pos == ( b32 ) true )
+		{
+			printf( " [%s]", e->lname );
+		}
+	}
 
-            case ZPL_OPTS_ERR_VALUE: zpl_printf("Invalid value \"%s\"", err->val); break;
+	printf( "\nOPTIONS:\n" );
 
-            case ZPL_OPTS_ERR_MISSING_VALUE: zpl_printf("Missing value for option \"%s\"", err->val); break;
+	for ( sw i = 0; i < array_count( opts->entries ); ++i )
+	{
+		opts_entry* e = opts->entries + i;
 
-            case ZPL_OPTS_ERR_EXTRA_VALUE: zpl_printf("Extra value for option \"%s\"", err->val); break;
-        }
-
-        zpl_printf("\n");
-    }
+		if ( e->name )
+		{
+			if ( e->lname )
+			{
+				printf( "\t-%s, --%s: %s\n", e->name, e->lname, e->desc );
+			}
+			else
+			{
+				printf( "\t-%s: %s\n", e->name, e->desc );
+			}
+		}
+		else
+		{
+			printf( "\t--%s: %s\n", e->lname, e->desc );
+		}
+	}
 }
 
-void zpl__opts_push_error(zpl_opts *opts, char *b, zpl_u8 errtype) {
-    zpl_opts_err err = { 0 };
-    err.val = b;
-    err.type = errtype;
-    zpl_array_append(opts->errors, err);
+void opts_print_errors( Opts* opts )
+{
+	for ( int i = 0; i < array_count( opts->errors ); ++i )
+	{
+		opts_err* err = ( opts->errors + i );
+
+		printf( "ERROR: " );
+
+		switch ( err->type )
+		{
+			case ZPL_OPTS_ERR_OPTION :
+				printf( "Invalid option \"%s\"", err->val );
+				break;
+
+			case ZPL_OPTS_ERR_VALUE :
+				printf( "Invalid value \"%s\"", err->val );
+				break;
+
+			case ZPL_OPTS_ERR_MISSING_VALUE :
+				printf( "Missing value for option \"%s\"", err->val );
+				break;
+
+			case ZPL_OPTS_ERR_EXTRA_VALUE :
+				printf( "Extra value for option \"%s\"", err->val );
+				break;
+		}
+
+		printf( "\n" );
+	}
 }
 
-zpl_b32 zpl_opts_compile(zpl_opts *opts, int argc, char **argv) {
-    zpl_b32 had_errors = false;
-    for (int i = 1; i < argc; ++i) {
-        char *p = argv[i];
+void _opts_push_error( Opts* opts, char* b, u8 errtype )
+{
+	opts_err err = { 0 };
+	err.val      = b;
+	err.type     = errtype;
+	array_append( opts->errors, err );
+}
 
-        if (*p) {
-            p = cast(char *)zpl_str_trim(p, false);
-            if (*p == '-') {
-                zpl_opts_entry *t = 0;
-                zpl_b32 checkln = false;
-                if (*(p + 1) == '-') {
-                    checkln = true;
-                    ++p;
-                }
+b32 opts_compile( Opts* opts, int argc, char** argv )
+{
+	b32 had_errors = false;
+	for ( int i = 1; i < argc; ++i )
+	{
+		char* p = argv[ i ];
 
-                char *b = p + 1, *e = b;
+		if ( *p )
+		{
+			p = zpl_cast( char* ) str_trim( p, false );
+			if ( *p == '-' )
+			{
+				opts_entry* t       = 0;
+				b32         checkln = false;
+				if ( *( p + 1 ) == '-' )
+				{
+					checkln = true;
+					++p;
+				}
 
-                while (zpl_char_is_alphanumeric(*e) || *e == '-' || *e == '_') { ++e; }
+				char *b = p + 1, *e = b;
 
-                t = zpl__opts_find(opts, b, (e - b), checkln);
+				while ( char_is_alphanumeric( *e ) || *e == '-' || *e == '_' )
+				{
+					++e;
+				}
 
-                if (t) {
-                    char *ob = b;
-                    b = e;
+				t = _opts_find( opts, b, ( e - b ), checkln );
 
-                    /**/ if (*e == '=') {
-                        if (t->type == ZPL_OPTS_FLAG) {
-                            *e = '\0';
-                            zpl__opts_push_error(opts, ob, ZPL_OPTS_ERR_EXTRA_VALUE);
-                            had_errors = true;
-                            continue;
-                        }
+				if ( t )
+				{
+					char* ob = b;
+					b        = e;
 
-                        b = e = e + 1;
-                    } else if (*e == '\0') {
-                        char *sp = argv[i+1];
+					/**/ if ( *e == '=' )
+					{
+						if ( t->type == ZPL_OPTS_FLAG )
+						{
+							*e = '\0';
+							_opts_push_error( opts, ob, ZPL_OPTS_ERR_EXTRA_VALUE );
+							had_errors = true;
+							continue;
+						}
 
-                        if (sp && *sp != '-' && (zpl_array_count(opts->positioned) < 1  || t->type != ZPL_OPTS_FLAG)) {
-                            if (t->type == ZPL_OPTS_FLAG) {
-                                zpl__opts_push_error(opts, b, ZPL_OPTS_ERR_EXTRA_VALUE);
-                                had_errors = true;
-                                continue;
-                            }
+						b = e = e + 1;
+					}
+					else if ( *e == '\0' )
+					{
+						char* sp = argv[ i + 1 ];
 
-                            p = sp;
-                            b = e = sp;
-                            ++i;
-                        } else {
-                            if (t->type != ZPL_OPTS_FLAG) {
-                                zpl__opts_push_error(opts, ob, ZPL_OPTS_ERR_MISSING_VALUE);
-                                had_errors = true;
-                                continue;
-                            }
-                            t->met = true;
-                            continue;
-                        }
-                    }
+						if ( sp && *sp != '-' && ( array_count( opts->positioned ) < 1 || t->type != ZPL_OPTS_FLAG ) )
+						{
+							if ( t->type == ZPL_OPTS_FLAG )
+							{
+								_opts_push_error( opts, b, ZPL_OPTS_ERR_EXTRA_VALUE );
+								had_errors = true;
+								continue;
+							}
 
-                    e = cast(char *)zpl_str_control_skip(e, '\0');
-                    zpl__opts_set_value(opts, t, b);
-                } else {
-                    zpl__opts_push_error(opts, b, ZPL_OPTS_ERR_OPTION);
-                    had_errors = true;
-                }
-            } else if (zpl_array_count(opts->positioned)) {
-                zpl_opts_entry *l = zpl_array_back(opts->positioned);
-                zpl_array_pop(opts->positioned);
-                zpl__opts_set_value(opts, l, p);
-            } else {
-                zpl__opts_push_error(opts, p, ZPL_OPTS_ERR_VALUE);
-                had_errors = true;
-            }
-        }
-    }
-    return !had_errors;
+							p = sp;
+							b = e = sp;
+							++i;
+						}
+						else
+						{
+							if ( t->type != ZPL_OPTS_FLAG )
+							{
+								_opts_push_error( opts, ob, ZPL_OPTS_ERR_MISSING_VALUE );
+								had_errors = true;
+								continue;
+							}
+							t->met = true;
+							continue;
+						}
+					}
+
+					e = zpl_cast( char* ) str_control_skip( e, '\0' );
+					_opts_set_value( opts, t, b );
+				}
+				else
+				{
+					_opts_push_error( opts, b, ZPL_OPTS_ERR_OPTION );
+					had_errors = true;
+				}
+			}
+			else if ( array_count( opts->positioned ) )
+			{
+				opts_entry* l = array_back( opts->positioned );
+				array_pop( opts->positioned );
+				_opts_set_value( opts, l, p );
+			}
+			else
+			{
+				_opts_push_error( opts, p, ZPL_OPTS_ERR_VALUE );
+				had_errors = true;
+			}
+		}
+	}
+	return ! had_errors;
 }
 
 ZPL_END_C_DECLS

@@ -5,151 +5,157 @@
 ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
 
-#ifndef cast
-#    define cast(Type) (Type)
+#ifndef zpl_cast
+#	define zpl_cast( Type ) ( Type )
 #endif
 
-#ifndef zpl_size_of
-#    define zpl_size_of(x) (ZPL_NS(zpl_isize))(sizeof(x))
+#ifndef size_of
+#	define size_of( x ) ( ZPL_NS( sw ) )( sizeof( x ) )
 #endif
 
-#ifndef zpl_count_of
-#    define zpl_count_of(x) ((zpl_size_of(x) / zpl_size_of(0 [x])) / ((ZPL_NS(zpl_isize))(!(zpl_size_of(x) % zpl_size_of(0 [x])))))
+#ifndef count_of
+#	define count_of( x ) ( ( size_of( x ) / size_of( 0 [ x ] ) ) / ( ( ZPL_NS( sw ) )( ! ( size_of( x ) % size_of( 0 [ x ] ) ) ) ) )
 #endif
 
-#ifndef zpl_offset_of
-#if defined(_MSC_VER) || defined(ZPL_COMPILER_TINYC)
-#    define zpl_offset_of(Type, element) ((ZPL_NS(zpl_isize)) & (((Type *)0)->element))
-#else
-#    define zpl_offset_of(Type, element) __builtin_offsetof(Type, element)
-#endif
+#ifndef offset_of
+#	if defined( _MSC_VER ) || defined( ZPL_COMPILER_TINYC )
+#		define offset_of( Type, element ) ( ( ZPL_NS( sw ) ) & ( ( ( Type* )0 )->element ) )
+#	else
+#		define offset_of( Type, element ) __builtin_offsetof( Type, element )
+#	endif
 #endif
 
-#if defined(__cplusplus)
-#    ifndef zpl_align_of
-#        if __cplusplus >= 201103L
-#            define zpl_align_of(Type) (ZPL_NS(zpl_isize))alignof(Type)
-#        else
-extern "C++" {
-    template <typename T> struct zpl_alignment_trick {
-        char c;
-        T member;
-    };
+#if defined( __cplusplus )
+#	ifndef align_of
+#		if __cplusplus >= 201103L
+#			define align_of( Type ) ( ZPL_NS( sw ) )alignof( Type )
+#		else
+extern "C++"
+{
+	template< typename T >
+	struct alignment_trick
+	{
+		char c;
+		T    member;
+	};
 }
-#            define zpl_align_of(Type) zpl_offset_of( ZPL_NS(zpl_alignment_trick)<Type>, member)
-#        endif
-#    endif
+#			define align_of( Type ) offset_of( ZPL_NS( alignment_trick ) < Type >, member )
+#		endif
+#	endif
 #else
-#    ifndef zpl_align_of
-#        define zpl_align_of(Type) \
-ZPL_NS( zpl_offset_of(             \
-struct {                   \
-char c;                \
-Type member;           \
-},                         \
-member))
-#    endif
+#	ifndef align_of
+#		define align_of( Type ) \
+			ZPL_NS( offset_of(   \
+			    struct {         \
+				    char c;      \
+				    Type member; \
+			    },               \
+			    member           \
+			) )
+#	endif
 #endif
 
-#ifndef zpl_swap
-#    define zpl_swap(Type, a, b) \
-do {                         \
-Type tmp = (a);          \
-(a) = (b);               \
-(b) = tmp;               \
-} while (0)
+#ifndef swap
+#	define swap( Type, a, b ) \
+		do                     \
+		{                      \
+			Type tmp = ( a );  \
+			( a )    = ( b );  \
+			( b )    = tmp;    \
+		} while ( 0 )
 #endif
 
 
 
-#ifndef zpl_global
-#    define zpl_global static        // Global variables
+#ifndef global
+#	define global static    // Global variables
 #endif
 
-#ifndef zpl_internal
-#    define zpl_internal static      // Internal linkage
+#ifndef internal
+#	define internal static    // Internal linkage
 #endif
 
-#ifndef zpl_local_persist
-#    define zpl_local_persist static // Local Persisting variables
+#ifndef local_persist
+#	define local_persist static    // Local Persisting variables
 #endif
 
-#ifndef zpl_unused
-#    if defined(_MSC_VER)
-#        define zpl_unused(x) (__pragma(warning(suppress : 4100))(x))
-#    elif defined(__GCC__)
-#        define zpl_unused(x) __attribute__((__unused__))(x)
-#    else
-#        define zpl_unused(x) ((void)(zpl_size_of(x)))
-#    endif
+#ifndef unused
+#	if defined( _MSC_VER )
+#		define unused( x ) ( __pragma( warning( suppress : 4100 ) )( x ) )
+#	elif defined( __GCC__ )
+#		define unused( x ) __attribute__( ( __unused__ ) ) ( x )
+#	else
+#		define unused( x ) ( ( void )( size_of( x ) ) )
+#	endif
 #endif
 
 
 #ifndef ZPL_JOIN_MACROS
-#    define ZPL_JOIN_MACROS
+#	define ZPL_JOIN_MACROS
 
-#    define ZPL_JOIN2 ZPL_CONCAT
-#    define ZPL_JOIN3(a, b, c) ZPL_JOIN2(ZPL_JOIN2(a, b), c)
-#    define ZPL_JOIN4(a, b, c, d) ZPL_JOIN2(ZPL_JOIN2(ZPL_JOIN2(a, b), c), d)
+#	define ZPL_JOIN2               ZPL_CONCAT
+#	define ZPL_JOIN3( a, b, c )    ZPL_JOIN2( ZPL_JOIN2( a, b ), c )
+#	define ZPL_JOIN4( a, b, c, d ) ZPL_JOIN2( ZPL_JOIN2( ZPL_JOIN2( a, b ), c ), d )
 #endif
 
 #ifndef ZPL_BIT
-#    define ZPL_BIT(x) (1 << (x))
+#	define ZPL_BIT( x ) ( 1 << ( x ) )
 #endif
 
-#ifndef zpl_min
-#    define zpl_min(a, b) ((a) < (b) ? (a) : (b))
+#ifndef min
+#	define min( a, b ) ( ( a ) < ( b ) ? ( a ) : ( b ) )
 #endif
 
-#ifndef zpl_max
-#    define zpl_max(a, b) ((a) > (b) ? (a) : (b))
+#ifndef max
+#	define max( a, b ) ( ( a ) > ( b ) ? ( a ) : ( b ) )
 #endif
 
-#ifndef zpl_min3
-#    define zpl_min3(a, b, c) zpl_min(zpl_min(a, b), c)
+#ifndef min3
+#	define min3( a, b, c ) min( min( a, b ), c )
 #endif
 
-#ifndef zpl_max3
-#    define zpl_max3(a, b, c) zpl_max(zpl_max(a, b), c)
+#ifndef max3
+#	define max3( a, b, c ) max( max( a, b ), c )
 #endif
 
-#ifndef zpl_clamp
-#    define zpl_clamp(x, lower, upper) zpl_min(zpl_max((x), (lower)), (upper))
+#ifndef clamp
+#	define clamp( x, lower, upper ) min( max( ( x ), ( lower ) ), ( upper ) )
 #endif
 
-#ifndef zpl_clamp01
-#    define zpl_clamp01(x) zpl_clamp((x), 0, 1)
+#ifndef clamp01
+#	define clamp01( x ) clamp( ( x ), 0, 1 )
 #endif
 
-#ifndef zpl_is_between
-#    define zpl_is_between(x, lower, upper) (((lower) <= (x)) && ((x) <= (upper)))
+#ifndef is_between
+#	define is_between( x, lower, upper ) ( ( ( lower ) <= ( x ) ) && ( ( x ) <= ( upper ) ) )
 #endif
 
-#ifndef zpl_is_between_limit
-#    define zpl_is_between_limit(x, lower, upper) (((lower) <= (x)) && ((x) < (upper)))
+#ifndef is_between_limit
+#	define is_between_limit( x, lower, upper ) ( ( ( lower ) <= ( x ) ) && ( ( x ) < ( upper ) ) )
 #endif
 
-#ifndef zpl_step
-#define zpl_step(x,y) (((x)/(y))*(y))
+#ifndef step
+#	define step( x, y ) ( ( ( x ) / ( y ) ) * ( y ) )
 #endif
 
-#ifndef zpl_abs
-#    define zpl_abs(x) ((x) < 0 ? -(x) : (x))
+#ifndef abs
+#	define abs( x ) ( ( x ) < 0 ? -( x ) : ( x ) )
 #endif
 
 #ifndef ZPL_MASK_SET
-#    define ZPL_MASK_SET(var, set, mask) \
-do {                                 \
-if (set)                         \
-(var) |= (mask);                 \
-else                             \
-(var) &= ~(mask);                \
-} while (0)
+#	define ZPL_MASK_SET( var, set, mask ) \
+		do                                 \
+		{                                  \
+			if ( set )                     \
+				( var ) |= ( mask );       \
+			else                           \
+				( var ) &= ~( mask );      \
+		} while ( 0 )
 #endif
 
 // Multiline string literals in C99!
 #ifndef ZPL_MULTILINE
-#    define ZPL_MULTILINE(...) #__VA_ARGS__
+#	define ZPL_MULTILINE( ... ) #__VA_ARGS__
 #endif
 
 ZPL_END_C_DECLS

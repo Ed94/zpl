@@ -25,78 +25,97 @@ funcname_get_array(VALUE * pad, zpl_usize max_size, zpl_allocator a)
 ZPL_BEGIN_NAMESPACE
 ZPL_BEGIN_C_DECLS
 
-#define ZPL_RING(PREFIX, FUNC, VALUE)                                                                           \
-ZPL_RING_DECLARE(PREFIX, FUNC, VALUE);                                                                      \
-ZPL_RING_DEFINE(FUNC, VALUE);
+#define ZPL_RING( PREFIX, FUNC, VALUE )      \
+	ZPL_RING_DECLARE( PREFIX, FUNC, VALUE ); \
+	ZPL_RING_DEFINE( FUNC, VALUE );
 
-#define ZPL_RING_DECLARE(prefix,func,type)                                                                                         \
-typedef struct {                                                                                                   \
-ZPL_NS(zpl_allocator) backing;                                                                                         \
-zpl_buffer(type) buf;                                                                                          \
-ZPL_NS(zpl_usize) head, tail;                                                                                              \
-ZPL_NS(zpl_usize) capacity;                                                                                                \
-} ZPL_JOIN2(func, type);                                                                                      \
-\
-prefix void ZPL_JOIN2(func, init)(ZPL_JOIN2(func, type) * pad, ZPL_NS(zpl_allocator) a, ZPL_NS(zpl_isize) max_size); \
-prefix void ZPL_JOIN2(func, free)(ZPL_JOIN2(func, type) * pad);                                  \
-prefix ZPL_NS(zpl_b32) ZPL_JOIN2(func, full)(ZPL_JOIN2(func, type) * pad);                                   \
-prefix ZPL_NS(zpl_b32) ZPL_JOIN2(func, empty)(ZPL_JOIN2(func, type) * pad);                                  \
-prefix void ZPL_JOIN2(func, append)(ZPL_JOIN2(func, type) * pad, type data);                     \
-prefix void ZPL_JOIN2(func, append_array)(ZPL_JOIN2(func, type) * pad, zpl_array(type) data);    \
-prefix type *ZPL_JOIN2(func, get)(ZPL_JOIN2(func, type) * pad);                                  \
-prefix zpl_array(type)                                                                                            \
-ZPL_JOIN2(func, get_array)(ZPL_JOIN2(func, type) * pad, ZPL_NS(zpl_usize) max_size, ZPL_NS(zpl_allocator) a);
+#define ZPL_RING_DECLARE( prefix, func, type )                                                                               \
+	typedef struct                                                                                                           \
+	{                                                                                                                        \
+		ZPL_NS( AllocatorInfo ) backing;                                                                                     \
+		buffer( type ) buf;                                                                                                  \
+		ZPL_NS( uw ) head, tail;                                                                                             \
+		ZPL_NS( uw ) capacity;                                                                                               \
+	} ZPL_JOIN2( func, type );                                                                                               \
+                                                                                                                             \
+	prefix void  ZPL_JOIN2( func, init )( ZPL_JOIN2( func, type ) * pad, ZPL_NS( AllocatorInfo ) a, ZPL_NS( sw ) max_size ); \
+	prefix void  ZPL_JOIN2( func, free )( ZPL_JOIN2( func, type ) * pad );                                                   \
+	prefix       ZPL_NS( b32 ) ZPL_JOIN2( func, full )( ZPL_JOIN2( func, type ) * pad );                                     \
+	prefix       ZPL_NS( b32 ) ZPL_JOIN2( func, empty )( ZPL_JOIN2( func, type ) * pad );                                    \
+	prefix void  ZPL_JOIN2( func, append )( ZPL_JOIN2( func, type ) * pad, type data );                                      \
+	prefix void  ZPL_JOIN2( func, append_array )( ZPL_JOIN2( func, type ) * pad, Array( type ) data );                       \
+	prefix type* ZPL_JOIN2( func, get )( ZPL_JOIN2( func, type ) * pad );                                                    \
+	prefix       Array( type ) ZPL_JOIN2( func, get_array )( ZPL_JOIN2( func, type ) * pad, ZPL_NS( uw ) max_size, ZPL_NS( AllocatorInfo ) a );
 
-#define ZPL_RING_DEFINE(func,type)                                                                                          \
-void ZPL_JOIN2(func, init)(ZPL_JOIN2(func, type) * pad, ZPL_NS(zpl_allocator) a, ZPL_NS(zpl_isize) max_size) {        \
-ZPL_JOIN2(func, type) pad_ = { 0 };                                                                       \
-*pad = pad_;                                                                                                   \
-\
-pad->backing = a;                                                                                              \
-zpl_buffer_init(pad->buf, a, max_size + 1);                                                                    \
-pad->capacity = max_size + 1;                                                                                  \
-pad->head = pad->tail = 0;                                                                                     \
-}                                                                                                                  \
-void ZPL_JOIN2(func, free)(ZPL_JOIN2(func, type) * pad) {                                         \
-zpl_buffer_free(pad->buf);                                                                       \
-}                                                                                                                  \
-\
-zpl_b32 ZPL_JOIN2(func, full)(ZPL_JOIN2(func, type) * pad) {                                          \
-return ((pad->head + 1) % pad->capacity) == pad->tail;                                                         \
-}                                                                                                                  \
-\
-zpl_b32 ZPL_JOIN2(func, empty)(ZPL_JOIN2(func, type) * pad) { return pad->head == pad->tail; }        \
-\
-void ZPL_JOIN2(func, append)(ZPL_JOIN2(func, type) * pad, type data) {                            \
-pad->buf[pad->head] = data;                                                                                    \
-pad->head = (pad->head + 1) % pad->capacity;                                                                   \
-\
-if (pad->head == pad->tail) { pad->tail = (pad->tail + 1) % pad->capacity; }                                   \
-}                                                                                                                  \
-\
-void ZPL_JOIN2(func, append_array)(ZPL_JOIN2(func, type) * pad, zpl_array(type) data) {           \
-ZPL_NS(zpl_usize) c = zpl_array_count(data);                                                                               \
-for (zpl_usize i = 0; i < c; ++i) { ZPL_JOIN2(func, append)(pad, data[i]); }                           \
-}                                                                                                                  \
-\
-type *ZPL_JOIN2(func, get)(ZPL_JOIN2(func, type) * pad) {                                         \
-if (ZPL_JOIN2(func, empty)(pad)) { return NULL; }                                                  \
-\
-type *data = &pad->buf[pad->tail];                                                                             \
-pad->tail = (pad->tail + 1) % pad->capacity;                                                                   \
-\
-return data;                                                                                                   \
-}                                                                                                                  \
-\
-zpl_array(type)                                                                                                    \
-ZPL_JOIN2(func, get_array)(ZPL_JOIN2(func, type) * pad, ZPL_NS(zpl_usize) max_size, ZPL_NS(zpl_allocator) a) {    \
-zpl_array(type) vals = 0;                                                                                          \
-zpl_array_init(vals, a);                                                                                       \
-while (--max_size && !ZPL_JOIN2(func, empty)(pad)) {                                               \
-zpl_array_append(vals, *ZPL_JOIN2(func, get)(pad));                                            \
-}                                                                                                              \
-return vals;                                                                                                   \
-}
+#define ZPL_RING_DEFINE( func, type )                                                                                             \
+	void ZPL_JOIN2( func, init )( ZPL_JOIN2( func, type ) * pad, ZPL_NS( AllocatorInfo ) a, ZPL_NS( sw ) max_size )               \
+	{                                                                                                                             \
+		ZPL_JOIN2( func, type ) pad_ = { 0 };                                                                                     \
+		*pad                         = pad_;                                                                                      \
+                                                                                                                                  \
+		pad->backing = a;                                                                                                         \
+		buffer_init( pad->buf, a, max_size + 1 );                                                                                 \
+		pad->capacity = max_size + 1;                                                                                             \
+		pad->head = pad->tail = 0;                                                                                                \
+	}                                                                                                                             \
+	void ZPL_JOIN2( func, free )( ZPL_JOIN2( func, type ) * pad )                                                                 \
+	{                                                                                                                             \
+		buffer_free( pad->buf );                                                                                                  \
+	}                                                                                                                             \
+                                                                                                                                  \
+	b32 ZPL_JOIN2( func, full )( ZPL_JOIN2( func, type ) * pad )                                                                  \
+	{                                                                                                                             \
+		return ( ( pad->head + 1 ) % pad->capacity ) == pad->tail;                                                                \
+	}                                                                                                                             \
+                                                                                                                                  \
+	b32 ZPL_JOIN2( func, empty )( ZPL_JOIN2( func, type ) * pad )                                                                 \
+	{                                                                                                                             \
+		return pad->head == pad->tail;                                                                                            \
+	}                                                                                                                             \
+                                                                                                                                  \
+	void ZPL_JOIN2( func, append )( ZPL_JOIN2( func, type ) * pad, type data )                                                    \
+	{                                                                                                                             \
+		pad->buf[ pad->head ] = data;                                                                                             \
+		pad->head             = ( pad->head + 1 ) % pad->capacity;                                                                \
+                                                                                                                                  \
+		if ( pad->head == pad->tail )                                                                                             \
+		{                                                                                                                         \
+			pad->tail = ( pad->tail + 1 ) % pad->capacity;                                                                        \
+		}                                                                                                                         \
+	}                                                                                                                             \
+                                                                                                                                  \
+	void ZPL_JOIN2( func, append_array )( ZPL_JOIN2( func, type ) * pad, Array( type ) data )                                     \
+	{                                                                                                                             \
+		ZPL_NS( uw ) c = array_count( data );                                                                                     \
+		for ( uw i = 0; i < c; ++i )                                                                                              \
+		{                                                                                                                         \
+			ZPL_JOIN2( func, append )( pad, data[ i ] );                                                                          \
+		}                                                                                                                         \
+	}                                                                                                                             \
+                                                                                                                                  \
+	type* ZPL_JOIN2( func, get )( ZPL_JOIN2( func, type ) * pad )                                                                 \
+	{                                                                                                                             \
+		if ( ZPL_JOIN2( func, empty )( pad ) )                                                                                    \
+		{                                                                                                                         \
+			return NULL;                                                                                                          \
+		}                                                                                                                         \
+                                                                                                                                  \
+		type* data = &pad->buf[ pad->tail ];                                                                                      \
+		pad->tail  = ( pad->tail + 1 ) % pad->capacity;                                                                           \
+                                                                                                                                  \
+		return data;                                                                                                              \
+	}                                                                                                                             \
+                                                                                                                                  \
+	Array( type ) ZPL_JOIN2( func, get_array )( ZPL_JOIN2( func, type ) * pad, ZPL_NS( uw ) max_size, ZPL_NS( AllocatorInfo ) a ) \
+	{                                                                                                                             \
+		Array( type ) vals = 0;                                                                                                   \
+		array_init( vals, a );                                                                                                    \
+		while ( --max_size && ! ZPL_JOIN2( func, empty )( pad ) )                                                                 \
+		{                                                                                                                         \
+			array_append( vals, *ZPL_JOIN2( func, get )( pad ) );                                                                 \
+		}                                                                                                                         \
+		return vals;                                                                                                              \
+	}
 
 ZPL_END_C_DECLS
 ZPL_END_NAMESPACE
