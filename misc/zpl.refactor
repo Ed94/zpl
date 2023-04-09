@@ -27,7 +27,7 @@ not include source/opts.c
 namespace zpl_
 
 // Don't expose internals
-not namespace zpl__
+namespace zpl__, _
 
 // Macro exposure
 //namespace ZPL_
@@ -62,12 +62,15 @@ word zpl_isize,   sw
 
 // Renames
 word zpl_allocator, Allocator
-word zpl_arena, Arena
-word zpl_array, Array
-word zpl_file, OS_File
-word zpl_list, List
-word zpl_pool, Pool
-word zpl_opts, Opts
+word zpl_arena,         Arena
+word zpl_array,         Array
+word zpl_array_header,  ArrayHeader
+word zpl_file,          OS_File
+word zpl_list,          List
+word zpl_pool,          Pool
+word zpl_string,        String
+word zpl_string_header, StringHeader
+word zpl_opts,          Opts
 
 
 // Conflicts with refactor
@@ -82,20 +85,20 @@ word zpl_opts, Opts
 // word pool,      a_pool
 
 // Conflicts with std. (Comment if using c externs)
-not word zpl_memchr
-not word zpl_memmove
-not word zpl_memset
-not word zpl_memswap
-not word zpl_memcopy
-not word zpl_printf
-not word zpl_printf_va
-not word zpl_printf_err
-not word zpl_printf_err_va
-not word zpl_fprintf
-not word zpl_fprintf_va
-not word zpl_snprintf
-not word zpl_snprintf_va
-not word zpl_strchr
-not word zpl_strlen
-not word zpl_strnlen
-not word zpl_exit
+// not word zpl_memchr
+// not word zpl_memmove
+// not word zpl_memset
+// not word zpl_memswap
+// not word zpl_memcopy
+// not word zpl_printf
+// not word zpl_printf_va
+// not word zpl_printf_err
+// not word zpl_printf_err_va
+// not word zpl_fprintf
+// not word zpl_fprintf_va
+// not word zpl_snprintf
+// not word zpl_snprintf_va
+// not word zpl_strchr
+// not word zpl_strlen
+// not word zpl_strnlen
+// not word zpl_exit
