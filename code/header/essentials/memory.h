@@ -83,19 +83,19 @@ ZPL_DEF void *zpl_memcopy(void *dest, void const *source, zpl_isize size);
 #ifndef zpl_memcopy_array
 
 //! Copy non-overlapping array.
-#define zpl_memcopy_array(dst, src, count) zpl_memcopy((dst), (src), zpl_size_of(*(dst)) * (count))
+#define zpl_memcopy_array(dst, src, count) ZPL_NS(zpl_memcopy)((dst), (src), zpl_size_of(*(dst)) * (count))
 #endif
 
 //! Copy an array.
 #ifndef zpl_memmove_array
-#define zpl_memmove_array(dst, src, count) zpl_memmove((dst), (src), zpl_size_of(*(dst)) * (count))
+#define zpl_memmove_array(dst, src, count) ZPL_NS(zpl_memmove)((dst), (src), zpl_size_of(*(dst)) * (count))
 #endif
 
 #ifndef ZPL_BIT_CAST
 #define ZPL_BIT_CAST(dest, source)                                                                                 \
 do {                                                                                                               \
     ZPL_STATIC_ASSERT(zpl_size_of(*(dest)) <= zpl_size_of(source), "zpl_size_of(*(dest)) !<= zpl_size_of(source)");\
-    zpl_memcopy((dest), &(source), zpl_size_of(*dest));                                                            \
+    ZPL_NS(zpl_memcopy)((dest), &(source), zpl_size_of(*dest));                                                    \
 } while (0)
 #endif
 
@@ -109,7 +109,7 @@ do {                                                                            
 
 /* inlines */
 
-#define ZPL__ONES (cast(zpl_usize) - 1 / ZPL_U8_MAX)
+#define ZPL__ONES (cast(ZPL_NS(zpl_usize)) - 1 / ZPL_U8_MAX)
 #define ZPL__HIGHS (ZPL__ONES * (ZPL_U8_MAX / 2 + 1))
 #define ZPL__HAS_ZERO(x) (((x)-ZPL__ONES) & ~(x)&ZPL__HIGHS)
 

@@ -17,9 +17,9 @@ typedef enum zpl_alloc_type {
 } zpl_alloc_type;
 
 // NOTE: This is useful so you can define an allocator of the same type and parameters
-#define ZPL_ALLOCATOR_PROC(name)                                                                                       \
-void *name(void *allocator_data, zpl_alloc_type type, zpl_isize size, zpl_isize alignment, void *old_memory,            \
-zpl_isize old_size, zpl_u64 flags)
+#define ZPL_ALLOCATOR_PROC(name)                                                                                                     \
+void *name(void *allocator_data, ZPL_NS(zpl_alloc_type) type, ZPL_NS(zpl_isize) size, ZPL_NS(zpl_isize) alignment, void *old_memory, \
+ZPL_NS(zpl_isize) old_size, ZPL_NS(zpl_u64) flags)
 typedef ZPL_ALLOCATOR_PROC(zpl_allocator_proc);
 
 
@@ -37,7 +37,7 @@ typedef enum zpl_alloc_flag {
 #endif
 
 #ifndef ZPL_DEFAULT_ALLOCATOR_FLAGS
-#define ZPL_DEFAULT_ALLOCATOR_FLAGS (ZPL_ALLOCATOR_FLAG_CLEAR_TO_ZERO)
+#define ZPL_DEFAULT_ALLOCATOR_FLAGS (ZPL_NS(ZPL_ALLOCATOR_FLAG_CLEAR_TO_ZERO))
 #endif
 
 //! Allocate memory with specified alignment.
@@ -73,10 +73,10 @@ ZPL_DEF_INLINE char *zpl_alloc_str_len(zpl_allocator a, char const *str, zpl_isi
 #ifndef zpl_alloc_item
 
 //! Allocate memory for an item.
-#define zpl_alloc_item(allocator_, Type) (Type *)zpl_alloc(allocator_, zpl_size_of(Type))
+#define zpl_alloc_item(allocator_, Type) (Type *)ZPL_NS(zpl_alloc)(allocator_, zpl_size_of(Type))
 
 //! Allocate memory for an array of items.
-#define zpl_alloc_array(allocator_, Type, count) (Type *)zpl_alloc(allocator_, zpl_size_of(Type) * (count))
+#define zpl_alloc_array(allocator_, Type, count) (Type *)ZPL_NS(zpl_alloc)(allocator_, zpl_size_of(Type) * (count))
 #endif
 
 /* heap memory analysis tools */
@@ -100,10 +100,10 @@ ZPL_DEF ZPL_ALLOCATOR_PROC(zpl_heap_allocator_proc);
 #ifndef zpl_malloc
 
 //! Helper to allocate memory using heap allocator.
-#define zpl_malloc(sz) ZPL_NS(zpl_alloc)(zpl_heap_allocator( ), sz)
+#define zpl_malloc(sz) ZPL_NS(zpl_alloc)(ZPL_NS(zpl_heap_allocator)( ), sz)
 
 //! Helper to free memory allocated by heap allocator.
-#define zpl_mfree(ptr) ZPL_NS(zpl_free)(zpl_heap_allocator( ), ptr)
+#define zpl_mfree(ptr) ZPL_NS(zpl_free)(ZPL_NS(zpl_heap_allocator)( ), ptr)
 
 //! Alias to heap allocator.
 #define zpl_heap ZPL_NS(zpl_heap_allocator)

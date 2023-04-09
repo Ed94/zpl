@@ -129,7 +129,7 @@ typedef struct zpl_hash_table_find_result {
         return r;                                                                                                   \
     }                                                                                                               \
                                                                                                                     \
-    zpl_internal zpl_b32 ZPL_JOIN2(FUNC, _full)(NAME * h) {                                                         \
+    zpl_internal ZPL_NS(zpl_b32) ZPL_JOIN2(FUNC, _full)(NAME * h) {                                                 \
         return 0.75f * zpl_array_count(h->hashes) < zpl_array_count(h->entries);                                    \
     }                                                                                                               \
                                                                                                                     \

@@ -23,7 +23,7 @@ ZPL_BEGIN_C_DECLS
 #    define ZPL_ASSERT_MSG(cond, msg, ...)                                                                             \
     do {                                                                                                               \
         if (!(cond)) {                                                                                                 \
-            ZPL_NS(zpl_assert_handler)(#cond, __FILE__, cast(zpl_i64) __LINE__, msg, ##__VA_ARGS__);                           \
+            ZPL_NS(zpl_assert_handler)(#cond, __FILE__, cast(ZPL_NS(zpl_i64)) __LINE__, msg, ##__VA_ARGS__);           \
             ZPL_DEBUG_TRAP( );                                                                                         \
         }                                                                                                              \
     } while (0)

@@ -13,13 +13,13 @@ PREFIX  - a prefix for function prototypes e.g. extern, static, etc.
      FUNC    - the name will prefix function names
      VALUE   - the type of the value to be stored
 
-funcname_init(VALUE * pad, zpl_allocator a, zpl_isize max_size) 
- funcname_free(VALUE * pad)                                  
- funcname_full(VALUE * pad)                                   
- funcname_empty(VALUE * pad)                                  
- funcname_append(VALUE * pad, type data)                     
- funcname_append_array(VALUE * pad, zpl_array(type) data)    
- funcname_get(VALUE * pad)                                  
+funcname_init(VALUE * pad, zpl_allocator a, zpl_isize max_size)
+ funcname_free(VALUE * pad)
+ funcname_full(VALUE * pad)
+ funcname_empty(VALUE * pad)
+ funcname_append(VALUE * pad, type data)
+ funcname_append_array(VALUE * pad, zpl_array(type) data)
+ funcname_get(VALUE * pad)
 funcname_get_array(VALUE * pad, zpl_usize max_size, zpl_allocator a)
 */
 ZPL_BEGIN_NAMESPACE
@@ -31,24 +31,24 @@ ZPL_RING_DEFINE(FUNC, VALUE);
 
 #define ZPL_RING_DECLARE(prefix,func,type)                                                                                         \
 typedef struct {                                                                                                   \
-zpl_allocator backing;                                                                                         \
+ZPL_NS(zpl_allocator) backing;                                                                                         \
 zpl_buffer(type) buf;                                                                                          \
-zpl_usize head, tail;                                                                                              \
-zpl_usize capacity;                                                                                                \
+ZPL_NS(zpl_usize) head, tail;                                                                                              \
+ZPL_NS(zpl_usize) capacity;                                                                                                \
 } ZPL_JOIN2(func, type);                                                                                      \
 \
-prefix void ZPL_JOIN2(func, init)(ZPL_JOIN2(func, type) * pad, zpl_allocator a, zpl_isize max_size); \
+prefix void ZPL_JOIN2(func, init)(ZPL_JOIN2(func, type) * pad, ZPL_NS(zpl_allocator) a, ZPL_NS(zpl_isize) max_size); \
 prefix void ZPL_JOIN2(func, free)(ZPL_JOIN2(func, type) * pad);                                  \
-prefix zpl_b32 ZPL_JOIN2(func, full)(ZPL_JOIN2(func, type) * pad);                                   \
-prefix zpl_b32 ZPL_JOIN2(func, empty)(ZPL_JOIN2(func, type) * pad);                                  \
+prefix ZPL_NS(zpl_b32) ZPL_JOIN2(func, full)(ZPL_JOIN2(func, type) * pad);                                   \
+prefix ZPL_NS(zpl_b32) ZPL_JOIN2(func, empty)(ZPL_JOIN2(func, type) * pad);                                  \
 prefix void ZPL_JOIN2(func, append)(ZPL_JOIN2(func, type) * pad, type data);                     \
 prefix void ZPL_JOIN2(func, append_array)(ZPL_JOIN2(func, type) * pad, zpl_array(type) data);    \
 prefix type *ZPL_JOIN2(func, get)(ZPL_JOIN2(func, type) * pad);                                  \
 prefix zpl_array(type)                                                                                            \
-ZPL_JOIN2(func, get_array)(ZPL_JOIN2(func, type) * pad, zpl_usize max_size, zpl_allocator a);
+ZPL_JOIN2(func, get_array)(ZPL_JOIN2(func, type) * pad, ZPL_NS(zpl_usize) max_size, ZPL_NS(zpl_allocator) a);
 
 #define ZPL_RING_DEFINE(func,type)                                                                                          \
-void ZPL_JOIN2(func, init)(ZPL_JOIN2(func, type) * pad, zpl_allocator a, zpl_isize max_size) {        \
+void ZPL_JOIN2(func, init)(ZPL_JOIN2(func, type) * pad, ZPL_NS(zpl_allocator) a, ZPL_NS(zpl_isize) max_size) {        \
 ZPL_JOIN2(func, type) pad_ = { 0 };                                                                       \
 *pad = pad_;                                                                                                   \
 \
@@ -75,7 +75,7 @@ if (pad->head == pad->tail) { pad->tail = (pad->tail + 1) % pad->capacity; }    
 }                                                                                                                  \
 \
 void ZPL_JOIN2(func, append_array)(ZPL_JOIN2(func, type) * pad, zpl_array(type) data) {           \
-zpl_usize c = zpl_array_count(data);                                                                               \
+ZPL_NS(zpl_usize) c = zpl_array_count(data);                                                                               \
 for (zpl_usize i = 0; i < c; ++i) { ZPL_JOIN2(func, append)(pad, data[i]); }                           \
 }                                                                                                                  \
 \
@@ -89,7 +89,7 @@ return data;                                                                    
 }                                                                                                                  \
 \
 zpl_array(type)                                                                                                    \
-ZPL_JOIN2(func, get_array)(ZPL_JOIN2(func, type) * pad, zpl_usize max_size, zpl_allocator a) {    \
+ZPL_JOIN2(func, get_array)(ZPL_JOIN2(func, type) * pad, ZPL_NS(zpl_usize) max_size, ZPL_NS(zpl_allocator) a) {    \
 zpl_array(type) vals = 0;                                                                                          \
 zpl_array_init(vals, a);                                                                                       \
 while (--max_size && !ZPL_JOIN2(func, empty)(pad)) {                                               \

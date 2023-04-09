@@ -28,50 +28,50 @@ typedef struct zpl_buffer_header {
 
 #define zpl_buffer(Type) Type *
 
-#define zpl_buffer_make(Type, Name, allocator, cap) Type *Name; zpl_buffer_init(Name, allocator, cap)
+#define zpl_buffer_make(Type, Name, allocator, cap) Type *Name; ZPL_NS(zpl_buffer_init)(Name, allocator, cap)
 
-#define ZPL_BUFFER_HEADER(x)   (cast(zpl_buffer_header *)(x) - 1)
+#define ZPL_BUFFER_HEADER(x)   (cast(ZPL_NS(zpl_buffer_header) *)(x) - 1)
 #define zpl_buffer_count(x)    (ZPL_BUFFER_HEADER(x)->count)
 #define zpl_buffer_capacity(x) (ZPL_BUFFER_HEADER(x)->capacity)
 #define zpl_buffer_end(x) (x + (zpl_buffer_count(x) - 1))
 
-#define zpl_buffer_init(x, allocator, cap)                                                                             \
-do {                                                                                                               \
-    void **nx = cast(void **) & (x);                                                                               \
-    zpl_buffer_header *zpl__bh =                                                                                   \
-    cast(zpl_buffer_header *) zpl_alloc((allocator), sizeof(zpl_buffer_header) + (cap)*zpl_size_of(*(x)));     \
-    zpl__bh->backing = allocator;                                                                                  \
-    zpl__bh->count = 0;                                                                                            \
-    zpl__bh->capacity = cap;                                                                                       \
-    *nx = cast(void *)(zpl__bh + 1);                                                                               \
+#define zpl_buffer_init(x, allocator, cap)                                                                                     \
+do {                                                                                                                           \
+    void **nx = cast(void **) & (x);                                                                                           \
+    ZPL_NS(zpl_buffer_header) *zpl__bh =                                                                                       \
+    cast(ZPL_NS(zpl_buffer_header) *) zpl_alloc((allocator), sizeof(ZPL_NS(zpl_buffer_header)) + (cap)*zpl_size_of(*(x)));     \
+    zpl__bh->backing = allocator;                                                                                              \
+    zpl__bh->count = 0;                                                                                                        \
+    zpl__bh->capacity = cap;                                                                                                   \
+    *nx = cast(void *)(zpl__bh + 1);                                                                                           \
 } while (0)
 
-#define zpl_buffer_free(x) (zpl_free(ZPL_BUFFER_HEADER(x)->backing, ZPL_BUFFER_HEADER(x)))
+#define zpl_buffer_free(x) (ZPL_NS(zpl_free)(ZPL_BUFFER_HEADER(x)->backing, ZPL_BUFFER_HEADER(x)))
 
 #define zpl_buffer_append(x, item)                                                                                     \
 do { (x)[zpl_buffer_count(x)++] = (item); } while (0)
 
-#define zpl_buffer_appendv(x, items, item_count)                                                                       \
+#define zpl_buffer_appendv(x, items, item_count)                                                                   \
 do {                                                                                                               \
     ZPL_ASSERT(zpl_size_of(*(items)) == zpl_size_of(*(x)));                                                        \
     ZPL_ASSERT(zpl_buffer_count(x) + item_count <= zpl_buffer_capacity(x));                                        \
-    zpl_memcopy(&(x)[zpl_buffer_count(x)], (items), zpl_size_of(*(x)) * (item_count));                             \
+    ZPL_NS(zpl_memcopy)(&(x)[zpl_buffer_count(x)], (items), zpl_size_of(*(x)) * (item_count));                     \
     zpl_buffer_count(x) += (item_count);                                                                           \
 } while (0)
 
-#define zpl_buffer_copy_init(y, x)                                                                                     \
+#define zpl_buffer_copy_init(y, x)                                                                                 \
 do {                                                                                                               \
-    zpl_buffer_init_reserve(y, zpl_buffer_allocator(x), zpl_buffer_capacity(x));                                   \
-    zpl_memcopy(y, x, zpl_buffer_capacity(x) * zpl_size_of(*x));                                                   \
+    ZPL_NS(zpl_buffer_init_reserve)(y, ZPL_NS(zpl_buffer_allocator)(x), zpl_buffer_capacity(x));                   \
+    ZPL_NS(zpl_memcopy)(y, x, zpl_buffer_capacity(x) * zpl_size_of(*x));                                           \
     zpl_buffer_count(y) = zpl_buffer_count(x);                                                                     \
 } while (0)
 
-#define zpl_buffer_pop(x)                                                                                              \
+#define zpl_buffer_pop(x)                                                                                          \
 do {                                                                                                               \
     ZPL_ASSERT(zpl_buffer_count(x) > 0);                                                                           \
     zpl_buffer_count(x)--;                                                                                         \
 } while (0)
-#define zpl_buffer_clear(x)                                                                                            \
+#define zpl_buffer_clear(x)                                                                                        \
 do { zpl_buffer_count(x) = 0; } while (0)
 
 ZPL_END_C_DECLS
