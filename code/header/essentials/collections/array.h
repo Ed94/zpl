@@ -73,7 +73,7 @@ typedef struct zpl_array_header {
 
 #define zpl_array(Type) Type *
 
-#define zpl_array_make(Type, Name, allocator) Type *Name; zpl_array_init(Name, allocator)
+#define zpl_array_make(Type, Name, allocator) Type *Name; ZPL_NS(zpl_array_init)(Name, allocator)
 
 #ifndef ZPL_ARRAY_GROW_FORMULA
 #define ZPL_ARRAY_GROW_FORMULA(x) (2 * (x) + 8)
@@ -100,7 +100,7 @@ ZPL_IMPL_INLINE zpl_b8 zpl__array_init_reserve(void **zpl__array_, zpl_allocator
     return true;
 }
 
-#define zpl_array_init_reserve(x, allocator_, cap) zpl__array_init_reserve(cast(void **) & (x), allocator_, zpl_size_of(*(x)), (cap))
+#define zpl_array_init_reserve(x, allocator_, cap) ZPL_NS(zpl__array_init_reserve)(cast(void **) & (x), allocator_, zpl_size_of(*(x)), (cap))
 
 // NOTE: Give it an initial default capacity
 #define zpl_array_init(x, allocator) zpl_array_init_reserve(x, allocator, ZPL_ARRAY_GROW_FORMULA(0))

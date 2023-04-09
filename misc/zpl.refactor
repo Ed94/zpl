@@ -27,7 +27,12 @@ not include source/opts.c
 namespace zpl_
 
 // Don't expose internals
+// not namespace zpl__
+
+// Cpp zpl namespace stuff
 namespace zpl__, _
+namespace ZPL_FILE_MODE_,  EFileMode_
+namespace ZPL_FILE_ERROR_, EFileError_
 
 // Macro exposure
 //namespace ZPL_
@@ -61,11 +66,12 @@ word zpl_isize,   sw
 //not word zpl_opts
 
 // Renames
-word zpl_allocator, Allocator
+word zpl_allocator,     AllocatorInfo
 word zpl_arena,         Arena
 word zpl_array,         Array
 word zpl_array_header,  ArrayHeader
-word zpl_file,          OS_File
+word zpl_file,          FileInfo
+word zpl_file_error,    FileError
 word zpl_list,          List
 word zpl_pool,          Pool
 word zpl_string,        String
