@@ -1,3 +1,20 @@
+# qol_cpp
+
+This is a wip fork of ZPL that uses adds some quality of life features for using the library beyond the c99 intended scope.
+
+Tools used:
+
+* [clang-format](https://clang.llvm.org/docs/ClangFormat.html) to clean up the doe formatting.
+* [refactor](https://github.com/Ed94/refactor) to clean up the library for usage beyond c99 code.
+
+The .clang-format is located within the code directory, replace or adjust to suit your conventions.
+refactor is assumed to be installed in an exposed system path.
+The zpl.refactor script dictates how the code is changed, adjust to suit your conventions.
+
+The refactor_and_format.ps1 currently runs the scripts. I plan to also port over th js most likely since thats the scripts used for this library.
+
+----
+
 <div align="center">
     <a href="https://github.com/zpl-c/zpl"><img src="https://user-images.githubusercontent.com/2182108/111983468-d5593e80-8b12-11eb-9c59-8c78ecc0504e.png" alt="zpl" /></a>
 </div>
