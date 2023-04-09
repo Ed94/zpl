@@ -56,7 +56,7 @@ ZPL_DEF_INLINE const char *zpl_strntok(char *output, zpl_isize len, const char *
 ZPL_DEF_INLINE char   *zpl_strdup(zpl_allocator a, char *src, zpl_isize max_len);
 ZPL_DEF_INLINE char  **zpl_str_split_lines(zpl_allocator alloc, char *source, zpl_b32 strip_whitespace);
 
-#define zpl_str_expand(str) str, ZPL_NS zpl_strlen(str)
+#define zpl_str_expand(str) str, ZPL_NS(zpl_strlen)(str)
 #define zpl_str_advance_while(str, cond) \
     do { \
         ++str; \

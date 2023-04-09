@@ -36,7 +36,7 @@ ZPL_DEF ZPL_COMPARE_PROC_PTR(zpl_f64_cmp(zpl_isize offset));
 //! Sorts an array.
 
 //! Uses quick sort for large arrays but insertion sort for small ones.
-#define zpl_sort_array(array, count, compare_proc) ZPL_NS zpl_sort(array, count, zpl_size_of(*(array)), compare_proc)
+#define zpl_sort_array(array, count, compare_proc) ZPL_NS(zpl_sort)(array, count, zpl_size_of(*(array)), compare_proc)
 
 //! Perform sorting operation on a memory location with a specified item count and size.
 ZPL_DEF void zpl_sort(void *base, zpl_isize count, zpl_isize size, zpl_compare_proc compare_proc);
@@ -54,18 +54,18 @@ ZPL_DEF ZPL_RADIX_SORT_PROC(zpl_u64);
 
 //! Returns index or -1 if not found
 #define zpl_binary_search_array(array, count, key, compare_proc)                                                       \
-ZPL_NS zpl_binary_search(array, count, zpl_size_of(*(array)), key, compare_proc)
+ZPL_NS(zpl_binary_search)(array, count, zpl_size_of(*(array)), key, compare_proc)
 
 //! Performs binary search on a memory location with specified item count and size.
 ZPL_DEF_INLINE zpl_isize zpl_binary_search(void const *base, zpl_isize count, zpl_isize size, void const *key,
                                 zpl_compare_proc compare_proc);
 
-#define zpl_shuffle_array(array, count) ZPL_NS zpl_shuffle(array, count, zpl_size_of(*(array)))
+#define zpl_shuffle_array(array, count) ZPL_NS(zpl_shuffle)(array, count, zpl_size_of(*(array)))
 
 //! Shuffles a memory.
 ZPL_DEF void zpl_shuffle(void *base, zpl_isize count, zpl_isize size);
 
-#define zpl_reverse_array(array, count) ZPL_NS zpl_reverse(array, count, zpl_size_of(*(array)))
+#define zpl_reverse_array(array, count) ZPL_NS(zpl_reverse)(array, count, zpl_size_of(*(array)))
 
 //! Reverses memory's contents
 ZPL_DEF void zpl_reverse(void *base, zpl_isize count, zpl_isize size);

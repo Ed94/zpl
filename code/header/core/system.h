@@ -160,11 +160,11 @@ defined(__ppc64__) || defined(__aarch64__)
 
 #    if !defined(ZPL__HACK_INFINITY)
     typedef union zpl__msvc_inf_hack {
-        unsigned __int8 bytes[4];   
+        unsigned __int8 bytes[4];
         float value;
     } zpl__msvc_inf_hack;
     static union zpl__msvc_inf_hack ZPL__INFINITY_HACK = {{0x00, 0x00, 0x80, 0x7F}};
-#    define ZPL__HACK_INFINITY (ZPL_NS ZPL__INFINITY_HACK.value)
+#    define ZPL__HACK_INFINITY (ZPL_NS(ZPL__INFINITY_HACK).value)
 #    endif
 
 #    define ZPL_INFINITY (ZPL__HACK_INFINITY)

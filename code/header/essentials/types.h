@@ -90,10 +90,10 @@ ZPL_STATIC_ASSERT(sizeof(zpl_f64) == 8, "sizeof(zpl_f64) != 8");
 
 typedef zpl_i32 zpl_rune; // NOTE: Unicode codepoint
 typedef zpl_i32 zpl_char32;
-#define ZPL_RUNE_INVALID cast(ZPL_NS zpl_rune)(0xfffd)
-#define ZPL_RUNE_MAX cast(ZPL_NS zpl_rune)(0x0010ffff)
-#define ZPL_RUNE_BOM cast(ZPL_NS zpl_rune)(0xfeff)
-#define ZPL_RUNE_EOF cast(ZPL_NS zpl_rune)(-1)
+#define ZPL_RUNE_INVALID cast(ZPL_NS(zpl_rune))(0xfffd)
+#define ZPL_RUNE_MAX cast(ZPL_NS(zpl_rune))(0x0010ffff)
+#define ZPL_RUNE_BOM cast(ZPL_NS(zpl_rune))(0xfeff)
+#define ZPL_RUNE_EOF cast(ZPL_NS(zpl_rune))(-1)
 
 typedef zpl_i8 zpl_b8;
 typedef zpl_i16 zpl_b16;

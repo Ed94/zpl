@@ -100,13 +100,13 @@ ZPL_DEF ZPL_ALLOCATOR_PROC(zpl_heap_allocator_proc);
 #ifndef zpl_malloc
 
 //! Helper to allocate memory using heap allocator.
-#define zpl_malloc(sz) ZPL_NS zpl_alloc(zpl_heap_allocator( ), sz)
+#define zpl_malloc(sz) ZPL_NS(zpl_alloc)(zpl_heap_allocator( ), sz)
 
 //! Helper to free memory allocated by heap allocator.
-#define zpl_mfree(ptr) ZPL_NS zpl_free(zpl_heap_allocator( ), ptr)
+#define zpl_mfree(ptr) ZPL_NS(zpl_free)(zpl_heap_allocator( ), ptr)
 
 //! Alias to heap allocator.
-#define zpl_heap ZPL_NS zpl_heap_allocator
+#define zpl_heap ZPL_NS(zpl_heap_allocator)
 #endif
 
 //
@@ -232,7 +232,7 @@ ZPL_DEF ZPL_ALLOCATOR_PROC(zpl_scratch_allocator_proc);
 
 typedef struct zpl_stack_memory {
     zpl_allocator backing;
-    
+
     void *physical_start;
     zpl_usize total_size;
     zpl_usize allocated;
@@ -293,14 +293,14 @@ ZPL_IMPL_INLINE char *zpl_alloc_str_len(zpl_allocator a, char const *str, zpl_is
 ZPL_IMPL_INLINE void *zpl_default_resize_align(zpl_allocator a, void *old_memory, zpl_isize old_size, zpl_isize new_size,
                                                zpl_isize alignment) {
     if (!old_memory) return zpl_alloc_align(a, new_size, alignment);
-    
+
     if (new_size == 0) {
         zpl_free(a, old_memory);
         return NULL;
     }
-    
+
     if (new_size < old_size) new_size = old_size;
-    
+
     if (old_size == new_size) {
         return old_memory;
     } else {
@@ -358,12 +358,12 @@ ZPL_IMPL_INLINE void zpl_arena_free(zpl_arena *arena) {
 ZPL_IMPL_INLINE zpl_isize zpl_arena_alignment_of(zpl_arena *arena, zpl_isize alignment) {
     zpl_isize alignment_offset, result_pointer, mask;
     ZPL_ASSERT(zpl_is_power_of_two(alignment));
-    
+
     alignment_offset = 0;
     result_pointer = cast(zpl_isize) arena->physical_start + arena->total_allocated;
     mask = alignment - 1;
     if (result_pointer & mask) alignment_offset = alignment - (result_pointer & mask);
-    
+
     return alignment_offset;
 }
 
@@ -432,7 +432,7 @@ ZPL_IMPL_INLINE void zpl_allocation_header_fill(zpl_allocation_header_ev *header
 // Stack Memory Allocator
 //
 
-#define ZPL_STACK_ALLOC_OFFSET sizeof(ZPL_NS zpl_u64)
+#define ZPL_STACK_ALLOC_OFFSET sizeof(ZPL_NS(zpl_u64))
 ZPL_STATIC_ASSERT(ZPL_STACK_ALLOC_OFFSET == 8, "ZPL_STACK_ALLOC_OFFSET != 8");
 
 ZPL_IMPL_INLINE void zpl_stack_memory_init_from_memory(zpl_stack_memory *s, void *start, zpl_isize size) {
@@ -450,9 +450,9 @@ ZPL_IMPL_INLINE void zpl_stack_memory_init(zpl_stack_memory *s, zpl_allocator ba
 
 ZPL_IMPL_INLINE zpl_b32 zpl_stack_memory_is_in_use(zpl_stack_memory *s, void *ptr) {
     if (s->allocated == 0) return false;
-    
+
     if (ptr > s->physical_start && ptr < zpl_pointer_add(s->physical_start, s->total_size)) { return true; }
-    
+
     return false;
 }
 

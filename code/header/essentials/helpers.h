@@ -10,16 +10,16 @@ ZPL_BEGIN_C_DECLS
 #endif
 
 #ifndef zpl_size_of
-#    define zpl_size_of(x) (ZPL_NS zpl_isize)(sizeof(x))
+#    define zpl_size_of(x) (ZPL_NS(zpl_isize))(sizeof(x))
 #endif
 
 #ifndef zpl_count_of
-#    define zpl_count_of(x) ((zpl_size_of(x) / zpl_size_of(0 [x])) / ((ZPL_NS zpl_isize)(!(zpl_size_of(x) % zpl_size_of(0 [x])))))
+#    define zpl_count_of(x) ((zpl_size_of(x) / zpl_size_of(0 [x])) / ((ZPL_NS(zpl_isize))(!(zpl_size_of(x) % zpl_size_of(0 [x])))))
 #endif
 
 #ifndef zpl_offset_of
 #if defined(_MSC_VER) || defined(ZPL_COMPILER_TINYC)
-#    define zpl_offset_of(Type, element) ((ZPL_NS zpl_isize) & (((Type *)0)->element))
+#    define zpl_offset_of(Type, element) ((ZPL_NS(zpl_isize)) & (((Type *)0)->element))
 #else
 #    define zpl_offset_of(Type, element) __builtin_offsetof(Type, element)
 #endif
@@ -28,7 +28,7 @@ ZPL_BEGIN_C_DECLS
 #if defined(__cplusplus)
 #    ifndef zpl_align_of
 #        if __cplusplus >= 201103L
-#            define zpl_align_of(Type) (ZPL_NS zpl_isize)alignof(Type)
+#            define zpl_align_of(Type) (ZPL_NS(zpl_isize))alignof(Type)
 #        else
 extern "C++" {
     template <typename T> struct zpl_alignment_trick {
@@ -36,18 +36,18 @@ extern "C++" {
         T member;
     };
 }
-#            define zpl_align_of(Type) zpl_offset_of( ZPL_NS zpl_alignment_trick<Type>, member)
+#            define zpl_align_of(Type) zpl_offset_of( ZPL_NS(zpl_alignment_trick)<Type>, member)
 #        endif
 #    endif
 #else
 #    ifndef zpl_align_of
 #        define zpl_align_of(Type) \
-ZPL_NS zpl_offset_of(             \
+ZPL_NS( zpl_offset_of(             \
 struct {                   \
 char c;                \
 Type member;           \
 },                         \
-member)
+member))
 #    endif
 #endif
 
