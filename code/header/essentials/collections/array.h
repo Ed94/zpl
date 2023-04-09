@@ -109,7 +109,7 @@ ZPL_IMPL_INLINE zpl_b8 zpl__array_init_reserve(void **zpl__array_, zpl_allocator
 do {                                                                                                               \
     if (x) {                                                                                                       \
         ZPL_NS(zpl_array_header) *zpl__ah = ZPL_ARRAY_HEADER(x);                                                   \
-        ZPLNS(zpl_free)(zpl__ah->allocator, zpl__ah);                                                              \
+        ZPL_NS(zpl_free)(zpl__ah->allocator, zpl__ah);                                                              \
     }                                                                                                              \
 } while (0)
 
