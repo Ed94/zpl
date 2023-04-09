@@ -50,30 +50,30 @@ typedef struct zpl_hash_table_find_result {
  * Table delcaration macro that generates the interface
  */
 
-#define ZPL_TABLE_DECLARE(PREFIX, NAME, FUNC, VALUE)                                                                        \
-    typedef struct ZPL_JOIN2(NAME, Entry) {                                                                                 \
-        ZPL_NS(zpl_u64) key;                                                                                                \
-        ZPL_NS(zpl_isize) next;                                                                                             \
-        VALUE value;                                                                                                        \
-    } ZPL_JOIN2(NAME, Entry);                                                                                               \
-                                                                                                                            \
-    typedef struct NAME {                                                                                                   \
-        zpl_array(ZPL_NS(zpl_isize)) hashes;                                                                                \
-        zpl_array(ZPL_JOIN2(NAME, Entry)) entries;                                                                          \
-    } NAME;                                                                                                                 \
-                                                                                                                            \
-    PREFIX void              ZPL_JOIN2(FUNC, init)          (NAME *h, ZPL_NS(zpl_allocator) a);                             \
-    PREFIX void              ZPL_JOIN2(FUNC, destroy)       (NAME *h);                                                      \
-    PREFIX void              ZPL_JOIN2(FUNC, clear)         (NAME *h);                                                      \
-    PREFIX VALUE            *ZPL_JOIN2(FUNC, get)           (NAME *h, ZPL_NS(zpl_u64) key);                                 \
-    PREFIX ZPL_NS(zpl_isize) ZPL_JOIN2(FUNC, slot)          (NAME *h, ZPL_NS(zpl_u64) key);                                 \
-    PREFIX void              ZPL_JOIN2(FUNC, set)           (NAME *h, ZPL_NS(zpl_u64) key, VALUE value);                    \
-    PREFIX void              ZPL_JOIN2(FUNC, grow)          (NAME *h);                                                      \
-    PREFIX void              ZPL_JOIN2(FUNC, rehash)        (NAME *h, ZPL_NS(zpl_isize) new_count);                         \
-    PREFIX void              ZPL_JOIN2(FUNC, rehash_fast)   (NAME *h);                                                      \
-    PREFIX void              ZPL_JOIN2(FUNC, map)           (NAME *h, void (*map_proc) (zpl_u64 key, VALUE value));         \
-    PREFIX void              ZPL_JOIN2(FUNC, map_mut)       (NAME *h, void (*map_proc) (zpl_u64 key, VALUE * value));       \
-    PREFIX void              ZPL_JOIN2(FUNC, remove)        (NAME *h, ZPL_NS(zpl_u64) key);                                 \
+#define ZPL_TABLE_DECLARE(PREFIX, NAME, FUNC, VALUE)                                                                          \
+    typedef struct ZPL_JOIN2(NAME, Entry) {                                                                                   \
+        ZPL_NS(zpl_u64) key;                                                                                                  \
+        ZPL_NS(zpl_isize) next;                                                                                               \
+        VALUE value;                                                                                                          \
+    } ZPL_JOIN2(NAME, Entry);                                                                                                 \
+                                                                                                                              \
+    typedef struct NAME {                                                                                                     \
+        zpl_array(ZPL_NS(zpl_isize)) hashes;                                                                                  \
+        zpl_array(ZPL_JOIN2(NAME, Entry)) entries;                                                                            \
+    } NAME;                                                                                                                   \
+                                                                                                                              \
+    PREFIX void              ZPL_JOIN2(FUNC, init)          (NAME *h, ZPL_NS(zpl_allocator) a);                               \
+    PREFIX void              ZPL_JOIN2(FUNC, destroy)       (NAME *h);                                                        \
+    PREFIX void              ZPL_JOIN2(FUNC, clear)         (NAME *h);                                                        \
+    PREFIX VALUE            *ZPL_JOIN2(FUNC, get)           (NAME *h, ZPL_NS(zpl_u64) key);                                   \
+    PREFIX ZPL_NS(zpl_isize) ZPL_JOIN2(FUNC, slot)          (NAME *h, ZPL_NS(zpl_u64) key);                                   \
+    PREFIX void              ZPL_JOIN2(FUNC, set)           (NAME *h, ZPL_NS(zpl_u64) key, VALUE value);                      \
+    PREFIX void              ZPL_JOIN2(FUNC, grow)          (NAME *h);                                                        \
+    PREFIX void              ZPL_JOIN2(FUNC, rehash)        (NAME *h, ZPL_NS(zpl_isize) new_count);                           \
+    PREFIX void              ZPL_JOIN2(FUNC, rehash_fast)   (NAME *h);                                                        \
+    PREFIX void              ZPL_JOIN2(FUNC, map)           (NAME *h, void (*map_proc) (ZPL_NS(zpl_u64) key, VALUE value));   \
+    PREFIX void              ZPL_JOIN2(FUNC, map_mut)       (NAME *h, void (*map_proc) (ZPL_NS(zpl_u64) key, VALUE * value)); \
+    PREFIX void              ZPL_JOIN2(FUNC, remove)        (NAME *h, ZPL_NS(zpl_u64) key);                                   \
     PREFIX void              ZPL_JOIN2(FUNC, remove_entry)  (NAME *h, ZPL_NS(zpl_isize) idx);
 
 /**
