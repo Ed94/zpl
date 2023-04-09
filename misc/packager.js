@@ -67,11 +67,11 @@ const embedIncludes = (print) => {
 
             const content = fs
                 .readFileSync(path.join(__dirname, '..', 'code', filename), 'utf8')
-                .split('\n')
-                .map(l => spaces + l)
-                .map(l => l === spaces ? '' : l)
-                .join('\n')
-                .replace(/\s+$/g, '')
+                // .split('\n')
+                // .map(l => spaces + l)
+                // .map(l => l === spaces ? '' : l)
+                // .join('\n')
+                // .replace(/\s+$/g, '')
 
             return content
         } else return line

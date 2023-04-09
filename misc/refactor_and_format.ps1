@@ -38,13 +38,13 @@ $refactorParams = @(
     "-spec=$($file_spec)"
 )
 
-Start-Process refactor $refactorParams -NoNewWindow -PassThru -Wait
+& refactor $refactorParams
 
 Write-Host "`nRefactoring complete`n`n"
 
 
 Write-Host "Beginning format...`n"
 
-clang-format $formatParams $targetFiles
+& clang-format $formatParams $targetFiles
 
 Write-Host "`nFormatting complete"
