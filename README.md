@@ -4,7 +4,7 @@ This is a wip fork of ZPL that adds some quality of life features for using the 
 
 Tools used:
 
-* [clang-format](https://clang.llvm.org/docs/ClangFormat.html) to clean up the doe formatting.
+* [clang-format](https://clang.llvm.org/docs/ClangFormat.html) to clean up the formatting (some files are pretty egregious...).
 * [refactor](https://github.com/Ed94/refactor) to clean up the library for usage in cpp mostly, or change the c_namespace.
 
 The `.clang-format` is located within the code directory, replace or adjust to suit your conventions.
