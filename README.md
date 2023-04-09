@@ -7,11 +7,13 @@ Tools used:
 * [clang-format](https://clang.llvm.org/docs/ClangFormat.html) to clean up the doe formatting.
 * [refactor](https://github.com/Ed94/refactor) to clean up the library for usage in cpp mostly, or change the c_namespace.
 
-The .clang-format is located within the code directory, replace or adjust to suit your conventions.
+The `.clang-format` is located within the code directory, replace or adjust to suit your conventions.
 refactor is assumed to be installed in an exposed system path.
-The zpl.refactor script dictates how the code is changed, adjust to suit your conventions.
+The `zpl.refactor` script in misc dictates how the code is changed, adjust to suit your conventions.
 
-The refactor_and_format.ps1 currently runs the scripts. I plan to also port over th js most likely since thats the scripts used for this library.
+The `refactor_and_format.ps1` currently runs the scripts. I plan to also port over th javscript since thats the scripting langauge used for this library.
+
+To build zpl single-header with all the desired changes run `.\refator_and_format` in pwsh first then open bash and run `sh embed_file.sh`. The file will output to `./misc/depot/zpl.h`
 
 ----
 
