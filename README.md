@@ -1,11 +1,11 @@
 # qol_cpp
 
-This is a wip fork of ZPL that uses adds some quality of life features for using the library beyond the c99 intended scope.
+This is a wip fork of ZPL that adds some quality of life features for using the library beyond the intended c99 scope.
 
 Tools used:
 
 * [clang-format](https://clang.llvm.org/docs/ClangFormat.html) to clean up the doe formatting.
-* [refactor](https://github.com/Ed94/refactor) to clean up the library for usage beyond c99 code.
+* [refactor](https://github.com/Ed94/refactor) to clean up the library for usage in cpp mostly, or change the c_namespace.
 
 The .clang-format is located within the code directory, replace or adjust to suit your conventions.
 refactor is assumed to be installed in an exposed system path.
