@@ -66,7 +66,7 @@ word zpl_allocation_header_event, AllocationHeaderEvent
 word zpl_allocator,               AllocatorInfo
 word zpl_allocator_proc,          AllocatorProc
 word zpl_alloc_flags,             AllocFlags
-word zpl_alloc_type               AllocType
+word zpl_alloc_type,              AllocType
 word zpl_arena,                   Arena
 word zpl_arena_snapshot,          ArenaSnapshot
 word zpl_array,                   Array
