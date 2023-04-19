@@ -124,7 +124,7 @@ SeparateDefinitionBlocks: Always
 
 ShortNamespaceLines: 40
 
-SortIncludes: true
+SortIncludes: false
 SortUsingDeclarations: true
 
 SpaceAfterCStyleCast: false
