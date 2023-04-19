@@ -43,7 +43,7 @@ ZPL_DEF void zpl_sort(void *base, zpl_isize count, zpl_isize size, zpl_compare_p
 
 // NOTE: the count of temp == count of items
 #define zpl_radix_sort(Type) zpl_radix_sort_##Type
-#define ZPL_RADIX_SORT_PROC(Type) void zpl_radix_sort(Type)(Type * items, Type * temp, zpl_isize count)
+#define ZPL_RADIX_SORT_PROC(Type) void zpl_radix_sort(Type)(Type * items, Type * temp, ZPL_NS(zpl_isize) count)
 
 ZPL_DEF ZPL_RADIX_SORT_PROC(zpl_u8);
 ZPL_DEF ZPL_RADIX_SORT_PROC(zpl_u16);
