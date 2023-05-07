@@ -208,3 +208,7 @@ word zpl_isize,   sw
 word cast, zpl_cast
 
 not word zpl_thread_local
+
+// Variable Name Conflicts
+word alloc,     allocator
+word file_size, fsize

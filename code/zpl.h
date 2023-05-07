@@ -61,7 +61,7 @@ License:
 #if defined(__cplusplus) && defined(ZPL_WRAP_IN_NAMESPACE)
 #    define ZPL_BEGIN_NAMESPACE namespace zpl {
 #    define ZPL_END_NAMESPACE }
-#    define ZPL_NS( Identifier ) zpl::##Identifier // Used in macros, properly exposes symbol anywhere
+#    define ZPL_NS( Identifier ) zpl::Identifier // Used in macros, properly exposes symbol anywhere
 #else
 #    define ZPL_BEGIN_NAMESPACE
 #    define ZPL_END_NAMESPACE
