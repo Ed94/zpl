@@ -46,6 +46,8 @@ namespace ZPL_RE_ERROR_,      ERegexError_
 namespace ZPL_OPTS_,          EOpts_
 namespace ZPL_OPTS_ERR,       EOptsError_
 namespace ZPL_PR_OPTS_,       EProcessOpts_
+namespace ZPL_SOCKET_,        ESocket_
+namespace ZPL_URI_ERROR,      EURI_Error_
 
 // Macro exposure
 //namespace ZPL_
@@ -124,6 +126,11 @@ word zpl_rune,                    Rune
 word zpl_scratch_memory,          ScratchMemory
 word zpl_seek_whence_type,        SeekWhenceType
 word zpl_semaphore,               Semaphore
+word zpl_socket,                  Socket
+word zpl_socket_addr,             SocketAddress
+word zpl_socket_mode,             SocketMode
+word zpl_socket_protocol,         SocketProtocol
+word zpl_socket_flags,            SocketFlags
 word zpl_string,                  String
 word zpl_string_header,           StringHeader
 word zpl_sync,                    Sync
@@ -145,6 +152,8 @@ word zpl_vec2,                    Vec2
 word zpl_vec3,                    Vec3
 word zpl_vec4,                    Vec4
 word zpl_virtual_memory,          VirtualMemory
+word zpl_uri_object,              URI_Object
+word zpl_uri_error,               URI_Error
 
 // Function Renames
 word zpl_lfence,        fence_load
