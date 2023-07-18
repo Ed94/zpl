@@ -33,7 +33,7 @@ namespace zpl_re_,            regex_
 namespace zpl_random_,        rng_
 namespace zpl_pr,             process_
 namespace zpl__,              __
-namespace ZPL_ADT_,           EADT
+namespace ZPL_ADT_,           EADT_
 namespace ZPL_ALLOCATION_,    EAllocation_
 namespace ZPL_CSV_ERROR,      ECSV_Error_
 namespace ZPL_FILE_MODE_,     EFileMode_
