@@ -44,8 +44,8 @@ License:
 #define ZPL_H
 
 #define ZPL_VERSION_MAJOR 19
-#define ZPL_VERSION_MINOR 0
-#define ZPL_VERSION_PATCH 1
+#define ZPL_VERSION_MINOR 3
+#define ZPL_VERSION_PATCH 0
 #define ZPL_VERSION_PRE ""
 
 #include "zpl_hedley.h"
@@ -129,6 +129,7 @@ License:
 #    define ZPL_MODULE_THREADING
 #    define ZPL_MODULE_JOBS
 #    define ZPL_MODULE_PARSER
+#    define ZPL_MODULE_SOCKET
 
     /* zpl nano distribution */
 #    if defined(ZPL_NANO) || defined(ZPL_PICO)
@@ -143,6 +144,7 @@ License:
 #        undef ZPL_MODULE_THREADING
 #        undef ZPL_MODULE_JOBS
 #        undef ZPL_MODULE_PARSER
+#        undef ZPL_MODULE_SOCKET
 #    endif
 
 #    if defined(ZPL_PICO)
@@ -183,6 +185,9 @@ License:
 #    if defined(ZPL_ENABLE_PARSER) && !defined(ZPL_MODULE_PARSER)
 #        define ZPL_MODULE_PARSER
 #    endif
+#    if defined(ZPL_ENABLE_SOCKET) && !defined(ZPL_MODULE_SOCKET)
+#        define ZPL_MODULE_SOCKET
+#    endif
 
     /* module disabling overrides */
 #    if defined(ZPL_DISABLE_CORE) && defined(ZPL_MODULE_CORE)
@@ -217,6 +222,9 @@ License:
 #    endif
 #    if defined(ZPL_DISABLE_PARSER) && defined(ZPL_MODULE_PARSER)
 #        undef ZPL_MODULE_PARSER
+#    endif
+#    if defined(ZPL_DISABLE_SOCKET) && defined(ZPL_MODULE_SOCKET)
+#        undef ZPL_MODULE_SOCKET
 #    endif
 #endif
 
@@ -302,6 +310,11 @@ License:
     /* parsers */
 #    include "header/parsers/json.h"
 #    include "header/parsers/csv.h"
+#    include "header/parsers/uri.h"
+#endif
+
+#if defined(ZPL_MODULE_SOCKET)
+#    include "header/socket.h"
 #endif
 
 #if defined(ZPL_MODULE_THREADING)
@@ -478,6 +491,11 @@ License:
     /* parsers */
 #    include "source/parsers/json.c"
 #    include "source/parsers/csv.c"
+#    include "source/parsers/uri.c"
+#endif
+
+#if defined(ZPL_MODULE_SOCKET)
+#    include "source/socket.c"
 #endif
 
 #if defined(ZPL_COMPILER_MSVC)
@@ -545,6 +563,7 @@ License:
 // header/jobs.h
 // header/parsers/json.h
 // header/parsers/csv.h
+// header/parsers/uri.h
 // header/dll.h
 // header/adt.h
 // header/core/file_tar.h
@@ -562,6 +581,7 @@ License:
 // header/core/time.h
 // header/hashing.h
 // header/regex.h
+// header/socket.h
 // source/hashing.c
 // source/adt.c
 // source/process.c
@@ -578,6 +598,7 @@ License:
 // source/threading/fence.c
 // source/threading/sem.c
 // source/parsers/csv.c
+// source/parsers/uri.c
 // source/parsers/json.c
 // source/jobs.c
 // source/core/file_stream.c
@@ -594,3 +615,4 @@ License:
 // source/core/file_tar.c
 // source/opts.c
 // source/math.c
+// source/socket.c

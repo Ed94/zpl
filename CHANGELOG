@@ -1,3 +1,10 @@
+19.3.0  - socket: new socket api cross-platform layer
+19.2.0  - file: add macros for standard i/o wrappers (ZPL_STDIO_IN, ...)
+19.1.1  - thread: return error values for POSIX calls
+19.1.0  - parser: introduce a new URI parser module
+19.0.4  - fix: zpl_buffer_copy_init missing macros (thanks Ed_ on Discord)
+19.0.3  - fix: zpl_str_skip_literal reading before start of string (mbenniston)
+19.0.2  - fixed ZPL_ISIZE_MIN and MAX for 32-bit architectures (mrossetti)
 19.0.1  - Fixed zpl_array_fill ZPL_ASSERT off-by-one error
 19.0.0  - Check all results of zpl_alloc() when using JSON parser/writer (rheatley-pervasid)
 

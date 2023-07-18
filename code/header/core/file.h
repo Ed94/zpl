@@ -113,6 +113,10 @@ typedef enum zpl_file_standard_type {
     ZPL_FILE_STANDARD_COUNT,
 } zpl_file_standard_type;
 
+#define ZPL_STDIO_IN  zpl_file_get_standard(ZPL_FILE_STANDARD_INPUT)
+#define ZPL_STDIO_OUT zpl_file_get_standard(ZPL_FILE_STANDARD_OUTPUT)
+#define ZPL_STDIO_ERR zpl_file_get_standard(ZPL_FILE_STANDARD_ERROR)
+
 /**
  * Get standard file I/O.
  * @param  std Check zpl_file_standard_type
@@ -194,7 +198,7 @@ ZPL_DEF void zpl_file_dirinfo_refresh(zpl_file *file);
  * Creates a temporary file
  * @param  file
  */
-zpl_file_error zpl_file_temp(zpl_file *file);
+ZPL_DEF zpl_file_error zpl_file_temp(zpl_file *file);
 
 /**
  * Closes the file
