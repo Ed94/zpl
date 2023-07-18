@@ -30,7 +30,7 @@ typedef struct zpl_buffer_header {
 
 #define zpl_buffer_make(Type, Name, allocator, cap) Type *Name; ZPL_NS(zpl_buffer_init)(Name, allocator, cap)
 
-#define ZPL_BUFFER_HEADER(x)   (cast(zpl_buffer_header *)(x) - 1)
+#define ZPL_BUFFER_HEADER(x)   (cast(ZPL_NS(zpl_buffer_header) *)(x) - 1)
 #define zpl_buffer_count(x)    (ZPL_BUFFER_HEADER(x)->count)
 #define zpl_buffer_capacity(x) (ZPL_BUFFER_HEADER(x)->capacity)
 #define zpl_buffer_end(x) (x + (zpl_buffer_count(x) - 1))
@@ -40,7 +40,7 @@ typedef struct zpl_buffer_header {
 do {                                                                                                                           \
     void **nx = cast(void **) & (x);                                                                                           \
     ZPL_NS(zpl_buffer_header) *zpl__bh =                                                                                       \
-    cast(ZPL_NS(zpl_buffer_header) *) zpl_alloc((allocator), sizeof(ZPL_NS(zpl_buffer_header)) + (cap)*zpl_size_of(*(x)));     \
+    cast(ZPL_NS(zpl_buffer_header) *) ZPL_NS(zpl_alloc)((allocator), sizeof(ZPL_NS(zpl_buffer_header)) + (cap)*zpl_size_of(*(x)));     \
     zpl__bh->backing = allocator;                                                                                              \
     zpl__bh->count = 0;                                                                                                        \
     zpl__bh->capacity = cap;                                                                                                   \
@@ -63,7 +63,7 @@ do {                                                                            
 #define zpl_buffer_copy_init(y, x)                                                                                 \
 do {                                                                                                               \
     zpl_buffer_init(y, zpl_buffer_allocator(x), zpl_buffer_capacity(x));                                   \
-    zpl_memcopy(y, x, zpl_buffer_capacity(x) * zpl_size_of(*x));                                                   \
+    ZPL_NS(zpl_memcopy)(y, x, zpl_buffer_capacity(x) * zpl_size_of(*x));                                                   \
     zpl_buffer_count(y) = zpl_buffer_count(x);                                                                     \
 } while (0)
 
