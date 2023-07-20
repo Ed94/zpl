@@ -96,6 +96,7 @@ word zpl_file_seek_proc,          FileSeekProc
 word zpl_file_write_proc,         FileWriteProc
 word zpl_file_standard_type,      FileStandardType
 word zpl_file_stream_flags,       FileStreamFlags
+word zpl_file_time,               FileTime
 word zpl_float2,                  Float2
 word zpl_float3,                  Float3
 word zpl_float4,                  Float4
