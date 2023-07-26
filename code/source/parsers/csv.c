@@ -89,12 +89,20 @@ zpl_u8 zpl_csv_parse_delimiter(zpl_csv_object *root, char *text, zpl_allocator a
             /* check if number and process if so */
             zpl_b32 skip_number = false;
             char *num_p = b;
-            do {
-                if (!zpl_char_is_hex_digit(*num_p) && (!zpl_strchr("+-.eExX", *num_p))) {
-                    skip_number = true;
-                    break;
-                }
-            } while (*num_p++);
+            
+            // We only consider hexadecimal values if they start with 0x
+            if (zpl_strlen(num_p) > 2 && num_p[0] == '0' && (num_p[1] == 'x' || num_p[1] == 'X')) {
+                num_p += 2; // skip '0x' prefix
+                do {
+                    if (!zpl_char_is_hex_digit(*num_p)) {
+                        skip_number = true;
+                        break;
+                    }
+                } while (*num_p++);
+            } 
+            else {
+                skip_number = true;
+            }
 
             if (!skip_number) {
                 zpl_adt_str_to_number(&row_item);
@@ -142,6 +150,7 @@ zpl_u8 zpl_csv_parse_delimiter(zpl_csv_object *root, char *text, zpl_allocator a
 
     return err;
 }
+
 void zpl_csv_free(zpl_csv_object *obj) {
     zpl_adt_destroy_branch(obj);
 }
